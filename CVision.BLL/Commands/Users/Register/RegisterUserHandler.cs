@@ -2,7 +2,6 @@ using AutoMapper;
 using CVision.BLL.DTOs.Users;
 using CVision.BLL.Interfaces;
 using CVision.DAL.Entities;
-using CVision.DAL.Repositories.Interfaces.Base;
 using FluentResults;
 using MediatR;
 using FluentValidation;
@@ -12,7 +11,6 @@ namespace CVision.BLL.Commands.Users.Register;
 
 public class RegisterUserHandler : IRequestHandler<RegisterUserCommand, Result<RegisterUserResponseDto>>
 {
-    private readonly IRepositoryWrapper _repositoryWrapper;
     private readonly IEmailService _emailService;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IMapper _mapper;
@@ -21,13 +19,11 @@ public class RegisterUserHandler : IRequestHandler<RegisterUserCommand, Result<R
     public RegisterUserHandler(
         IEmailService emailService,
         UserManager<ApplicationUser> userManager,
-        IRepositoryWrapper repositoryWrapperObj,
         IMapper mapperObj,
         IValidator<RegisterUserCommand> registerUserRequestDtoValidator)
     {
         _emailService = emailService;
         _userManager = userManager;
-        _repositoryWrapper = repositoryWrapperObj;
         _mapper = mapperObj;
         _registerUserRequestDtoValidator = registerUserRequestDtoValidator;
     }
