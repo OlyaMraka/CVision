@@ -1,5 +1,8 @@
 using CVision.DAL.Data;
 using CVision.DAL.Entities;
+using CVision.DAL.Repositories.Interfaces.Base;
+using CVision.DAL.Repositories.Realizations.Base;
+using CVision.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -8,6 +11,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.UseSerilog((context, loggerConfig) =>
     loggerConfig.ReadFrom.Configuration(context.Configuration));
+
+builder.Services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
+
+builder.Services.AddRepositoriesFromAssembly(typeof(RepositoryWrapper).Assembly);
 
 
 builder.Services.AddControllersWithViews();

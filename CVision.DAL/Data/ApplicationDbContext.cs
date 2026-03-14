@@ -13,9 +13,13 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
     }
 
     public DbSet<CV> CVs { get; set; }
+
     public DbSet<CVAnalysis> CVAnalyses { get; set; }
+
     public DbSet<CVAnalysisRecommendation> CVAnalysisRecommendations { get; set; }
+
     public DbSet<Publication> Publications { get; set; }
+
     public DbSet<Comment> Comments { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
