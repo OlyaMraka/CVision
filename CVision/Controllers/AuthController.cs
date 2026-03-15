@@ -5,6 +5,7 @@ using CVision.BLL.Commands.Users.Register;
 using CVision.BLL.DTOs.Users;
 using CVision.DAL.Entities;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using FluentResults;
 
@@ -14,6 +15,16 @@ public class AuthController(
     SignInManager<ApplicationUser> signInManager,
     IMapper mapper) : BaseApiController
 {
+    [Authorize]
+    [HttpPost("logout")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> LogoutAsync()
+    {
+        await signInManager.SignOutAsync();
+        return Ok();
+    }
+
     [HttpPost("login")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(LoginUserResponseDto))]
