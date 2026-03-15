@@ -16,12 +16,12 @@
 *@
 
 @{
-/*
-    ViewData["Title"] підставляється в <title> у _Layout.cshtml
-    Результат: <title>Головна — CVision</title>
-*/
-ViewData["Title"] = "Головна";
-Layout = "~/Views/Shared/_Layout.cshtml";
+    /*
+        ViewData["Title"] підставляється в <title> у _Layout.cshtml
+        Результат: <title>Головна — CVision</title>
+    */
+    ViewData["Title"] = "Головна";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 @*
@@ -30,7 +30,7 @@ Layout = "~/Views/Shared/_Layout.cshtml";
     asp-append-version додає ?v=хеш — автоматичний кешбастинг.
 *@
 @section Styles {
-<link rel="stylesheet" href="~/css/LadingPage.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/landing.css" asp-append-version="true" />
 }
 
 
@@ -55,10 +55,23 @@ Layout = "~/Views/Shared/_Layout.cshtml";
         <a href="#contact">Contact Us</a>
     </nav>
 
-    <!-- Права частина: гість + кнопка -->
+    <!-- Права частина: дві окремі кнопки -->
     <div class="site-header__right">
-        <a asp-controller="Account" asp-action="Guest" class="site-header__guest">Guest</a>
-        <a asp-controller="Account" asp-action="Register" class="btn-signup">Sign up/ Lg in</a>
+        <!--
+            Кнопка "Увійти" — outline-стиль (обведена без заливки).
+            Веде на сторінку логіну.
+        -->
+        <a asp-controller="Account"
+           asp-action="Login"
+           class="btn-login">Увійти</a>
+
+        <!--
+            Кнопка "Зареєструватися" — заповнена золотиста.
+            Головний CTA — виділяється більше.
+        -->
+        <a asp-controller="Account"
+           asp-action="Register"
+           class="btn-signup">Зареєструватися</a>
     </div>
 
 </header>

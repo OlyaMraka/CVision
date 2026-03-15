@@ -123,39 +123,65 @@ a {
 
 .site-header__nav a:hover { opacity: .55; }
 
-/* Права частина */
+/* Права частина — дві кнопки: Увійти + Зареєструватися */
 .site-header__right {
     display: flex;
     align-items: center;
-    gap: 1.5rem;
+    gap: .75rem;
 }
 
-.site-header__guest {
-    font-size: 0.95rem;
-    font-weight: 500;
-    color: var(--color-text-mid);
+/*
+    Кнопка "Увійти" — обведена (outline), без заливки.
+    Виглядає легше, щоб не конкурувала з головною кнопкою.
+*/
+.btn-login {
+    background-color: transparent;
+    color: var(--color-text);
+    font-family: var(--font-main);
+    font-size: 0.9rem;
+    font-weight: 600;
+    border: 1.5px solid #c8b89a;   /* м'який бежево-коричневий border     */
+    border-radius: var(--radius-btn);
+    padding: .55rem 1.35rem;
+    cursor: pointer;
+    white-space: nowrap;
+    display: inline-block;
+    text-decoration: none;
+    transition: background-color .2s, border-color .2s, transform .15s;
 }
 
-/* Кнопка Sign up */
+.btn-login:hover {
+    background-color: rgba(196, 124, 42, .08); /* легкий теплий фон      */
+    border-color: var(--color-btn);
+    color: var(--color-btn);
+    transform: translateY(-1px);
+}
+
+/*
+    Кнопка "Зареєструватися" — заповнена золотисто-коричнева.
+    Це головний CTA (call-to-action) у хедері.
+*/
 .btn-signup {
     background-color: var(--color-btn);
     color: var(--color-btn-text);
     font-family: var(--font-main);
     font-size: 0.9rem;
     font-weight: 600;
-    border: none;
+    border: 1.5px solid transparent;
     border-radius: var(--radius-btn);
-    padding: .6rem 1.5rem;
+    padding: .55rem 1.35rem;
     cursor: pointer;
     white-space: nowrap;
     display: inline-block;
-    transition: background-color .2s, transform .15s;
+    text-decoration: none;
+    transition: background-color .2s, transform .15s, box-shadow .2s;
 }
 
 .btn-signup:hover {
     background-color: var(--color-btn-hover);
-    transform: translateY(-1px);
     color: var(--color-btn-text);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(196, 124, 42, .3);
 }
 
 

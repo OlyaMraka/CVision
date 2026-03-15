@@ -26,12 +26,9 @@ namespace CVision.Controllers
             return View(new LogInViewModel());
         }
 
-        // POST /Account/Login
-        // Отримуємо дані форми, перевіряємо ModelState,
-        // якщо все ок — перевіряємо логін/пароль через Identity
         [HttpPost]
         [ValidateAntiForgeryToken] // захист від CSRF
-        public Task<IActionResult> Login(LogInViewModel model, string? returnUrl = null)
+        public IActionResult Login(LogInViewModel model, string? returnUrl = null)
         {
             return View(model);
         }
@@ -45,9 +42,9 @@ namespace CVision.Controllers
         // POST /Account/Register
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public Task<IActionResult> Register(RegisterViewModel model)
+        public IActionResult Register(RegisterViewModel model)
         {
-                return View(model);
+            return View(model);
         }
 
         // GET /Account/Guest — гостьовий доступ (без реєстрації)

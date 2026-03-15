@@ -2,8 +2,7 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using CVision.Models;
 
-using Microsoft.AspNetCore.Mvc;
- 
+
 namespace CVision.Controllers
 {
     public class HomeController : Controller
@@ -12,7 +11,7 @@ namespace CVision.Controllers
         {
             return View();
         }
-        
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

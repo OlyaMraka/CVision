@@ -11,8 +11,5 @@ namespace CVision.Models.ViewModels.AuthViewModels
         [Required(ErrorMessage = "Введіть пароль")]
         [DataType(DataType.Password)]
         public string Password { get; set; } = string.Empty;
-
-        // Чекбокс "Запам'ятати мене" — не обов'язковий
-        public bool RememberMe { get; set; }
     }
 }
