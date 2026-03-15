@@ -1,5 +1,14 @@
+using CVision.BLL.Commands.Users.Register;
 using CVision.DAL.Data;
 using CVision.DAL.Entities;
+using CVision.DAL.Repositories.Interfaces.Base;
+using CVision.DAL.Repositories.Realizations.Base;
+using CVision.BLL.Interfaces;
+using CVision.BLL.Mappers;
+using CVision.BLL.Services;
+using CVision.BLL.Validators.Users;
+using CVision.Extensions;
+using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -8,6 +17,15 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.UseSerilog((context, loggerConfig) =>
     loggerConfig.ReadFrom.Configuration(context.Configuration));
+
+builder.Services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
+
+builder.Services.AddRepositoriesFromAssembly(typeof(RepositoryWrapper).Assembly);
+
+builder.Services.AddScoped<IEmailService, SmtpEmailService>();
+builder.Services.AddAutoMapper(typeof(UsersProfile));
+builder.Services.AddValidatorsFromAssembly(typeof(RegisterUserValidator).Assembly);
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(RegisterUserCommand).Assembly));
 
 
 builder.Services.AddControllersWithViews();
@@ -21,8 +39,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole<int>>(options =>
     options.Password.RequireLowercase = true;
     options.Password.RequireUppercase = true;
     options.Password.RequireNonAlphanumeric = false;
-    options.Password.RequiredLength = 6;
-
+    options.Password.RequiredLength = 8;
     options.User.RequireUniqueEmail = true;
 })
 .AddEntityFrameworkStores<ApplicationDbContext>()
