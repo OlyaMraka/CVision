@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 
-namespace CVisionUnitTests.HandlerTests;
+namespace CVisionUnitTests.HandlerTests.Users;
 
 public class RegisterUserHandlerTests
 {

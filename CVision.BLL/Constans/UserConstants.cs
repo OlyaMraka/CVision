@@ -8,12 +8,6 @@ public static class UserConstants
     public static readonly int MinUserNameLength = 4;
     public static readonly int MinPasswordLength = 8;
 
-    public static readonly string NameRequiredErrorMessage
-        = "First name is required!";
-
-    public static readonly string SurnameRequiredErrorMessage
-        = "Last name is required!";
-
     public static readonly string EmailRequiredErrorMessage
         = "Email is required!";
 
@@ -62,6 +56,6 @@ public static class UserConstants
     public static readonly string DbSaveError
         = "Database save error!";
 
-    public static readonly string DataNotFound
-        = "Data not found!";
+    public static readonly string EmailConfirmationError
+        = "Email confirmation failed!";
 }

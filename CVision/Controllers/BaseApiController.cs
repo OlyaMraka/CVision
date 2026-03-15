@@ -14,39 +14,45 @@ public class BaseApiController : ControllerBase
     protected IMediator Mediator => _mediator ??=
         HttpContext.RequestServices.GetService<IMediator>()!;
 
+    protected ActionResult HandleResult(Result result)
+    {
+        if (result.IsSuccess)
+        {
+            return Ok();
+        }
+
+        return ProcessErrors(result);
+    }
+
     protected ActionResult HandleResult<T>(Result<T> result)
     {
-        var problemsFactory = HttpContext.RequestServices
-            .GetRequiredService<ProblemDetailsFactory>();
-
         if (result.IsSuccess)
         {
             return Ok(result.Value);
         }
 
-        if (result.HasError(error
-                => error.Message.Contains("not found", StringComparison.CurrentCultureIgnoreCase)))
+        return ProcessErrors(result);
+    }
+
+    private ActionResult ProcessErrors(ResultBase result)
+    {
+        var problemsFactory = HttpContext.RequestServices
+            .GetRequiredService<ProblemDetailsFactory>();
+
+        if (result.HasError(error => error.Message.Contains("not found", StringComparison.CurrentCultureIgnoreCase)))
         {
-            var notFoundDetails = problemsFactory.CreateProblemDetails(
-                HttpContext,
-                statusCode: StatusCodes.Status404NotFound);
-            return NotFound(notFoundDetails);
+            return NotFound(problemsFactory.CreateProblemDetails(HttpContext, statusCode: StatusCodes.Status404NotFound));
         }
 
         if (result.HasError(error => error.Message.Equals("Unauthorized")))
         {
-            var unauthorizedDetails = problemsFactory.CreateProblemDetails(
-                HttpContext,
-                statusCode: StatusCodes.Status401Unauthorized);
-            return Unauthorized(unauthorizedDetails);
+            return Unauthorized(problemsFactory.CreateProblemDetails(HttpContext, statusCode: StatusCodes.Status401Unauthorized));
         }
 
         var errorDetail = string.Join("; ", result.Errors.Select(e => e.Message));
-        var badRequestDetails = problemsFactory.CreateProblemDetails(
+        return BadRequest(problemsFactory.CreateProblemDetails(
             HttpContext,
             statusCode: StatusCodes.Status400BadRequest,
-            detail: errorDetail);
-
-        return BadRequest(badRequestDetails);
+            detail: errorDetail));
     }
 }
