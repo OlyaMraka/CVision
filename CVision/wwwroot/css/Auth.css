@@ -1,58 +1,27 @@
-/* =============================================================
-   wwwroot/css/auth.css
-   Стилі для модалок: Вхід і Реєстрація.
-   Підключається через @section Styles у Login.cshtml та Register.cshtml.
-
-   СТРУКТУРА:
-   1.  Оверлей (темний фон за модалкою)
-   2.  Модальне вікно (біла картка)
-   3.  Шапка модалки (заголовок + підзаголовок + кнопка ×)
-   4.  Поля форми (label, input, іконки)
-   5.  Рядок "Забули пароль?"
-   6.  Чекбокс "Запам'ятати мене" / "Погоджуюсь з..."
-   7.  Кнопка Submit (золотисто-коричнева)
-   8.  Розділювач "АБО ЗА ДОПОМОГОЮ"
-   9.  Кнопки Google / LinkedIn
-   10. Підвал модалки (посилання "Створити" / "Увійти")
-   ============================================================= */
-
-
-/* ─────────────────────────────────────────────────────────────
-   1. ОВЕРЛЕЙ
-   Темний напівпрозорий фон, що закриває всю сторінку.
-   display:none за замовчуванням — показується через JS.
-───────────────────────────────────────────────────────────── */
 .modal-overlay {
-    display: none;                      /* прихований за замовчуванням    */
+    display: none;
     position: fixed;
-    inset: 0;                           /* top/right/bottom/left = 0      */
+    inset: 0;
     z-index: 1000;
-    background-color: rgba(30, 20, 10, 0.45); /* напівпрозорий темний фон */
+    background-color: rgba(30, 20, 10, 0.45);
     align-items: center;
     justify-content: center;
     padding: 1rem;
 }
 
-/* Клас .is-open додається через JS — модалка стає видимою */
 .modal-overlay.is-open {
     display: flex;
 }
 
-
-/* ─────────────────────────────────────────────────────────────
-   2. МОДАЛЬНЕ ВІКНО
-   Біла картка з тінню, фіксована ширина як на фото.
-───────────────────────────────────────────────────────────── */
 .modal {
     position: relative;
     background: #ffffff;
     border-radius: 16px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18), 0 4px 16px rgba(0, 0, 0, 0.08);
     width: 100%;
-    max-width: 440px;          /* ширина як на фото */
+    max-width: 440px;
     padding: 2.5rem 2.5rem 2rem;
 
-    /* Анімація появи */
     animation: modalSlideIn .25s ease both;
 }
 
@@ -61,12 +30,6 @@
     to   { opacity: 1; transform: translateY(0)     scale(1);   }
 }
 
-
-/* ─────────────────────────────────────────────────────────────
-   3. ШАПКА МОДАЛКИ
-───────────────────────────────────────────────────────────── */
-
-/* Кнопка × у правому верхньому куті */
 .modal__close {
     position: absolute;
     top: 1.1rem;
@@ -89,7 +52,6 @@
     color: #333;
 }
 
-/* Заголовок: "Вхід" / "Реєстрація" */
 .modal__title {
     font-size: 2rem;
     font-weight: 800;
@@ -99,7 +61,6 @@
     margin-bottom: .5rem;
 }
 
-/* Підзаголовок-опис */
 .modal__subtitle {
     font-size: .9rem;
     color: #7a7a7a;
@@ -108,15 +69,10 @@
     line-height: 1.4;
 }
 
-
-/* ─────────────────────────────────────────────────────────────
-   4. ПОЛЯ ФОРМИ
-───────────────────────────────────────────────────────────── */
 .form-group {
     margin-bottom: 1.1rem;
 }
 
-/* Label над полем */
 .form-group__label {
     display: block;
     font-size: .875rem;
@@ -125,28 +81,22 @@
     margin-bottom: .45rem;
 }
 
-/*
-    Обгортка поля — потрібна для позиціювання іконок
-    (іконка зліва, кнопка показати пароль — справа)
-*/
 .form-group__input-wrap {
     position: relative;
     display: flex;
     align-items: center;
 }
 
-/* Іконка ЗЛІВА (конверт для email, замок для пароля, юзер для імені) */
 .form-group__icon-left {
     position: absolute;
     left: .9rem;
     display: flex;
     align-items: center;
     color: #9a9a9a;
-    pointer-events: none; /* не заважає кліку на input */
+    pointer-events: none;
     font-size: .9rem;
 }
 
-/* Кнопка "показати/приховати пароль" СПРАВА */
 .form-group__toggle-pass {
     position: absolute;
     right: .9rem;
@@ -162,13 +112,12 @@
 }
 .form-group__toggle-pass:hover { color: #555; }
 
-/* Саме поле input */
 .form-group__input {
     width: 100%;
     height: 48px;
     border: 1.5px solid #e0e0e0;
     border-radius: 10px;
-    padding: 0 2.8rem 0 2.6rem; /* місце для іконок з обох сторін      */
+    padding: 0 2.8rem 0 2.6rem;
     font-family: var(--font-main, 'DM Sans', sans-serif);
     font-size: .95rem;
     color: #1a1a1a;
@@ -177,7 +126,6 @@
     transition: border-color .2s, box-shadow .2s;
 }
 
-/* Поле без правої іконки (ім'я, email у реєстрації) */
 .form-group__input--no-right {
     padding-right: 1rem;
 }
@@ -191,12 +139,10 @@
     box-shadow: 0 0 0 3px rgba(196, 124, 42, .12);
 }
 
-/* Підсвічування помилки (додається через ModelState) */
 .form-group__input.input-error {
     border-color: #e05050;
 }
 
-/* Текст помилки під полем */
 .form-group__error {
     font-size: .78rem;
     color: #e05050;
@@ -204,11 +150,6 @@
     display: block;
 }
 
-
-/* ─────────────────────────────────────────────────────────────
-   5. РЯДОК "Забули пароль?" (між label і полем пароля)
-   Реалізований як flex-рядок де label і лінк по краях.
-───────────────────────────────────────────────────────────── */
 .form-group__label-row {
     display: flex;
     align-items: center;
@@ -225,10 +166,6 @@
 }
 .form-group__forgot:hover { opacity: .7; }
 
-
-/* ─────────────────────────────────────────────────────────────
-   6. ЧЕКБОКС "Запам'ятати мене" / "Погоджуюсь з..."
-───────────────────────────────────────────────────────────── */
 .form-check {
     display: flex;
     align-items: flex-start;
@@ -236,7 +173,6 @@
     margin-bottom: 1.3rem;
 }
 
-/* Прихований стандартний чекбокс — замінюємо кастомним */
 .form-check__input {
     appearance: none;
     -webkit-appearance: none;
@@ -255,7 +191,6 @@
     justify-content: center;
 }
 
-/* Галочка через ::after */
 .form-check__input::after {
     content: '';
     display: none;
@@ -277,7 +212,6 @@
     display: block;
 }
 
-/* Текст поряд із чекбоксом */
 .form-check__label {
     font-size: .875rem;
     color: #3d3d3d;
@@ -285,7 +219,6 @@
     cursor: pointer;
 }
 
-/* Посилання всередині тексту чекбокса (Умови / Політика) */
 .form-check__label a {
     color: #c47c2a;
     text-decoration: none;
@@ -293,11 +226,6 @@
 }
 .form-check__label a:hover { text-decoration: underline; }
 
-
-/* ─────────────────────────────────────────────────────────────
-   7. КНОПКА SUBMIT
-   Золотисто-коричнева, повна ширина, заокруглена.
-───────────────────────────────────────────────────────────── */
 .btn-auth {
     display: block;
     width: 100%;
@@ -325,10 +253,6 @@
     box-shadow: none;
 }
 
-
-/* ─────────────────────────────────────────────────────────────
-   8. РОЗДІЛЮВАЧ "АБО ЗА ДОПОМОГОЮ"
-───────────────────────────────────────────────────────────── */
 .auth-divider {
     display: flex;
     align-items: center;
@@ -353,11 +277,6 @@
     white-space: nowrap;
 }
 
-
-/* ─────────────────────────────────────────────────────────────
-   9. КНОПКИ СОЦІАЛЬНИХ МЕРЕЖ (Google / LinkedIn)
-   Два однакових блоки в ряд із border.
-───────────────────────────────────────────────────────────── */
 .social-btns {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -388,10 +307,38 @@
     box-shadow: 0 2px 8px rgba(0,0,0,.06);
 }
 
+.toast-success{
+    position: fixed;
+    top: 25px;
+    right: 25px;
+    background: #22c55e;
+    color: white;
+    padding: 16px 22px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    transform: translateY(-100px);
+    opacity: 0;
+    transition: all .4s ease;
+    font-weight: 500;
+    z-index: 1000;
+}
 
-/* ─────────────────────────────────────────────────────────────
-   10. ПІДВАЛ МОДАЛКИ — посилання "Немає акаунту?" / "Вже маєте?"
-───────────────────────────────────────────────────────────── */
+.toast-success.show{
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.toast-success button{
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
 .modal__footer-text {
     text-align: center;
     font-size: .875rem;

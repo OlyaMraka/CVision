@@ -1,17 +1,3 @@
-@*
-    Views/Account/Login.cshtml
-    ════════════════════════════════════════════════════════════════
-    Сторінка входу — рендерить модалку "Вхід" поверх лендінгу.
-
-    Як це працює:
-      - Layout = "_Layout.cshtml" — та сама обгортка що й скрізь
-      - Підключаємо auth.css через @section Styles
-      - Модалка одразу is-open (сторінка призначена для логіну)
-      - Форма йде на POST AccountController.Login()
-      - ModelState автоматично підсвічує помилки через asp-validation-for
-    ════════════════════════════════════════════════════════════════
-*@
-
 @model CVision.Models.ViewModels.AuthViewModels.LogInViewModel
 
 @{
@@ -19,65 +5,38 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@* Підключаємо CSS тільки для цієї сторінки *@
 @section Styles {
     <link rel="stylesheet" href="~/css/LadingPage.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/auth.css"    asp-append-version="true" />
 }
 
-
-@*
-    ══════════════════════════════════════════════════════════════
-    ФОН — Hero лендінгу як підкладка за модалкою.
-    Це той самий .hero із Index.cshtml, але без карток,
-    щоб фон був пісочний як на фото.
-    ══════════════════════════════════════════════════════════════
-*@
 <div class="hero" style="display:flex;align-items:center;justify-content:center;">
-
-    <!--
-        ══════════════════════════════════════════════════════════
-        ОВЕРЛЕЙ + МОДАЛКА "ВХІД"
-        .is-open — модалка відразу відкрита (ми на сторінці логіну)
-        ══════════════════════════════════════════════════════════
-    -->
     <div class="modal-overlay is-open" id="loginOverlay">
         <div class="modal" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
-
-            <!-- ── Кнопка закрити × ───────────────────────── -->
+            
             <button class="modal__close"
                     type="button"
                     onclick="window.location.href='/'"
                     aria-label="Закрити">
                 &#x2715;
             </button>
-
-            <!-- ── Заголовок ──────────────────────────────── -->
+            
             <h1 class="modal__title" id="loginTitle">Вхід</h1>
             <p class="modal__subtitle">Увійдіть у свій кабінет CVision</p>
 
-            <!--
-                Форма — POST на AccountController.Login()
-                asp-antiforgery="true" — CSRF токен (вбудований у Razor)
-            -->
             <form asp-controller="Account"
                   asp-action="Login"
                   method="post"
                   novalidate>
 
-                @* AntiForgery Token — захист від CSRF-атак *@
                 @Html.AntiForgeryToken()
 
-                <!-- ── Поле: Електронна пошта ─────────────── -->
                 <div class="form-group">
                     <label class="form-group__label"
                            asp-for="Email">Електронна пошта</label>
 
                     <div class="form-group__input-wrap">
-                        <!--
-                            Іконка конверта — SVG inline (не потребує зовнішніх бібліотек).
-                            Можна замінити на <i class="..."> якщо підключений Font Awesome.
-                        -->
+
                         <span class="form-group__icon-left" aria-hidden="true">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
                                  stroke="currentColor" stroke-width="2"
@@ -94,20 +53,16 @@
                                autocomplete="email" />
                     </div>
 
-                    @* Повідомлення про помилку від ModelState *@
                     <span asp-validation-for="Email" class="form-group__error"></span>
                 </div>
 
-                <!-- ── Поле: Пароль ───────────────────────── -->
                 <div class="form-group">
-                    <!--
-                        Лише label — без "Забули пароль?" (прибрано за вимогою)
-                    -->
+                    
                     <label class="form-group__label"
                            asp-for="Password">Пароль</label>
 
                     <div class="form-group__input-wrap">
-                        <!-- Іконка замка зліва -->
+
                         <span class="form-group__icon-left" aria-hidden="true">
                             <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
                                  stroke="currentColor" stroke-width="2"
@@ -122,9 +77,8 @@
                                class="form-group__input"
                                type="password"
                                placeholder="password123"
-                               autocomplete="current-password" />
-
-                        <!-- Кнопка показати/приховати пароль -->
+                               autocomplete="current-password"/>
+                        
                         <button class="form-group__toggle-pass"
                                 type="button"
                                 onclick="togglePassword('loginPassword', this)"
@@ -143,52 +97,34 @@
 
                     <span asp-validation-for="Password" class="form-group__error"></span>
                 </div>
-                
 
-                <!-- ── Кнопка Увійти ──────────────────────── -->
                 <button class="btn-auth" type="submit">Увійти</button>
 
-                @* Загальна помилка (напр. "Невірний логін або пароль") *@
                 <span asp-validation-summary="ModelOnly"
                       class="form-group__error"
                       style="display:block;text-align:center;margin-top:.5rem;"></span>
 
             </form>
 
-            <!-- ── Підвал: посилання на реєстрацію ──────────── -->
             <p class="modal__footer-text" style="margin-top:1.2rem;">
                 Немає акаунту?
                 <a asp-controller="Account" asp-action="Register">Створити зараз</a>
             </p>
 
-        </div><!-- /.modal -->
-    </div><!-- /.modal-overlay -->
+        </div>
+    </div>
 
-</div><!-- /.hero -->
+</div>
 
-
-@*
-    ── СЕКЦІЯ SCRIPTS ─────────────────────────────────────────────
-    JS тільки для цієї сторінки.
-    Дві функції:
-      - togglePassword() — показати/приховати пароль
-      - Закрити модалку при кліку на оверлей
-*@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
     <script>
-        /*
-            togglePassword(inputId, btn)
-            Перемикає type="password" ↔ type="text"
-            і змінює іконку ока.
-        */
         function togglePassword(inputId, btn) {
             const input = document.getElementById(inputId);
             const isHidden = input.type === 'password';
             input.type = isHidden ? 'text' : 'password';
-
-            // Міняємо вигляд іконки (закреслене / відкрите oko)
+            
             btn.innerHTML = isHidden
                 ? `<svg width="16" height="16" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2"
@@ -206,11 +142,7 @@
                      <line x1="1" y1="1" x2="23" y2="23"/>
                    </svg>`;
         }
-
-        /*
-            Закриваємо модалку якщо клікнули на темний оверлей
-            (не на саму білу картку)
-        */
+        
         document.getElementById('loginOverlay').addEventListener('click', function (e) {
             if (e.target === this) {
                 window.location.href = '/';

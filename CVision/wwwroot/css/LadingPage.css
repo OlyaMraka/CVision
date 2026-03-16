@@ -1,45 +1,19 @@
-/* =============================================================
-   landing.css
-   Стилі виключно для лендінгу CVision.
-   Підключається тільки у Views/Home/Index.cshtml через секцію Styles.
-
-   СТРУКТУРА ФАЙЛУ:
-   1.  CSS-змінні (кольори, шрифти, розміри)
-   2.  Reset / Base
-   3.  Header / Navbar
-   4.  Hero Section
-   5.  CV-картки (загальні + позиціювання)
-   6.  Внутрішній контент карток
-   7.  Секції (Benefits, Specifications, How-to, Contact)
-   8.  Footer
-   9.  Анімації (@keyframes)
-   10. Адаптивність (@media)
-   ============================================================= */
-
-
-/* ─────────────────────────────────────────────────────────────
-   1. CSS-ЗМІННІ
-   Всі кольори, відступи та шрифти — в одному місці.
-   Хочеш змінити колір кнопки? Міняєш лише тут.
-───────────────────────────────────────────────────────────── */
 :root {
-    --color-bg:           #f5ead8;   /* кремово-пісочний фон сторінки      */
-    --color-bg-alt:       #ede1cc;   /* трохи темніший — для парних секцій */
-    --color-text:         #1a1a1a;   /* майже чорний для заголовків         */
-    --color-text-mid:     #3d3d3d;   /* для навігаційних лінків             */
-    --color-text-muted:   #888888;   /* підписи, мітки                      */
+    --color-bg-alt:       #ede1cc;
+    --color-text:         #1a1a1a;
+    --color-text-mid:     #3d3d3d;
+    --color-text-muted:   #888888;
+    --color-bg:           #f5ead8;
 
-    --color-btn:          #c47c2a;   /* золотисто-коричнева кнопка Sign up  */
-    --color-btn-hover:    #a5651e;   /* кнопка при ховері                   */
+    --color-btn:          #c47c2a;
+    --color-btn-hover:    #a5651e;
     --color-btn-text:     #ffffff;
-
-    /* Кольори карток */
-    --color-card-pink:    #e8a0a0;   /* шапка Tom Williams                  */
-    --color-card-yellow:  #f5c800;   /* шапка Nina Lane                     */
-    --color-card-rose:    #f0c0c8;   /* шапка Maria Dela Cruz               */
-    --color-card-dark:    #1e2d3d;   /* темно-синє CV                       */
-    --color-card-darker:  #162030;   /* ще темніша ліва колонка             */
-    --color-card-brown:   #3d2010;   /* шапка Radhika Kumari                */
+    --color-card-pink:    #e8a0a0;
+    --color-card-yellow:  #f5c800;
+    --color-card-rose:    #f0c0c8;
+    --color-card-dark:    #1e2d3d;
+    --color-card-darker:  #162030;
+    --color-card-brown:   #3d2010;
 
     --font-main:          'DM Sans', sans-serif;
 
@@ -50,10 +24,6 @@
     --header-height:      70px;
 }
 
-
-/* ─────────────────────────────────────────────────────────────
-   2. RESET / BASE
-───────────────────────────────────────────────────────────── */
 *, *::before, *::after {
     box-sizing: border-box;
     margin: 0;
@@ -75,12 +45,6 @@ a {
     color: inherit;
 }
 
-
-/* ─────────────────────────────────────────────────────────────
-   3. HEADER / NAVBAR
-   fixed — прилипає зверху при скролі.
-   Три зони: лого | центр-навігація | rights (guest + btn)
-───────────────────────────────────────────────────────────── */
 .site-header {
     position: fixed;
     top: 0;
@@ -88,14 +52,13 @@ a {
     right: 0;
     z-index: 200;
     height: var(--header-height);
-    background-color: var(--color-bg); /* колір фону — зливається зі сторінкою */
+    background-color: var(--color-bg);
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 0 3rem;
 }
 
-/* Логотип */
 .site-header__logo {
     font-size: 1.6rem;
     font-weight: 700;
@@ -104,7 +67,6 @@ a {
     user-select: none;
 }
 
-/* Центральна навігація — абсолютний центр незалежно від бічних блоків */
 .site-header__nav {
     display: flex;
     align-items: center;
@@ -123,24 +85,19 @@ a {
 
 .site-header__nav a:hover { opacity: .55; }
 
-/* Права частина — дві кнопки: Увійти + Зареєструватися */
 .site-header__right {
     display: flex;
     align-items: center;
     gap: .75rem;
 }
 
-/*
-    Кнопка "Увійти" — обведена (outline), без заливки.
-    Виглядає легше, щоб не конкурувала з головною кнопкою.
-*/
 .btn-login {
     background-color: transparent;
     color: var(--color-text);
     font-family: var(--font-main);
     font-size: 0.9rem;
     font-weight: 600;
-    border: 1.5px solid #c8b89a;   /* м'який бежево-коричневий border     */
+    border: 1.5px solid #c8b89a;
     border-radius: var(--radius-btn);
     padding: .55rem 1.35rem;
     cursor: pointer;
@@ -151,16 +108,12 @@ a {
 }
 
 .btn-login:hover {
-    background-color: rgba(196, 124, 42, .08); /* легкий теплий фон      */
+    background-color: rgba(196, 124, 42, .08);
     border-color: var(--color-btn);
     color: var(--color-btn);
     transform: translateY(-1px);
 }
 
-/*
-    Кнопка "Зареєструватися" — заповнена золотисто-коричнева.
-    Це головний CTA (call-to-action) у хедері.
-*/
 .btn-signup {
     background-color: var(--color-btn);
     color: var(--color-btn-text);
@@ -184,12 +137,6 @@ a {
     box-shadow: 0 4px 14px rgba(196, 124, 42, .3);
 }
 
-
-/* ─────────────────────────────────────────────────────────────
-   4. HERO SECTION
-   Займає весь вьюпорт. position:relative — основа для
-   абсолютно позиціонованих карток.
-───────────────────────────────────────────────────────────── */
 .hero {
     position: relative;
     width: 100%;
@@ -199,7 +146,6 @@ a {
     overflow: hidden;
 }
 
-/* Великий заголовок — абсолютний центр */
 .hero__title {
     position: absolute;
     top: 50%;
@@ -207,7 +153,7 @@ a {
     transform: translate(-50%, -50%);
     text-align: center;
     z-index: 10;
-    pointer-events: none; /* картки кліка-бельні, заголовок не заважає */
+    pointer-events: none;
     width: 90%;
     max-width: 700px;
 }
@@ -220,16 +166,11 @@ a {
     letter-spacing: -0.025em;
 }
 
-/* Жирна остання лінія "із CVision" */
 .hero__title h1 strong {
     display: block;
     font-weight: 900;
 }
 
-
-/* ─────────────────────────────────────────────────────────────
-   5. CV-КАРТКИ — загальні стилі + позиціювання
-───────────────────────────────────────────────────────────── */
 .cv-card {
     position: absolute;
     background: #ffffff;
@@ -237,8 +178,6 @@ a {
     box-shadow: var(--shadow-card);
     overflow: hidden;
     transition: transform .3s ease, box-shadow .3s ease;
-
-    /* Анімація появи — кожна картка через animation-delay */
     animation: cardFloatIn .7s ease both;
 }
 
@@ -248,7 +187,7 @@ a {
     z-index: 50;
 }
 
-/* --- Затримки появи (nth-child) --- */
+
 .cv-card:nth-child(2) { animation-delay: .10s; }
 .cv-card:nth-child(3) { animation-delay: .22s; }
 .cv-card:nth-child(4) { animation-delay: .34s; }
@@ -257,10 +196,6 @@ a {
 .cv-card:nth-child(7) { animation-delay: .70s; }
 .cv-card:nth-child(8) { animation-delay: .82s; }
 
-/* ── Позиціювання кожної картки ──
-   Координати підібрані точно під фото.            */
-
-/* Картка 1: класичне CV — верх, трохи лівіше центру */
 .cv-card--classic {
     top: 7%;
     left: 50%;
@@ -269,28 +204,27 @@ a {
 }
 .cv-card--classic:hover { transform: translateX(-65%) translateY(-5px) scale(1.015); }
 
-/* Картка 2: Tom Williams — верхній правий кут */
+
 .cv-card--tom {
     top: 8%;
     right: 4%;
     width: 205px;
 }
 
-/* Картка 3: Your Name темна — лівий середній */
+
 .cv-card--dark-left {
     top: 30%;
     left: 2%;
     width: 205px;
 }
 
-/* Картка 4: Nina Lane жовта — нижній лівий */
 .cv-card--nina {
     bottom: 2%;
     left: 4%;
     width: 190px;
 }
 
-/* Картка 5: Maria Dela Cruz — нижній центр */
+
 .cv-card--maria {
     bottom: 0;
     left: 50%;
@@ -299,28 +233,18 @@ a {
 }
 .cv-card--maria:hover { transform: translateX(-55%) translateY(-5px) scale(1.015); }
 
-/* Картка 6: Radhika Kumari — правий нижній центр */
 .cv-card--radhika {
     bottom: 2%;
     right: 14%;
     width: 185px;
 }
 
-/* Картка 7: темна права — правий нижній кут */
 .cv-card--dark-right {
     bottom: 5%;
     right: 2%;
     width: 185px;
 }
 
-
-/* ─────────────────────────────────────────────────────────────
-   6. ВНУТРІШНІЙ КОНТЕНТ КАРТОК
-   Всі елементи — імітація рядків тексту (лінії),
-   шапки з кольоровим блоком, аватари.
-───────────────────────────────────────────────────────────── */
-
-/* --- Шапка з кольоровим фоном --- */
 .card-header {
     padding: 10px 10px 8px;
     display: flex;
@@ -328,13 +252,11 @@ a {
     gap: 8px;
 }
 
-/* Різні кольори шапок */
 .card-header--pink   { background: var(--color-card-pink); }
 .card-header--yellow { background: var(--color-card-yellow); }
 .card-header--rose   { background: var(--color-card-rose); padding: 12px; }
 .card-header--brown  { background: var(--color-card-brown); color: #fff; }
 
-/* Аватар — коло або заокруглений прямокутник */
 .card-avatar {
     flex-shrink: 0;
     border-radius: 50%;
@@ -349,7 +271,6 @@ a {
 .card-avatar--round { border-radius: 50%; }
 .card-avatar--rect  { border-radius: 3px; }
 
-/* Ім'я і посада в шапці */
 .card-name h3 {
     font-size: .6rem;
     font-weight: 800;
@@ -363,12 +284,10 @@ a {
     margin-top: 1px;
 }
 
-/* --- Тіло картки --- */
 .card-body {
     padding: 6px 10px 8px;
 }
 
-/* Мітка секції (EXPERIENCE, SKILLS, тощо) */
 .card-label {
     font-size: .32rem;
     font-weight: 700;
@@ -379,7 +298,6 @@ a {
     margin-bottom: 3px;
 }
 
-/* Імітація рядка тексту */
 .card-line {
     height: 3px;
     border-radius: 2px;
@@ -392,7 +310,6 @@ a {
 .card-line--w40  { width: 40%;  }
 .card-line--dark { background: #bfbfbf; }
 
-/* Двоколонковий layout всередині картки */
 .card-two-col {
     display: flex;
     gap: 6px;
@@ -400,7 +317,6 @@ a {
 .card-two-col__left  { width: 42%; flex-shrink: 0; }
 .card-two-col__right { flex: 1; }
 
-/* --- Темний варіант картки (сайдбар або весь фон) --- */
 .card-dark {
     background: var(--color-card-dark);
     color: #dde8f0;
@@ -409,13 +325,11 @@ a {
 .card-dark .card-line    { background: #2a4060; }
 .card-dark .card-line--dark { background: #4a7090; }
 
-/* Ліва колонка темнішого відтінку */
 .card-sidebar {
     background: var(--color-card-darker);
     padding: 8px 7px;
 }
 
-/* --- Класичне CV (картка 1) --- */
 .card-classic__top {
     display: flex;
     gap: 6px;
@@ -433,10 +347,6 @@ a {
 .card-classic__info { flex: 1; }
 .card-classic__body { padding: 0 8px 8px; }
 
-
-/* ─────────────────────────────────────────────────────────────
-   7. КОНТЕНТНІ СЕКЦІЇ (Benefits / Specifications / How-to / Contact)
-───────────────────────────────────────────────────────────── */
 .content-section {
     min-height: 100vh;
     display: flex;
@@ -474,10 +384,6 @@ a {
     color: var(--color-btn);
 }
 
-
-/* ─────────────────────────────────────────────────────────────
-   8. FOOTER
-───────────────────────────────────────────────────────────── */
 .site-footer {
     background: var(--color-text);
     color: #999;
@@ -486,10 +392,6 @@ a {
     font-size: .85rem;
 }
 
-
-/* ─────────────────────────────────────────────────────────────
-   9. АНІМАЦІЇ
-───────────────────────────────────────────────────────────── */
 @keyframes cardFloatIn {
     from {
         opacity: 0;
@@ -501,7 +403,6 @@ a {
     }
 }
 
-/* Картки з transform на translateX потребують окремої анімації */
 .cv-card--classic,
 .cv-card--maria {
     animation-name: cardFloatInCenter;
@@ -519,21 +420,15 @@ a {
     to   { opacity: 1; transform: translateX(-55%) translateY(0)    scale(1);   }
 }
 
-
-/* ─────────────────────────────────────────────────────────────
-   10. АДАПТИВНІСТЬ
-───────────────────────────────────────────────────────────── */
 @media (max-width: 1024px) {
-    /* Приховуємо частину карток на планшетах */
     .cv-card--nina,
     .cv-card--dark-right { display: none; }
 }
 
 @media (max-width: 768px) {
     .site-header { padding: 0 1.2rem; }
-    .site-header__nav { display: none; } /* мобільне меню — окремо */
-
-    /* На мобільному тільки 2 картки залишаємо */
+    .site-header__nav { display: none; } 
+    
     .cv-card--dark-left,
     .cv-card--maria,
     .cv-card--radhika    { display: none; }

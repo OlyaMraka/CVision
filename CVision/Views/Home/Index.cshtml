@@ -1,53 +1,15 @@
-﻿@*
-    Views/Home/Index.cshtml
-    ════════════════════════════════════════════════════════════════
-    Лендінг CVision — точна копія дизайну з фото.
-
-    Ця сторінка:
-      - Використовує _Layout.cshtml як обгортку
-      - Підключає свій CSS через секцію @section Styles
-      - НЕ містить жодних стилів inline — тільки семантична HTML-розмітка
-      - Класи відповідають landing.css
-
-    Razor-синтаксис тут мінімальний, бо це статичний лендінг.
-    У реальному проекті картки CV можна рендерити через Model
-    (список шаблонів з БД).
-    ════════════════════════════════════════════════════════════════
-*@
-
-@{
-    /*
-        ViewData["Title"] підставляється в <title> у _Layout.cshtml
-        Результат: <title>Головна — CVision</title>
-    */
+﻿@{
     ViewData["Title"] = "Головна";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@*
-    ── СЕКЦІЯ STYLES ──────────────────────────────────────────────
-    Підключаємо CSS виключно для цієї сторінки.
-    asp-append-version додає ?v=хеш — автоматичний кешбастинг.
-*@
 @section Styles {
     <link rel="stylesheet" href="~/css/landing.css" asp-append-version="true" />
 }
 
-
-<!-- ══════════════════════════════════════════════════════════════
-     HEADER
-     Структура: [Лого] | [Навігація по центру] | [Guest + Кнопка]
-══════════════════════════════════════════════════════════════ -->
 <header class="site-header">
-
-    <!-- Логотип — посилання на головну -->
     <a href="/" class="site-header__logo">CVision</a>
 
-    <!--
-        Центральна навігація.
-        asp-action / asp-controller — Razor Tag Helpers для URL.
-        Якщо секції на одній сторінці — використовуємо якорі (#).
-    -->
     <nav class="site-header__nav">
         <a href="#benefits">Benefits</a>
         <a href="#specifications">Specifications</a>
@@ -55,20 +17,12 @@
         <a href="#contact">Contact Us</a>
     </nav>
 
-    <!-- Права частина: дві окремі кнопки -->
     <div class="site-header__right">
-        <!--
-            Кнопка "Увійти" — outline-стиль (обведена без заливки).
-            Веде на сторінку логіну.
-        -->
+
         <a asp-controller="Account"
            asp-action="Login"
            class="btn-login">Увійти</a>
 
-        <!--
-            Кнопка "Зареєструватися" — заповнена золотиста.
-            Головний CTA — виділяється більше.
-        -->
         <a asp-controller="Account"
            asp-action="Register"
            class="btn-signup">Зареєструватися</a>
@@ -76,15 +30,8 @@
 
 </header>
 
-
-<!-- ══════════════════════════════════════════════════════════════
-     HERO SECTION
-     100vh, пісочний фон, великий заголовок по центру,
-     навколо — 7 плаваючих карток CV.
-══════════════════════════════════════════════════════════════ -->
 <section class="hero">
 
-    <!-- ── Центральний заголовок ─────────────────────────────── -->
     <div class="hero__title">
         <h1>
             Створюй<br />
@@ -93,14 +40,8 @@
         </h1>
     </div>
 
-
-    <!-- ══════════════════════════════════════════════════════════
-         КАРТКА 1 — Класичне CV (верх, трохи лівіше центру)
-         Мінімалістичне чорно-біле резюме з фото у шапці
-    ══════════════════════════════════════════════════════════ -->
     <div class="cv-card cv-card--classic">
-
-        <!-- Шапка: аватар + базові дані -->
+        
         <div class="card-classic__top">
             <div class="card-classic__avatar"></div>
             <div class="card-classic__info">
@@ -110,7 +51,6 @@
             </div>
         </div>
 
-        <!-- Тіло: Experience + Education + Skills -->
         <div class="card-classic__body">
             <div class="card-label">Experience</div>
             <div class="card-line card-line--w100 card-line--dark"></div>
@@ -138,10 +78,6 @@
         </div>
     </div>
 
-
-    <!-- ══════════════════════════════════════════════════════════
-         КАРТКА 2 — Tom Williams (верхній правий, рожева шапка)
-    ══════════════════════════════════════════════════════════ -->
     <div class="cv-card cv-card--tom">
 
         <div class="card-header card-header--pink">
@@ -170,7 +106,6 @@
                 <div class="card-line card-line--w80"></div>
             </div>
 
-            <!-- Дві колонки внизу: Skills + Contact -->
             <div class="card-two-col" style="margin-top:5px;">
                 <div class="card-two-col__left">
                     <div class="card-label">Skills</div>
@@ -187,16 +122,9 @@
         </div>
     </div>
 
-
-    <!-- ══════════════════════════════════════════════════════════
-         КАРТКА 3 — Your Name (лівий середній, темно-синя двоколонкова)
-         Ліва колонка: темний сайдбар з контактами/скілами
-         Права колонка: світла, досвід та освіта
-    ══════════════════════════════════════════════════════════ -->
     <div class="cv-card cv-card--dark-left">
         <div style="display:flex;min-height:250px;">
 
-            <!-- Ліва темна колонка (сайдбар) -->
             <div class="card-sidebar" style="width:42%;">
                 <div style="width:38px;height:38px;border-radius:50%;
                             background:#2a4060;margin:0 auto 7px;"></div>
@@ -219,7 +147,6 @@
                 <div class="card-line card-line--w60"  style="background:#2a4060;"></div>
             </div>
 
-            <!-- Права світла колонка -->
             <div style="flex:1;padding:8px 8px;background:#fff;">
                 <div class="card-label">Profile</div>
                 <div class="card-line card-line--w100"></div>
@@ -245,10 +172,6 @@
         </div>
     </div>
 
-
-    <!-- ══════════════════════════════════════════════════════════
-         КАРТКА 4 — Nina Lane (нижній лівий, жовта шапка)
-    ══════════════════════════════════════════════════════════ -->
     <div class="cv-card cv-card--nina">
 
         <div class="card-header card-header--yellow">
@@ -297,10 +220,6 @@
         </div>
     </div>
 
-
-    <!-- ══════════════════════════════════════════════════════════
-         КАРТКА 5 — Maria Dela Cruz (нижній центр, рожево-біла)
-    ══════════════════════════════════════════════════════════ -->
     <div class="cv-card cv-card--maria">
 
         <div class="card-header card-header--rose">
@@ -355,10 +274,6 @@
         </div>
     </div>
 
-
-    <!-- ══════════════════════════════════════════════════════════
-         КАРТКА 6 — Radhika Kumari (правий нижній центр, коричнева шапка)
-    ══════════════════════════════════════════════════════════ -->
     <div class="cv-card cv-card--radhika">
 
         <div class="card-header card-header--brown" style="align-items:flex-start;gap:8px;">
@@ -406,14 +321,9 @@
         </div>
     </div>
 
-
-    <!-- ══════════════════════════════════════════════════════════
-         КАРТКА 7 — Your Name темна (правий нижній кут, двоколонкова)
-    ══════════════════════════════════════════════════════════ -->
     <div class="cv-card cv-card--dark-right">
         <div style="display:flex;min-height:220px;">
 
-            <!-- Ліва темніша колонка -->
             <div class="card-sidebar" style="width:42%;">
                 <div style="width:34px;height:34px;border-radius:50%;
                             background:#2a4060;margin:0 auto 6px;"></div>
@@ -433,7 +343,6 @@
                 <div class="card-line card-line--w80"  style="background:#2a4060;"></div>
             </div>
 
-            <!-- Права колонка -->
             <div style="flex:1;padding:8px 7px;background:#1e2d3d;color:#dde8f0;">
                 <div class="card-label" style="color:#6a8aa0;">Profile</div>
                 <div class="card-line card-line--w100" style="background:#2a4060;"></div>
@@ -456,12 +365,7 @@
     </div>
 
 </section>
-<!-- END .hero -->
 
-
-<!-- ══════════════════════════════════════════════════════════════
-     СЕКЦІЯ: Benefits
-══════════════════════════════════════════════════════════════ -->
 <section class="content-section" id="benefits">
     <div class="content-section__inner">
         <h2>Benefits</h2>
@@ -469,10 +373,6 @@
     </div>
 </section>
 
-
-<!-- ══════════════════════════════════════════════════════════════
-     СЕКЦІЯ: Specifications
-══════════════════════════════════════════════════════════════ -->
 <section class="content-section" id="specifications">
     <div class="content-section__inner">
         <h2>Specifications</h2>
@@ -480,10 +380,6 @@
     </div>
 </section>
 
-
-<!-- ══════════════════════════════════════════════════════════════
-     СЕКЦІЯ: How-to
-══════════════════════════════════════════════════════════════ -->
 <section class="content-section" id="howto">
     <div class="content-section__inner">
         <h2>How-to</h2>
@@ -491,10 +387,6 @@
     </div>
 </section>
 
-
-<!-- ══════════════════════════════════════════════════════════════
-     СЕКЦІЯ: Contact Us
-══════════════════════════════════════════════════════════════ -->
 <section class="content-section" id="contact">
     <div class="content-section__inner">
         <h2>Contact Us</h2>
@@ -505,10 +397,6 @@
     </div>
 </section>
 
-
-<!-- ══════════════════════════════════════════════════════════════
-     FOOTER
-══════════════════════════════════════════════════════════════ -->
 <footer class="site-footer">
     <p>&copy; @DateTime.Now.Year CVision. Всі права захищені.</p>
 </footer>

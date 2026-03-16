@@ -3,49 +3,24 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <!-- SEO title: кожна сторінка задає свій через ViewData["Title"] -->
+    
     <title>@ViewData["Title"] — CVision</title>
-
-    <!--
-        Шрифт DM Sans з Google Fonts.
-        preconnect пришвидшує завантаження.
-    -->
+    
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&display=swap"
           rel="stylesheet" />
-
-    <!--
-        Глобальний CSS (reset, типографіка для всього сайту).
-        Генерується через asp-append-version — додає ?v=хеш
-        для кешбастингу при деплої.
-    -->
+    
     <link rel="stylesheet" href="~/css/LadingPage.css" asp-append-version="true" />
-
-    <!--
-        Секція Styles — сюди сторінки вставляють свій CSS.
-        required: false — не кожна сторінка зобов'язана її заповнювати.
-    -->
+    
     @await RenderSectionAsync("Styles", required: false)
 </head>
 <body>
 
-<!--
-    RenderBody — тут рендериться вміст конкретної сторінки
-    (наприклад Views/Home/Index.cshtml)
--->
 @RenderBody()
 
-<!--
-    Глобальні скрипти (jQuery, Bootstrap JS, тощо).
-    Підключаємо в кінці <body> для швидшого рендеру сторінки.
--->
 <script src="~/js/site.js" asp-append-version="true"></script>
 
-<!--
-    Секція Scripts — сторінки вставляють свій JS тут.
--->
 @await RenderSectionAsync("Scripts", required: false)
 
 </body>
