@@ -1,8 +1,402 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Головна";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+@section Styles {
+    <link rel="stylesheet" href="~/css/landing.css" asp-append-version="true" />
+}
+
+<header class="site-header">
+    <a href="/" class="site-header__logo">CVision</a>
+
+    <nav class="site-header__nav">
+        <a href="#benefits">Benefits</a>
+        <a href="#specifications">Specifications</a>
+        <a href="#howto">How-to</a>
+        <a href="#contact">Contact Us</a>
+    </nav>
+
+    <div class="site-header__right">
+
+        <a asp-controller="Account"
+           asp-action="Login"
+           class="btn-login">Увійти</a>
+
+        <a asp-controller="Account"
+           asp-action="Register"
+           class="btn-signup">Зареєструватися</a>
+    </div>
+
+</header>
+
+<section class="hero">
+
+    <div class="hero__title">
+        <h1>
+            Створюй<br />
+            найкраще CV<br />
+            <strong>із CVision</strong>
+        </h1>
+    </div>
+
+    <div class="cv-card cv-card--classic">
+        
+        <div class="card-classic__top">
+            <div class="card-classic__avatar"></div>
+            <div class="card-classic__info">
+                <div class="card-line card-line--w100 card-line--dark"></div>
+                <div class="card-line card-line--w60"></div>
+                <div class="card-line card-line--w80"></div>
+            </div>
+        </div>
+
+        <div class="card-classic__body">
+            <div class="card-label">Experience</div>
+            <div class="card-line card-line--w100 card-line--dark"></div>
+            <div class="card-line card-line--w80"></div>
+            <div class="card-line card-line--w60"></div>
+
+            <div style="margin-top:4px;">
+                <div class="card-line card-line--w100 card-line--dark"></div>
+                <div class="card-line card-line--w80"></div>
+                <div class="card-line card-line--w60"></div>
+            </div>
+
+            <div class="card-label">Education</div>
+            <div class="card-line card-line--w80 card-line--dark"></div>
+            <div class="card-line card-line--w60"></div>
+
+            <div style="margin-top:3px;">
+                <div class="card-line card-line--w80 card-line--dark"></div>
+                <div class="card-line card-line--w40"></div>
+            </div>
+
+            <div class="card-label">Skills</div>
+            <div class="card-line card-line--w100"></div>
+            <div class="card-line card-line--w80"></div>
+        </div>
+    </div>
+
+    <div class="cv-card cv-card--tom">
+
+        <div class="card-header card-header--pink">
+            <div class="card-avatar card-avatar--rect"
+                 style="width:44px;height:48px;background:#c0a0a8;">TW</div>
+            <div class="card-name">
+                <h3>TOM<br />WILLIAMS</h3>
+                <p>Sales</p>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <div class="card-label">Profile</div>
+            <div class="card-line card-line--w100"></div>
+            <div class="card-line card-line--w100"></div>
+            <div class="card-line card-line--w80"></div>
+
+            <div class="card-label">Experience</div>
+            <div class="card-line card-line--w100 card-line--dark"></div>
+            <div class="card-line card-line--w60"></div>
+            <div class="card-line card-line--w100"></div>
+            <div class="card-line card-line--w80"></div>
+            <div style="margin-top:3px;">
+                <div class="card-line card-line--w100 card-line--dark"></div>
+                <div class="card-line card-line--w60"></div>
+                <div class="card-line card-line--w80"></div>
+            </div>
+
+            <div class="card-two-col" style="margin-top:5px;">
+                <div class="card-two-col__left">
+                    <div class="card-label">Skills</div>
+                    <div class="card-line card-line--w100"></div>
+                    <div class="card-line card-line--w80"></div>
+                    <div class="card-line card-line--w100"></div>
+                </div>
+                <div class="card-two-col__right">
+                    <div class="card-label">Contact</div>
+                    <div class="card-line card-line--w100"></div>
+                    <div class="card-line card-line--w80"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="cv-card cv-card--dark-left">
+        <div style="display:flex;min-height:250px;">
+
+            <div class="card-sidebar" style="width:42%;">
+                <div style="width:38px;height:38px;border-radius:50%;
+                            background:#2a4060;margin:0 auto 7px;"></div>
+                <div class="card-line card-line--w100" style="background:#2a4060;"></div>
+                <div class="card-line card-line--w60"  style="background:#2a4060;"></div>
+
+                <div class="card-label" style="color:#6a8aa0;">Contact</div>
+                <div class="card-line card-line--w100" style="background:#2a4060;"></div>
+                <div class="card-line card-line--w80"  style="background:#2a4060;"></div>
+                <div class="card-line card-line--w100" style="background:#2a4060;"></div>
+
+                <div class="card-label" style="color:#6a8aa0;">Skills</div>
+                <div class="card-line card-line--w100" style="background:#2a4060;"></div>
+                <div class="card-line card-line--w80"  style="background:#2a4060;"></div>
+                <div class="card-line card-line--w100" style="background:#2a4060;"></div>
+                <div class="card-line card-line--w60"  style="background:#2a4060;"></div>
+
+                <div class="card-label" style="color:#6a8aa0;">Languages</div>
+                <div class="card-line card-line--w80"  style="background:#2a4060;"></div>
+                <div class="card-line card-line--w60"  style="background:#2a4060;"></div>
+            </div>
+
+            <div style="flex:1;padding:8px 8px;background:#fff;">
+                <div class="card-label">Profile</div>
+                <div class="card-line card-line--w100"></div>
+                <div class="card-line card-line--w100"></div>
+                <div class="card-line card-line--w80"></div>
+
+                <div class="card-label">Work Experience</div>
+                <div class="card-line card-line--w100 card-line--dark"></div>
+                <div class="card-line card-line--w60"></div>
+                <div class="card-line card-line--w100"></div>
+                <div class="card-line card-line--w80"></div>
+                <div style="margin-top:3px;">
+                    <div class="card-line card-line--w100 card-line--dark"></div>
+                    <div class="card-line card-line--w60"></div>
+                    <div class="card-line card-line--w100"></div>
+                </div>
+
+                <div class="card-label">Education</div>
+                <div class="card-line card-line--w80 card-line--dark"></div>
+                <div class="card-line card-line--w60"></div>
+                <div class="card-line card-line--w100"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="cv-card cv-card--nina">
+
+        <div class="card-header card-header--yellow">
+            <div class="card-avatar card-avatar--rect"
+                 style="width:44px;height:50px;background:#d4a830;">NL</div>
+            <div class="card-name">
+                <h3 style="color:#1a1a1a;">Nina Lane</h3>
+                <p style="color:#444;">Graphic Designer</p>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <div class="card-two-col">
+                <div class="card-two-col__left">
+                    <div class="card-label">Profile</div>
+                    <div class="card-line card-line--w100"></div>
+                    <div class="card-line card-line--w80"></div>
+
+                    <div class="card-label">Contact</div>
+                    <div class="card-line card-line--w100"></div>
+                    <div class="card-line card-line--w80"></div>
+
+                    <div class="card-label">Skills</div>
+                    <div class="card-line card-line--w100"></div>
+                    <div class="card-line card-line--w60"></div>
+                    <div class="card-line card-line--w80"></div>
+                    <div class="card-line card-line--w100"></div>
+                </div>
+                <div class="card-two-col__right">
+                    <div class="card-label">Experience</div>
+                    <div class="card-line card-line--w100 card-line--dark"></div>
+                    <div class="card-line card-line--w80"></div>
+                    <div class="card-line card-line--w100"></div>
+                    <div class="card-line card-line--w60"></div>
+                    <div style="margin-top:3px;">
+                        <div class="card-line card-line--w100 card-line--dark"></div>
+                        <div class="card-line card-line--w80"></div>
+                        <div class="card-line card-line--w100"></div>
+                    </div>
+
+                    <div class="card-label">Education</div>
+                    <div class="card-line card-line--w80 card-line--dark"></div>
+                    <div class="card-line card-line--w60"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="cv-card cv-card--maria">
+
+        <div class="card-header card-header--rose">
+            <div class="card-avatar card-avatar--round"
+                 style="width:50px;height:50px;background:#d0a0a8;">MDC</div>
+            <div class="card-name">
+                <h3 style="font-size:.7rem;color:#2a1515;">MARIA<br />DELA CRUZ</h3>
+                <p style="color:#884455;">Marketing Specialist</p>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <div class="card-two-col">
+                <div class="card-two-col__left">
+                    <div class="card-label">Skills</div>
+                    <div class="card-line card-line--w100 card-line--dark"></div>
+                    <div class="card-line card-line--w80"></div>
+                    <div class="card-line card-line--w100"></div>
+                    <div class="card-line card-line--w60"></div>
+                    <div class="card-line card-line--w100"></div>
+
+                    <div class="card-label">Education</div>
+                    <div class="card-line card-line--w100 card-line--dark"></div>
+                    <div class="card-line card-line--w80"></div>
+                    <div style="margin-top:2px;">
+                        <div class="card-line card-line--w100 card-line--dark"></div>
+                        <div class="card-line card-line--w60"></div>
+                    </div>
+
+                    <div class="card-label">Languages</div>
+                    <div class="card-line card-line--w100"></div>
+                    <div class="card-line card-line--w80"></div>
+                </div>
+                <div class="card-two-col__right">
+                    <div class="card-label">Profile</div>
+                    <div class="card-line card-line--w100"></div>
+                    <div class="card-line card-line--w100"></div>
+                    <div class="card-line card-line--w80"></div>
+
+                    <div class="card-label">Work Experience</div>
+                    <div class="card-line card-line--w100 card-line--dark"></div>
+                    <div class="card-line card-line--w60"></div>
+                    <div class="card-line card-line--w100"></div>
+                    <div class="card-line card-line--w80"></div>
+                    <div style="margin-top:3px;">
+                        <div class="card-line card-line--w100 card-line--dark"></div>
+                        <div class="card-line card-line--w60"></div>
+                        <div class="card-line card-line--w100"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="cv-card cv-card--radhika">
+
+        <div class="card-header card-header--brown" style="align-items:flex-start;gap:8px;">
+            <div class="card-avatar card-avatar--rect"
+                 style="width:40px;height:40px;background:#6d4020;">RK</div>
+            <div class="card-name">
+                <h3 style="color:#fff;font-size:.58rem;">RADHIKA<br />KUMARI</h3>
+                <p style="color:#c09070;">Graphic Designer</p>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <div class="card-two-col">
+                <div class="card-two-col__left">
+                    <div class="card-label">Contact</div>
+                    <div class="card-line card-line--w100"></div>
+                    <div class="card-line card-line--w80"></div>
+                    <div class="card-line card-line--w100"></div>
+                    <div class="card-line card-line--w60"></div>
+
+                    <div class="card-label">Skills</div>
+                    <div class="card-line card-line--w100"></div>
+                    <div class="card-line card-line--w60"></div>
+                    <div class="card-line card-line--w80"></div>
+                    <div class="card-line card-line--w100"></div>
+
+                    <div class="card-label">Tools</div>
+                    <div class="card-line card-line--w100"></div>
+                    <div class="card-line card-line--w80"></div>
+                </div>
+                <div class="card-two-col__right">
+                    <div class="card-label">Experience</div>
+                    <div class="card-line card-line--w100 card-line--dark"></div>
+                    <div class="card-line card-line--w80"></div>
+                    <div class="card-line card-line--w100"></div>
+                    <div class="card-line card-line--w60"></div>
+                    <div style="margin-top:3px;">
+                        <div class="card-line card-line--w100 card-line--dark"></div>
+                        <div class="card-line card-line--w80"></div>
+                        <div class="card-line card-line--w100"></div>
+                        <div class="card-line card-line--w60"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="cv-card cv-card--dark-right">
+        <div style="display:flex;min-height:220px;">
+
+            <div class="card-sidebar" style="width:42%;">
+                <div style="width:34px;height:34px;border-radius:50%;
+                            background:#2a4060;margin:0 auto 6px;"></div>
+                <div class="card-line card-line--w100" style="background:#2a4060;"></div>
+                <div class="card-line card-line--w60"  style="background:#2a4060;"></div>
+
+                <div class="card-label" style="color:#6a8aa0;">Contact</div>
+                <div class="card-line card-line--w100" style="background:#2a4060;"></div>
+                <div class="card-line card-line--w80"  style="background:#2a4060;"></div>
+
+                <div class="card-label" style="color:#6a8aa0;">Skills</div>
+                <div class="card-line card-line--w100" style="background:#2a4060;"></div>
+                <div class="card-line card-line--w80"  style="background:#2a4060;"></div>
+                <div class="card-line card-line--w60"  style="background:#2a4060;"></div>
+
+                <div class="card-label" style="color:#6a8aa0;">Languages</div>
+                <div class="card-line card-line--w80"  style="background:#2a4060;"></div>
+            </div>
+
+            <div style="flex:1;padding:8px 7px;background:#1e2d3d;color:#dde8f0;">
+                <div class="card-label" style="color:#6a8aa0;">Profile</div>
+                <div class="card-line card-line--w100" style="background:#2a4060;"></div>
+                <div class="card-line card-line--w100" style="background:#2a4060;"></div>
+
+                <div class="card-label" style="color:#6a8aa0;">Work Experience</div>
+                <div class="card-line card-line--w100" style="background:#4a7090;"></div>
+                <div class="card-line card-line--w60"  style="background:#2a4060;"></div>
+                <div class="card-line card-line--w100" style="background:#2a4060;"></div>
+                <div style="margin-top:3px;">
+                    <div class="card-line card-line--w100" style="background:#4a7090;"></div>
+                    <div class="card-line card-line--w60"  style="background:#2a4060;"></div>
+                </div>
+
+                <div class="card-label" style="color:#6a8aa0;">Education</div>
+                <div class="card-line card-line--w80"  style="background:#4a7090;"></div>
+                <div class="card-line card-line--w60"  style="background:#2a4060;"></div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+<section class="content-section" id="benefits">
+    <div class="content-section__inner">
+        <h2>Benefits</h2>
+        <p>Створюй професійне CV за лічені хвилини. Обирай з десятків шаблонів і налаштовуй під себе без зайвих клопотів.</p>
+    </div>
+</section>
+
+<section class="content-section" id="specifications">
+    <div class="content-section__inner">
+        <h2>Specifications</h2>
+        <p>Підтримка PDF та DOCX, зручний drag-and-drop редактор і хмарне збереження — все в одному місці.</p>
+    </div>
+</section>
+
+<section class="content-section" id="howto">
+    <div class="content-section__inner">
+        <h2>How-to</h2>
+        <p>Три кроки: обери шаблон → заповни свої дані → завантаж готове CV у потрібному форматі.</p>
+    </div>
+</section>
+
+<section class="content-section" id="contact">
+    <div class="content-section__inner">
+        <h2>Contact Us</h2>
+        <p>
+            Маєш питання або пропозиції?<br />
+            Пиши нам: <a href="mailto:hello@cvision.app">hello@cvision.app</a>
+        </p>
+    </div>
+</section>
+
+<footer class="site-footer">
+    <p>&copy; @DateTime.Now.Year CVision. Всі права захищені.</p>
+</footer>
