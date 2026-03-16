@@ -7,7 +7,7 @@ namespace CVision.Models.ViewModels.AuthViewModels
         // ── Ім'я ──────────────────────────────────────────────
         [Required(ErrorMessage = "Введіть ваше ім'я")]
         [StringLength(100, MinimumLength = 2, ErrorMessage = "Ім'я: від 2 до 100 символів")]
-        public string FullName { get; set; } = string.Empty;
+        public string UserName { get; set; } = string.Empty;
 
         // ── Email ─────────────────────────────────────────────
         [Required(ErrorMessage = "Введіть електронну пошту")]

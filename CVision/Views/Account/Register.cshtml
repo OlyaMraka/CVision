@@ -53,7 +53,7 @@
 
                 <!-- ── Поле: Повне ім'я ───────────────────── -->
                 <div class="form-group">
-                    <label class="form-group__label" asp-for="FullName">Повне ім'я</label>
+                    <label class="form-group__label" asp-for="UserName">Повне ім'я</label>
                     <div class="form-group__input-wrap">
                         <span class="form-group__icon-left" aria-hidden="true">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
@@ -63,13 +63,13 @@
                                 <circle cx="12" cy="7" r="4"/>
                             </svg>
                         </span>
-                        <input asp-for="FullName"
+                        <input asp-for="UserName"
                                class="form-group__input form-group__input--no-right"
                                type="text"
                                placeholder="Олександр Петренко"
                                autocomplete="name" />
                     </div>
-                    <span asp-validation-for="FullName" class="form-group__error"></span>
+                    <span asp-validation-for="UserName" class="form-group__error"></span>
                 </div>
 
                 <!-- ── Поле: Електронна пошта ─────────────── -->
