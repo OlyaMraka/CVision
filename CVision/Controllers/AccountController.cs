@@ -1,4 +1,5 @@
 using CVision.BLL.Commands.Users.Login;
+using CVision.BLL.Commands.Users.ConfirmEmail;
 using CVision.BLL.Commands.Users.Register;
 using CVision.BLL.DTOs.Users;
 using Microsoft.AspNetCore.Mvc;
@@ -18,9 +19,62 @@ namespace CVision.Controllers
         }
 
         [HttpGet]
-        public IActionResult ConfirmEmail()
+        public IActionResult EmailConfirm(string? email = null)
         {
-            return View(new ConfirmEmailViewModel());
+            return View("ConfirmEmail", new ConfirmEmailViewModel
+            {
+                Email = email ?? string.Empty,
+            });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ConfirmEmail(int? userId = null, string? token = null)
+        {
+            bool hasUserId = userId.HasValue;
+            bool hasToken = !string.IsNullOrWhiteSpace(token);
+
+            if (!hasUserId && !hasToken)
+            {
+                return RedirectToAction(nameof(EmailConfirm));
+            }
+
+            if (hasUserId ^ hasToken)
+            {
+                return RedirectToAction(nameof(RegistrationConfirmed), new { isConfirmed = false, errorMessage = "Посилання для підтвердження недійсне." });
+            }
+
+            // Підтвердження виконуємо тільки коли є обидва параметри callback-посилання.
+            var requestDto = new ConfirmEmailRequestDto
+            {
+                UserId = userId!.Value,
+                Token = token!.Replace(' ', '+'),
+            };
+
+            var result = await mediator.Send(new ConfirmEmailCommand(requestDto));
+
+            if (result.IsSuccess)
+            {
+                return RedirectToAction(nameof(RegistrationConfirmed), new { isConfirmed = true });
+            }
+
+            string errorMessage = result.Errors.FirstOrDefault()?.Message
+                ?? "Не вдалося підтвердити email. Спробуйте ще раз.";
+
+            return RedirectToAction(nameof(RegistrationConfirmed), new { isConfirmed = false, errorMessage });
+        }
+
+        [HttpGet]
+        public IActionResult RegistrationConfirmed(bool? isConfirmed = null, string? errorMessage = null)
+        {
+            // Пряме відкриття без параметрів — редірект на головну
+            if (isConfirmed is null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            ViewData["IsConfirmed"] = isConfirmed.Value;
+            ViewData["ConfirmationError"] = errorMessage;
+            return View();
         }
 
         [HttpPost]
@@ -55,8 +109,12 @@ namespace CVision.Controllers
             };
 
             var response = await mediator.Send(new RegisterUserCommand(requestDto));
-            var confirmModel = new ConfirmEmailViewModel { Email = model.Email };
-            return View(nameof(ConfirmEmail), confirmModel);
+            return RedirectToAction(nameof(EmailConfirm), new { email = model.Email });
+        }
+        [HttpGet]
+        public IActionResult Guest()
+        {
+            return RedirectToAction("hub", "Home");
         }
     }
 }

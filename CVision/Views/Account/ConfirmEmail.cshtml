@@ -7,34 +7,27 @@
 
 @section Styles {
     <link rel="stylesheet" href="~/css/LadingPage.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/auth.css"       asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/auth.css" asp-append-version="true" />
 }
 
 <div class="hero" style="display:flex; align-items:center; justify-content:center;">
 
     <div class="modal-overlay is-open" id="confirmOverlay">
-        <div class="modal"
-             role="dialog"
-             aria-modal="true"
-             aria-labelledby="confirmTitle"
+        <div class="modal"        role="dialog"        aria-modal="true"        aria-labelledby="confirmTitle"
              style="text-align:center; max-width:420px;">
 
-            <button class="modal__close"
-                    type="button"
-                    onclick="window.location.href='/'"
-                    aria-label="Закрити">
+            <button class="modal__close" type="button"        onclick="window.location.href='/'"               aria-label="Закрити">
                 &#x2715;
             </button>
 
             <div style="width:72px;height:72px;border-radius:50%;
-                        background:#fef3e2;
-                        display:flex;align-items:center;justify-content:center;
-                        margin:0 auto 1.5rem;">
-                <svg width="32" height="32" viewBox="0 0 24 24"
-                     fill="none" stroke="#c47c2a" stroke-width="1.8"
+                background:#fef3e2;
+                display:flex;align-items:center;justify-content:center;
+                margin:0 auto 1.5rem;">
+                <svg width="32" height="32" viewBox="0 0 24 24"        fill="none" stroke="#c47c2a" stroke-width="1.8"
                      stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="2" y="4" width="20" height="16" rx="2"/>
-                    <path d="m2 7 10 7 10-7"/>
+                    <rect x="2" y="4" width="20" height="16" rx="2" />
+                    <path d="m2 7 10 7 10-7" />
                 </svg>
             </div>
 
@@ -49,10 +42,10 @@
             @if (!string.IsNullOrEmpty(Model.Email))
             {
                 <div style="display:inline-block;
-                            background:#fef3e2;color:#c47c2a;
-                            font-weight:700;font-size:.9rem;
-                            border-radius:8px;padding:.35rem 1rem;
-                            margin-bottom:1.4rem;word-break:break-all;">
+                    background:#fef3e2;color:#c47c2a;
+                    font-weight:700;font-size:.9rem;
+                    border-radius:8px;padding:.35rem 1rem;
+                    margin-bottom:1.4rem;word-break:break-all;">
                     @Model.Email
                 </div>
             }
@@ -62,10 +55,8 @@
                 або зачекайте кілька хвилин.
             </p>
 
-            <a href="/"
-               class="btn-auth"
-               style="text-decoration:none;display:flex;
-                      align-items:center;justify-content:center;">
+            <a href="/"           class="btn-auth"               style="text-decoration:none;display:flex;
+                align-items:center;justify-content:center;">
                 На головну
             </a>
 
@@ -77,10 +68,10 @@
 
 @section Scripts {
     <script>
-        document.getElementById('confirmOverlay').addEventListener('click', function (e) {
-            if (e.target === this) {
-                window.location.href = '/';
-            }
-        });
+            document.getElementById('confirmOverlay').addEventListener('click', function (e) {
+                if (e.target === this) {
+                    window.location.href = '/';
+                }
+            });
     </script>
 }
