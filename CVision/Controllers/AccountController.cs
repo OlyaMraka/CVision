@@ -1,3 +1,4 @@
+using CVision.BLL.Commands.Users.Login;
 using CVision.BLL.Commands.Users.Register;
 using CVision.BLL.DTOs.Users;
 using Microsoft.AspNetCore.Mvc;
@@ -24,9 +25,15 @@ namespace CVision.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Login(LogInViewModel model, string? returnUrl = null)
+        public async Task<IActionResult> Login(LogInViewModel model, string? returnUrl = null)
         {
-            return View(model);
+            LoginUserRequestDto requestDto = new LoginUserRequestDto()
+            {
+                Email = model.Email,
+                Password = model.Password,
+            };
+            var response = await mediator.Send(new LoginUserCommand(requestDto));
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpGet]
@@ -50,12 +57,6 @@ namespace CVision.Controllers
             var response = await mediator.Send(new RegisterUserCommand(requestDto));
             var confirmModel = new ConfirmEmailViewModel { Email = model.Email };
             return View(nameof(ConfirmEmail), confirmModel);
-        }
-
-        [HttpGet]
-        public IActionResult Guest()
-        {
-            return RedirectToAction("Index", "Template");
         }
     }
 }
