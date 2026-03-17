@@ -110,6 +110,11 @@ namespace CVision.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
             RegisterUserRequestDto requestDto = new RegisterUserRequestDto
             {
                 UserName = model.UserName,
@@ -119,6 +124,13 @@ namespace CVision.Controllers
             };
 
             var response = await mediator.Send(new RegisterUserCommand(requestDto));
+
+            if (response.IsFailed)
+            {
+                ModelState.AddModelError(string.Empty, response.Errors.FirstOrDefault()?.Message ?? "Не вдалося зареєструвати акаунт.");
+                return View(model);
+            }
+
             return RedirectToAction(nameof(EmailConfirm), new { email = model.Email });
         }
 

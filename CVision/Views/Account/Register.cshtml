@@ -31,6 +31,11 @@
 
                 @Html.AntiForgeryToken()
 
+                 <div asp-validation-summary="ModelOnly"
+                     class="form-alert form-alert--error"
+                     role="alert">
+                 </div>
+
                 <div class="form-group">
                     <label class="form-group__label" asp-for="UserName">Повне ім'я</label>
                     <div class="form-group__input-wrap">
@@ -116,6 +121,9 @@
                                class="form-group__input"
                                type="password"
                                placeholder="Мінімум 8 символів"
+                               minlength="8"
+                               pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                               title="Мінімум 8 символів, 1 велика літера, 1 мала літера і 1 цифра"
                                autocomplete="new-password" />
                         <button class="form-group__toggle-pass"
                                 type="button"
@@ -133,13 +141,12 @@
                         </button>
                     </div>
                     <span asp-validation-for="Password" class="form-group__error"></span>
+                    <p class="form-group__hint">
+                        Пароль має містити щонайменше 8 символів, одну велику літеру, одну малу літеру та одну цифру.
+                    </p>
                 </div>
 
                 <button class="btn-auth" type="submit">Зареєструватися</button>
-
-                <span asp-validation-summary="ModelOnly"
-                      class="form-group__error"
-                      style="display:block;text-align:center;margin-top:.6rem;"></span>
 
             </form>
 
