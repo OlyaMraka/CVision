@@ -5,11 +5,13 @@ using CVision.BLL.DTOs.Users;
 using Microsoft.AspNetCore.Mvc;
 using CVision.Models.ViewModels.AuthViewModels;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
+using CVision.DAL.Entities;
 
 
 namespace CVision.Controllers
 {
-    public class AccountController(IMediator mediator) : Controller
+    public class AccountController(IMediator mediator, SignInManager<ApplicationUser> signInManager) : Controller
     {
         [HttpGet]
         public IActionResult Login(string? returnUrl = null)
@@ -87,7 +89,15 @@ namespace CVision.Controllers
                 Password = model.Password,
             };
             var response = await mediator.Send(new LoginUserCommand(requestDto));
-            return RedirectToAction("Index", "Home");
+
+            if (response.IsSuccess)
+            {
+                await signInManager.SignInAsync(response.Value, isPersistent: false);
+                return RedirectToAction("hub", "Home");
+            }
+
+            ModelState.AddModelError(string.Empty, response.Errors.FirstOrDefault()?.Message ?? "Невдалось увійти. Перевірте email та пароль.");
+            return View(model);
         }
 
         [HttpGet]
@@ -111,6 +121,14 @@ namespace CVision.Controllers
             var response = await mediator.Send(new RegisterUserCommand(requestDto));
             return RedirectToAction(nameof(EmailConfirm), new { email = model.Email });
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Logout()
+        {
+            await signInManager.SignOutAsync();
+            return RedirectToAction(nameof(Login));
+        }
+
         [HttpGet]
         public IActionResult Guest()
         {

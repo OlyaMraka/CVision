@@ -200,6 +200,10 @@
     background: linear-gradient(180deg, #d7b287 0%, #bf8046 100%);
 }
 
+.dashboard-account-card__image-wrap--black {
+    background: var(--color-bg, #f5ead8);
+}
+
 .dashboard-profile-preview__image,
 .dashboard-account-card__image {
     display: block;
@@ -300,6 +304,14 @@
     align-items: start;
 }
 
+.dashboard-panel--profile-spacer {
+    min-height: 520px;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    backdrop-filter: none;
+}
+
 .dashboard-panel {
     border-radius: 32px;
     padding: 1.8rem;
@@ -366,6 +378,20 @@
     border-color: rgba(196, 124, 42, 0.8);
     box-shadow: 0 0 0 4px rgba(196, 124, 42, 0.12);
     background: rgba(255, 255, 255, 0.9);
+}
+
+.dashboard-field__display {
+    width: 100%;
+    min-height: 52px;
+    border: 1.5px solid rgba(151, 124, 92, 0.22);
+    border-radius: 18px;
+    padding: 0.95rem 1rem;
+    background: rgba(255, 255, 255, 0.72);
+    font-family: var(--font-main);
+    font-size: 0.96rem;
+    color: #1a1a1a;
+    display: flex;
+    align-items: center;
 }
 
 .dashboard-field__hint {
@@ -440,11 +466,47 @@
     word-break: break-word;
 }
 
+.dashboard-account-card__actions {
+    margin-top: 1.5rem;
+    padding-top: 1.2rem;
+    border-top: 1px solid rgba(151, 124, 92, 0.15);
+    display: flex;
+    justify-content: center;
+}
+
+.dashboard-logout-btn {
+    display: inline-block;
+    padding: 0.85rem 1.8rem;
+    border-radius: 999px;
+    background: rgba(197, 48, 48, 0.88);
+    color: #ffffff;
+    font-family: var(--font-main);
+    font-size: 0.92rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+    text-align: center;
+}
+
+.dashboard-logout-btn:hover {
+    background: rgba(197, 48, 48, 1);
+    box-shadow: 0 8px 20px rgba(197, 48, 48, 0.24);
+    transform: translateY(-1px);
+}
+
+.dashboard-logout-btn:active {
+    transform: translateY(0);
+}
+
 @media (max-width: 1100px) {
     .dashboard-hero-card,
     .dashboard-main--user,
     .dashboard-advice-grid {
         grid-template-columns: 1fr;
+    }
+
+    .dashboard-panel--profile-spacer {
+        display: none;
     }
 
     .dashboard-nav {
