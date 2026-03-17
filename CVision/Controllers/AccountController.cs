@@ -30,26 +30,12 @@ namespace CVision.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ConfirmEmail(int? userId = null, string? token = null)
+        public async Task<IActionResult> ConfirmEmail(int userId, string token)
         {
-            bool hasUserId = userId.HasValue;
-            bool hasToken = !string.IsNullOrWhiteSpace(token);
-
-            if (!hasUserId && !hasToken)
-            {
-                return RedirectToAction(nameof(EmailConfirm));
-            }
-
-            if (hasUserId ^ hasToken)
-            {
-                return RedirectToAction(nameof(RegistrationConfirmed), new { isConfirmed = false, errorMessage = "Посилання для підтвердження недійсне." });
-            }
-
-            // Підтвердження виконуємо тільки коли є обидва параметри callback-посилання.
             var requestDto = new ConfirmEmailRequestDto
             {
-                UserId = userId!.Value,
-                Token = token!.Replace(' ', '+'),
+                UserId = userId,
+                Token = token,
             };
 
             var result = await mediator.Send(new ConfirmEmailCommand(requestDto));
@@ -68,7 +54,6 @@ namespace CVision.Controllers
         [HttpGet]
         public IActionResult RegistrationConfirmed(bool? isConfirmed = null, string? errorMessage = null)
         {
-            // Пряме відкриття без параметрів — редірект на головну
             if (isConfirmed is null)
             {
                 return RedirectToAction("Index", "Home");
