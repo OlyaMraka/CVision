@@ -1,0 +1,132 @@
+@model CVision.Models.ViewModels.ProfileViewModels.UserWindowViewModel
+
+@{
+    ViewData["Title"] = "User Window";
+    ViewData["DashboardCurrentPage"] = "user";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string? successMessage = TempData["UserWindowSuccess"] as string;
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/HubUser.css" asp-append-version="true" />
+}
+
+<div class="dashboard-page dashboard-page--user">
+    <div class="dashboard-page__gradient"></div>
+
+    <partial name="~/Views/Shared/_DashboardHeader.cshtml" />
+
+    <main class="dashboard-main dashboard-main--user">
+        <section class="dashboard-panel dashboard-panel--profile">
+            <div class="dashboard-panel__intro">
+                <span class="dashboard-badge">User account</span>
+                <h1 class="dashboard-title">Керуйте особистими даними профілю.</h1>
+                <p class="dashboard-subtitle">
+                    Тут можна редагувати базові поля акаунта й одразу зберігати зміни. Для кожного поля показані обмеження, щоб уникнути помилок введення.
+                </p>
+            </div>
+
+            @if (!string.IsNullOrWhiteSpace(successMessage))
+            {
+                <div class="dashboard-alert dashboard-alert--success" role="status">
+                    @successMessage
+                </div>
+            }
+
+            <form asp-controller="Home"
+                  asp-action="user"
+                  method="post"
+                  class="dashboard-form"
+                  novalidate>
+
+                @Html.AntiForgeryToken()
+
+                <div asp-validation-summary="ModelOnly" class="dashboard-form__summary"></div>
+
+                <div class="dashboard-field-grid">
+                    <div class="dashboard-field">
+                        <label asp-for="UserName" class="dashboard-field__label">Повне ім'я</label>
+                        <input asp-for="UserName"
+                               class="dashboard-field__input"
+                               type="text"
+                               placeholder="Олександр Петренко"
+                               autocomplete="name" />
+                        <p class="dashboard-field__hint">Обмеження: від 2 до 100 символів.</p>
+                        <span asp-validation-for="UserName" class="dashboard-field__error"></span>
+                    </div>
+
+                    <div class="dashboard-field">
+                        <label asp-for="Email" class="dashboard-field__label">Електронна пошта</label>
+                        <input asp-for="Email"
+                               class="dashboard-field__input"
+                               type="email"
+                               placeholder="name@example.com"
+                               autocomplete="email" />
+                        <p class="dashboard-field__hint">Обмеження: валідний email у форматі `name@example.com`.</p>
+                        <span asp-validation-for="Email" class="dashboard-field__error"></span>
+                    </div>
+
+                    <div class="dashboard-field dashboard-field--full">
+                        <label asp-for="PhoneNumber" class="dashboard-field__label">Номер телефону</label>
+                        <input asp-for="PhoneNumber"
+                               class="dashboard-field__input"
+                               type="tel"
+                               placeholder="+380 XX XXX XX XX"
+                               autocomplete="tel" />
+                        <p class="dashboard-field__hint">Обмеження: від 7 до 20 символів, дозволені `+`, цифри, пробіли, дужки та дефіси.</p>
+                        <span asp-validation-for="PhoneNumber" class="dashboard-field__error"></span>
+                    </div>
+                </div>
+
+                <div class="dashboard-form__footer">
+                    <div class="dashboard-member-since">
+                        <span class="dashboard-member-since__label">Member since</span>
+                        <strong class="dashboard-member-since__value">@Model.MemberSince</strong>
+                    </div>
+
+                    <button type="submit" class="dashboard-submit-btn">Зберегти зміни</button>
+                </div>
+            </form>
+        </section>
+
+        <aside class="dashboard-panel dashboard-panel--preview">
+            <div class="dashboard-account-card">
+                <div class="dashboard-account-card__image-wrap">
+                    <img src="~/images/user-profile-art.svg"
+                         asp-append-version="true"
+                         alt="Зображення профілю користувача"
+                         class="dashboard-account-card__image" />
+                </div>
+
+                <div class="dashboard-account-card__body">
+                    <span class="dashboard-card-eyebrow">Profile snapshot</span>
+                    <h2>@Model.UserName</h2>
+                    <p>@Model.StatusLabel</p>
+
+                    <dl class="dashboard-account-card__meta">
+                        <div>
+                            <dt>Email</dt>
+                            <dd>@Model.Email</dd>
+                        </div>
+                        <div>
+                            <dt>Phone</dt>
+                            <dd>@Model.PhoneNumber</dd>
+                        </div>
+                        <div>
+                            <dt>Hub</dt>
+                            <dd>
+                                <a asp-controller="Home" asp-action="hub" class="dashboard-inline-link">
+                                    Повернутись до hub
+                                </a>
+                            </dd>
+                        </div>
+                    </dl>
+                </div>
+            </div>
+        </aside>
+    </main>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

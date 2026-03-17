@@ -1,0 +1,41 @@
+@{
+    string currentPage = (string?)ViewData["DashboardCurrentPage"] ?? string.Empty;
+}
+
+<header class="dashboard-header">
+    <a asp-controller="Home"
+       asp-action="hub"
+       class="dashboard-header__logo">CVision</a>
+
+    <nav class="dashboard-nav" aria-label="Основна навігація">
+        <button class="dashboard-nav__item @(currentPage == "hub" ? "is-active" : string.Empty)"
+                type="button"
+                disabled>
+            AI поради
+        </button>
+        <button class="dashboard-nav__item"
+                type="button"
+                disabled>
+            Поради
+        </button>
+        <button class="dashboard-nav__item"
+                type="button"
+                disabled>
+            Завантажити CV
+        </button>
+        <button class="dashboard-nav__item"
+                type="button"
+                disabled>
+            Подивитись на CV
+        </button>
+    </nav>
+
+    <a asp-controller="Home"
+       asp-action="user"
+       class="dashboard-header__user @(currentPage == "user" ? "is-active" : string.Empty)"
+       aria-label="Профіль користувача">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 12a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9Zm0 2.25c-4.14 0-7.5 2.77-7.5 6.19 0 .31.25.56.56.56h13.88c.31 0 .56-.25.56-.56 0-3.42-3.36-6.19-7.5-6.19Z" />
+        </svg>
+    </a>
+</header>

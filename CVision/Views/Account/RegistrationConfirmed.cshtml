@@ -1,0 +1,85 @@
+@{
+    bool isConfirmed = (bool?)ViewData["IsConfirmed"] ?? true;
+    string? errorMessage = ViewData["ConfirmationError"] as string;
+
+    ViewData["Title"] = isConfirmed ? "Реєстрацію підтверджено" : "Підтвердження не виконано";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/LadingPage.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/auth.css" asp-append-version="true" />
+}
+
+<div class="hero" style="display:flex;align-items:center;justify-content:center;">
+    <div class="modal-overlay is-open" id="registrationConfirmedOverlay">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="registrationConfirmedTitle"
+             style="text-align:center; max-width:440px;">
+            <button class="modal__close"          type="button"       onclick="window.location.href='/'"    aria-label="Закрити">
+                &#x2715;
+            </button>
+
+            @if (isConfirmed)
+            {
+                <div style="width:72px;height:72px;border-radius:50%;background:#e9f9ef;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;">
+                    <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#169a4c" stroke-width="2.2"
+                         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M20 6 9 17l-5-5" />
+                    </svg>
+                </div>
+            }
+            else
+            {
+                <div style="width:72px;height:72px;border-radius:50%;background:#fff2f2;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;">
+                    <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#d64545" stroke-width="2.2"
+                         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <circle cx="12" cy="12" r="10" />
+                        <path d="M15 9 9 15" />
+                        <path d="m9 9 6 6" />
+                    </svg>
+                </div>
+            }
+
+            <h1 class="modal__title" id="registrationConfirmedTitle">
+                @(isConfirmed ? "Email успішно підтверджено" : "Не вдалося підтвердити email")
+            </h1>
+            <p class="modal__subtitle" style="margin-bottom:1.2rem;">
+                @(isConfirmed
+                    ? "Ваш акаунт активований. Тепер ви можете увійти та продовжити роботу в CVision."
+                    : (!string.IsNullOrWhiteSpace(errorMessage)
+                        ? errorMessage
+                        : "Посилання для підтвердження недійсне або вже використане."))
+            </p>
+
+            @if (isConfirmed)
+            {
+                <a asp-controller="Account"      asp-action="Login"  class="btn-auth"
+                       style="text-decoration:none;display:flex;align-items:center;justify-content:center;">
+                    Увійти в акаунт
+                </a>
+            }
+            else
+            {
+                <a asp-controller="Account"            asp-action="Register"        class="btn-auth"
+                       style="text-decoration:none;display:flex;align-items:center;justify-content:center;">
+                    Повернутися до реєстрації
+                </a>
+            }
+
+            <p class="modal__footer-text" style="margin-top:1.2rem;">
+                Або
+                <a asp-controller="Home" asp-action="Index">перейти на головну</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+            document.getElementById('registrationConfirmedOverlay').addEventListener('click', function (e) {
+                if (e.target === this) {
+                    window.location.href = '/';
+                }
+            });
+    </script>
+}
