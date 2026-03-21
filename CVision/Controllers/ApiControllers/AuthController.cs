@@ -1,13 +1,17 @@
 using AutoMapper;
 using CVision.BLL.Commands.Users.ConfirmEmail;
+using CVision.BLL.Commands.Users.ForgotPassword;
 using CVision.BLL.Commands.Users.Login;
 using CVision.BLL.Commands.Users.Register;
+using CVision.BLL.Commands.Users.ResetPassword;
+using CVision.BLL.Commands.Users.UpdatePassword;
 using CVision.BLL.DTOs.Users;
 using CVision.DAL.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using FluentResults;
+using System.Security.Claims;
 
 namespace CVision.Controllers;
 
@@ -57,5 +61,32 @@ public class AuthController(
     public async Task<IActionResult> ConfirmEmailAsync(ConfirmEmailRequestDto requestDto)
     {
         return HandleResult(await Mediator.Send(new ConfirmEmailCommand(requestDto)));
+    }
+
+    [Authorize]
+    [HttpPost("update-password")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> UpdatePasswordAsync(UpdatePasswordRequestDto requestDto)
+    {
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        return HandleResult(await Mediator.Send(new UpdatePasswordCommand(userId, requestDto)));
+    }
+
+    [HttpPost("forgot-password")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> ForgotPasswordAsync(ForgotPasswordRequestDto requestDto)
+    {
+        await Mediator.Send(new ForgotPasswordCommand(requestDto));
+        return Ok(new { message = "If the email exists, a password reset link has been sent." });
+    }
+
+    [HttpPost("reset-password")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> ResetPasswordAsync(ResetPasswordRequestDto requestDto)
+    {
+        return HandleResult(await Mediator.Send(new ResetPasswordCommand(requestDto)));
     }
 }
