@@ -5,6 +5,7 @@ using CVision.DAL.Repositories.Interfaces.Base;
 using CVision.DAL.Repositories.Realizations.Base;
 using CVision.BLL.Interfaces;
 using CVision.BLL.Mappers;
+using CVision.BLL.Options;
 using CVision.BLL.Services;
 using CVision.BLL.Validators.Users;
 using CVision.Extensions;
@@ -22,11 +23,26 @@ builder.Services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
 
 builder.Services.AddRepositoriesFromAssembly(typeof(RepositoryWrapper).Assembly);
 
+builder.Services.AddScoped<ITextExtractor, PdfTextExtractor>();
+builder.Services.AddScoped<ITextExtractor, DocxTextExtractor>();
+builder.Services.AddScoped<ITextExtractor, ImageTextExtractor>();
+
+builder.Services.AddScoped<ICvParserService, CvParserService>();
 builder.Services.AddScoped<IEmailService, SmtpEmailService>();
 builder.Services.AddAutoMapper(typeof(UsersProfile));
 builder.Services.AddValidatorsFromAssembly(typeof(RegisterUserValidator).Assembly);
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(RegisterUserCommand).Assembly));
 
+var cloudinaryOptions = builder.Configuration
+    .GetSection("CloudinarySettings")
+    .Get<CloudinaryOptions>();
+
+builder.Services.AddScoped<IFileService>(sp => new CloudinaryFileService(cloudinaryOptions!));
+
+string geminiApiKey = builder.Configuration["GeminiApiKey"]
+                      ?? throw new Exception("Gemini API Key is missing!");
+
+builder.Services.AddScoped<IAIService>(sp => new GeminiService(geminiApiKey));
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddSession();
