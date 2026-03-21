@@ -129,4 +129,81 @@ public class SmtpEmailService : IEmailService
 
         await SendEmailAsync(email, "Підтвердження реєстрації в CVision", htmlBody);
     }
+
+    public async Task SendPasswordResetEmailAsync(string email, string resetLink)
+    {
+        var htmlBody = $@"
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset='utf-8'>
+            <style>
+                .container {{
+                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                    max-width: 500px;
+                    margin: 40px auto;
+                    padding: 0;
+                    border-radius: 16px;
+                    overflow: hidden;
+                    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+                    border: 1px solid #e1e8ed;
+                }}
+                .header {{
+                    background: linear-gradient(135deg, #0984e3 0%, #6c5ce7 100%);
+                    padding: 40px 20px;
+                    text-align: center;
+                    color: white;
+                }}
+                .content {{
+                    padding: 40px 30px;
+                    background-color: white;
+                    text-align: center;
+                    color: #2d3436;
+                }}
+                .button {{
+                    display: inline-block;
+                    padding: 16px 32px;
+                    background-color: #0984e3;
+                    color: #ffffff !important;
+                    text-decoration: none;
+                    border-radius: 12px;
+                    font-weight: bold;
+                    margin: 30px 0;
+                    transition: background-color 0.3s;
+                }}
+                .footer {{
+                    padding: 20px;
+                    background-color: #f9f9f9;
+                    text-align: center;
+                    font-size: 12px;
+                    color: #b2bec3;
+                }}
+                h1 {{ margin: 0; font-size: 28px; letter-spacing: 1px; }}
+                p {{ line-height: 1.6; font-size: 16px; }}
+            </style>
+        </head>
+        <body>
+            <div class='container'>
+                <div class='header'>
+                    <h1>CVision</h1>
+                </div>
+                <div class='content'>
+                    <h2>Скидання пароля</h2>
+                    <p>Ми отримали запит на скидання пароля для вашого акаунту. Натисніть кнопку нижче, щоб встановити новий пароль.</p>
+
+                    <a href='{resetLink}' class='button'>Скинути пароль</a>
+
+                    <p style='font-size: 14px; color: #636e72;'>Якщо ви не запитували скидання пароля, проігноруйте цей лист.</p>
+                    <p style='font-size: 12px; word-break: break-all; color: #0984e3;'>{resetLink}</p>
+                </div>
+                <div class='footer'>
+                    <p>&copy; 2026 CVision Project &bull; Future of Recruitment</p>
+                    <p>Ви отримали цей лист, тому що було запитано скидання пароля.</p>
+                </div>
+            </div>
+        </body>
+        </html>";
+
+        await SendEmailAsync(email, "Скидання пароля в CVision", htmlBody);
+    }
 }
