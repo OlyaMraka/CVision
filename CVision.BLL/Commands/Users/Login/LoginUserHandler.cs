@@ -37,6 +37,11 @@ public class LoginUserHandler(
             return Result.Fail<ApplicationUser>(UserConstants.UserLogInError);
         }
 
+        if (!user.EmailConfirmed)
+        {
+            return Result.Fail<ApplicationUser>(UserConstants.UserLogInError);
+        }
+
         return Result.Ok(user);
     }
 }
