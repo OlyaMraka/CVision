@@ -51,7 +51,7 @@ public class RegisterUserHandler : IRequestHandler<RegisterUserCommand, Result<R
 
         var emailToken = await _userManager.GenerateEmailConfirmationTokenAsync(newUser);
 
-        var confirmationLink = $"https://translate.google.com/?hl=uk&sl=uk&tl=en&op=translate";
+        var confirmationLink = $"http://localhost:5128/Account/ConfirmEmail?userId={newUser.Id}&token={Uri.EscapeDataString(emailToken)}";
 
         await _emailService.SendConfirmationEmailAsync(newUser.Email!, confirmationLink);
 

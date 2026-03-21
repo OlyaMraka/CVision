@@ -1,14 +1,17 @@
 using CVision.BLL.Commands.Users.Login;
+using CVision.BLL.Commands.Users.ConfirmEmail;
 using CVision.BLL.Commands.Users.Register;
 using CVision.BLL.DTOs.Users;
 using Microsoft.AspNetCore.Mvc;
 using CVision.Models.ViewModels.AuthViewModels;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
+using CVision.DAL.Entities;
 
 
 namespace CVision.Controllers
 {
-    public class AccountController(IMediator mediator) : Controller
+    public class AccountController(IMediator mediator, SignInManager<ApplicationUser> signInManager) : Controller
     {
         [HttpGet]
         public IActionResult Login(string? returnUrl = null)
@@ -18,9 +21,47 @@ namespace CVision.Controllers
         }
 
         [HttpGet]
-        public IActionResult ConfirmEmail()
+        public IActionResult EmailConfirm(string? email = null)
         {
-            return View(new ConfirmEmailViewModel());
+            return View("ConfirmEmail", new ConfirmEmailViewModel
+            {
+                Email = email ?? string.Empty,
+            });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ConfirmEmail(int userId, string token)
+        {
+            var requestDto = new ConfirmEmailRequestDto
+            {
+                UserId = userId,
+                Token = token,
+            };
+
+            var result = await mediator.Send(new ConfirmEmailCommand(requestDto));
+
+            if (result.IsSuccess)
+            {
+                return RedirectToAction(nameof(RegistrationConfirmed), new { isConfirmed = true });
+            }
+
+            string errorMessage = result.Errors.FirstOrDefault()?.Message
+                ?? "Не вдалося підтвердити email. Спробуйте ще раз.";
+
+            return RedirectToAction(nameof(RegistrationConfirmed), new { isConfirmed = false, errorMessage });
+        }
+
+        [HttpGet]
+        public IActionResult RegistrationConfirmed(bool? isConfirmed = null, string? errorMessage = null)
+        {
+            if (isConfirmed is null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            ViewData["IsConfirmed"] = isConfirmed.Value;
+            ViewData["ConfirmationError"] = errorMessage;
+            return View();
         }
 
         [HttpPost]
@@ -33,7 +74,15 @@ namespace CVision.Controllers
                 Password = model.Password,
             };
             var response = await mediator.Send(new LoginUserCommand(requestDto));
-            return RedirectToAction("Index", "Home");
+
+            if (response.IsSuccess)
+            {
+                await signInManager.SignInAsync(response.Value, isPersistent: false);
+                return RedirectToAction("hub", "Home");
+            }
+
+            ModelState.AddModelError(string.Empty, response.Errors.FirstOrDefault()?.Message ?? "Невдалось увійти. Перевірте email та пароль.");
+            return View(model);
         }
 
         [HttpGet]
@@ -46,6 +95,11 @@ namespace CVision.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
             RegisterUserRequestDto requestDto = new RegisterUserRequestDto
             {
                 UserName = model.UserName,
@@ -55,8 +109,27 @@ namespace CVision.Controllers
             };
 
             var response = await mediator.Send(new RegisterUserCommand(requestDto));
-            var confirmModel = new ConfirmEmailViewModel { Email = model.Email };
-            return View(nameof(ConfirmEmail), confirmModel);
+
+            if (response.IsFailed)
+            {
+                ModelState.AddModelError(string.Empty, response.Errors.FirstOrDefault()?.Message ?? "Не вдалося зареєструвати акаунт.");
+                return View(model);
+            }
+
+            return RedirectToAction(nameof(EmailConfirm), new { email = model.Email });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Logout()
+        {
+            await signInManager.SignOutAsync();
+            return RedirectToAction(nameof(Login));
+        }
+
+        [HttpGet]
+        public IActionResult Guest()
+        {
+            return RedirectToAction("hub", "Home");
         }
     }
 }

@@ -1,0 +1,60 @@
+@model CVision.Models.ViewModels.ProfileViewModels.UserWindowViewModel
+
+@{
+    ViewData["Title"] = "User Window";
+    ViewData["DashboardCurrentPage"] = "user";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string? successMessage = TempData["UserWindowSuccess"] as string;
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/HubUser.css" asp-append-version="true" />
+}
+
+<div class="dashboard-page dashboard-page--user">
+    <div class="dashboard-page__gradient"></div>
+
+    <partial name="~/Views/Shared/_DashboardHeader.cshtml" />
+
+    <main class="dashboard-main dashboard-main--user">
+        <section class="dashboard-panel dashboard-panel--profile-spacer" aria-hidden="true"></section>
+
+        <aside class="dashboard-panel dashboard-panel--preview">
+            <div class="dashboard-account-card">
+                <div class="dashboard-account-card__image-wrap dashboard-account-card__image-wrap--black">
+                    <img src="~/images/user_1.png" asp-append-version="true" alt="Зображення профілю користувача"
+                         class="dashboard-account-card__image" />
+                </div>
+
+                <div class="dashboard-account-card__body">
+                    <span class="dashboard-card-eyebrow">Профіль</span>
+                    <h2>@Model.UserName</h2>
+                    <p>@Model.StatusLabel</p>
+
+                    <dl class="dashboard-account-card__meta">
+                        <div>
+                            <dt>Email</dt>
+                            <dd>@Model.Email</dd>
+                        </div>
+                        <div>
+                            <dt>Номер телефону</dt>
+                            <dd>@Model.PhoneNumber</dd>
+                        </div>
+                    </dl>
+
+                    <div class="dashboard-account-card__actions">
+                        <a asp-controller="Account" asp-action="Logout" class="dashboard-logout-btn">
+                            Вийти з акаунту
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </main>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

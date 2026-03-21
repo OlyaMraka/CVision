@@ -1,0 +1,15 @@
+@{
+    ViewData["Title"] = "Hub Window";
+    ViewData["DashboardCurrentPage"] = "hub";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/HubUser.css" asp-append-version="true" />
+}
+
+<div class="dashboard-page dashboard-page--hub">
+    <div class="dashboard-page__gradient"></div>
+
+    <partial name="~/Views/Shared/_DashboardHeader.cshtml" />
+</div>
