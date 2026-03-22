@@ -1,3 +1,4 @@
+using CVision.BLL.Constans;
 using CVision.BLL.Interfaces;
 using MailKit.Net.Smtp;
 using MimeKit;
@@ -21,7 +22,7 @@ public class SmtpEmailService : IEmailService
 
         if (string.IsNullOrEmpty(senderEmail) || string.IsNullOrEmpty(password))
         {
-            throw new InvalidOperationException("Email settings are missing in configuration.");
+            throw new InvalidOperationException(ServiceConstants.EmailConfigurationError);
         }
 
         var emailMessage = new MimeMessage();

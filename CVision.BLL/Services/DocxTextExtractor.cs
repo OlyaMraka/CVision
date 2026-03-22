@@ -1,7 +1,5 @@
 using DocumentFormat.OpenXml.Packaging;
-using System.Text;
 using CVision.BLL.Interfaces;
-using UglyToad.PdfPig.DocumentLayoutAnalysis.Export;
 
 namespace CVision.BLL.Services;
 

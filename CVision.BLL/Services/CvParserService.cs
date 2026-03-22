@@ -1,3 +1,4 @@
+using CVision.BLL.Constans;
 using CVision.BLL.Interfaces;
 
 namespace CVision.BLL.Services;
@@ -19,7 +20,7 @@ public class CvParserService : ICvParserService
 
         if (extractor == null)
         {
-            throw new NotSupportedException($"Формат файлу {extension} не підтримується системою.");
+            throw new NotSupportedException(ServiceConstants.ExtensionNotSupported(extension));
         }
 
         return await extractor.ExtractTextAsync(fileStream);
