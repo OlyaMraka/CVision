@@ -47,9 +47,6 @@ public static class UserConstants
     public static readonly string UserLogInError
         = "Incorrect login or password!";
 
-    public static readonly string UserLogOutError
-        = "Invalid token!";
-
     public static readonly string UserNotFound
         = "User not found!";
 

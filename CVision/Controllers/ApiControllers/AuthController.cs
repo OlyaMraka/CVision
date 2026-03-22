@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using FluentResults;
 
-namespace CVision.Controllers;
+namespace CVision.Controllers.ApiControllers;
 
 public class AuthController(
     SignInManager<ApplicationUser> signInManager,

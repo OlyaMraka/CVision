@@ -8,6 +8,8 @@ public class CV
 
     public string FilePath { get; set; } = string.Empty;
 
+    public string PublicId { get; set; } = string.Empty;
+
     public string? ParsedText { get; set; }
 
     public DateTime UploadedAt { get; set; } = DateTime.UtcNow;

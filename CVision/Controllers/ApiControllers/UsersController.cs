@@ -2,7 +2,7 @@ using CVision.BLL.DTOs.Users;
 using CVision.BLL.Queries.Users.GetUserById;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CVision.Controllers;
+namespace CVision.Controllers.ApiControllers;
 
 public class UsersController : BaseApiController
 {

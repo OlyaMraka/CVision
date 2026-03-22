@@ -12,10 +12,24 @@
 
     <ItemGroup>
       <PackageReference Include="AutoMapper" Version="13.0.1" />
+      <PackageReference Include="CloudinaryDotNet" Version="1.28.0" />
+      <PackageReference Include="DocumentFormat.OpenXml" Version="3.5.1" />
       <PackageReference Include="FluentResults" Version="4.0.0" />
       <PackageReference Include="FluentValidation" Version="12.1.1" />
       <PackageReference Include="MailKit" Version="4.15.1" />
       <PackageReference Include="MediatR" Version="14.1.0" />
+      <PackageReference Include="Mscc.GenerativeAI" Version="3.1.0" />
+      <PackageReference Include="PdfPig" Version="0.1.13" />
+      <PackageReference Include="Tesseract" Version="5.2.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="tessdata\eng.traineddata">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="tessdata\ukr.traineddata">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
 </Project>
