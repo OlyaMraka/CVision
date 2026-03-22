@@ -1,0 +1,105 @@
+@*
+    Views/Hub/Index.cshtml
+    ═══════════════════════════════════════════════════════════
+    Сторінка "AI поради" — CV аналіз.
+
+    Відкривається при натисканні вкладки "AI поради" у хедері.
+    Маршрут: GET /Hub  або  GET /Hub/Index
+
+    СТИЛІ:
+      Підключає ~/css/HubUser.css через @section Styles.
+      Цей файл містить ВСІ стилі дашборду:
+        - .db-header*        → хедер з вкладками
+        - .dashboard-page*   → фон з mesh-градієнтом
+        - .hub*              → контент сторінки
+        - .hub-upload*       → картка завантаження
+        - .hub-summary*      → AI висновок
+        - .hub-loader*       → спінер
+        - .hub-results*      → грід секцій
+        - .hub-section-card* → одна картка секції
+
+    КОМПОНЕНТИ (Partial Views):
+      _DashboardHeader  → Views/Shared/_DashboardHeader.cshtml
+      _UploadCard       → Views/Hub/Components/_UploadCard.cshtml
+      _AiSummaryCard    → Views/Hub/Components/_AiSummaryCard.cshtml
+      _AnalysisLoader   → Views/Hub/Components/_AnalysisLoader.cshtml
+      _SectionsGrid     → Views/Hub/Components/_SectionsGrid.cshtml
+
+    JS:
+      wwwroot/js/hub-analysis.js — вся логіка взаємодії
+    ═══════════════════════════════════════════════════════════
+*@
+
+@{
+    ViewData["Title"] = "AI поради";
+    ViewData["DashboardCurrentPage"] = "hub";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+ 
+@section Styles {
+    <link rel="stylesheet" href="~/css/HubUsers.css" asp-append-version="true" />
+}
+
+
+<div class="dashboard-page dashboard-page--hub">
+
+    {{! Mesh-градієнтний фон — position:fixed, z-index:0, pointer-events:none }}
+    <div class="dashboard-page__gradient"></div>
+
+    {{!
+        Хедер — Shared компонент.
+        ViewData["DashboardCurrentPage"] = "hub" → підсвічує вкладку "AI поради".
+    }}
+    <partial name="~/Views/Shared/_DashboardHeader.cshtml" />
+
+    <main class="hub">
+
+        {{!
+            Верхній ряд: два блоки поряд.
+            CSS: .hub-top { display: grid; grid-template-columns: 380px 1fr; }
+        }}
+        <div class="hub-top">
+
+            {{!
+                _UploadCard — зона drag-and-drop для завантаження PDF/DOCX.
+                Містить: input[type=file], прев'ю файлу, кнопки "Обрати" і "Аналізувати".
+                JS керує відображенням прев'ю і активацією кнопки аналізу.
+            }}
+            <partial name="~/Views/Hub/Components/_UploadCard.cshtml" />
+
+            {{!
+                _AiSummaryCard — загальний висновок AI.
+                Два внутрішніх стани (перемикаються JS'ом):
+                  #summaryEmpty  — до аналізу (пояснювальний текст)
+                  #summaryResult — після аналізу (score + feedback)
+            }}
+            <partial name="~/Views/Hub/Components/_AiSummaryCard.cshtml" />
+
+        </div>
+
+        {{!
+            _AnalysisLoader — спінер з анімованими крапками.
+            Прихований за замовчуванням (display:none).
+            JS додає .is-active при старті аналізу → display:flex.
+        }}
+        <partial name="~/Views/Hub/Components/_AnalysisLoader.cshtml" />
+
+        {{!
+            _SectionsGrid — грід карток детального розбору.
+            Прихований до завершення аналізу (.hub-results без .is-active).
+            JS заповнює #sectionsGrid картками і додає .is-active.
+            Кожна картка з'являється з затримкою 80мс (staggered animation).
+        }}
+        <partial name="~/Views/Hub/Components/_SectionsGrid.cshtml" />
+
+    </main>
+</div>
+
+
+@section Scripts {
+    {{!
+        Увесь JS для цієї сторінки — в окремому файлі.
+        asp-append-version додає ?v=хеш для кешбастингу.
+    }}
+    <script src="~/js/hub-analysis.js" asp-append-version="true"></script>
+}

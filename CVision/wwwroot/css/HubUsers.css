@@ -1,0 +1,518 @@
+/* =============================================================
+   wwwroot/css/HubUser.css
+   Стилі для:
+     1. Хедер дашборду  (.db-header)
+     2. Фонова сторінка (.dashboard-page)
+     3. Сторінка AI-аналізу CV (.hub-*)
+   ============================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap');
+
+/* ─────────────────────────────────────────────────────────────
+   ЗМІННІ
+───────────────────────────────────────────────────────────── */
+:root {
+    --font:           'DM Sans', sans-serif;
+    --gold:           #c47c2a;
+    --gold-light:     #fef3e2;
+    --pink:           #e8547a;
+    --pink-light:     #fde8ef;
+    --pink-mid:       #f4a0b8;
+    --text:           #1a1a1a;
+    --text-muted:     #888;
+    --border:         #ede5d8;
+    --white:          #ffffff;
+    --radius-card:    16px;
+    --radius-pill:    50px;
+    --shadow:         0 4px 24px rgba(0,0,0,.08);
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   1. СТОРІНКА-ОБГОРТКА
+   Градієнтний фон як на фото (кремово-персиковий mesh).
+───────────────────────────────────────────────────────────── */
+.dashboard-page {
+    min-height: 100vh;
+    font-family: var(--font);
+    position: relative;
+    background: #f5ead8;
+    overflow-x: hidden;
+}
+
+/* Mesh-градієнт — два кольорових плями як на фото */
+.dashboard-page__gradient {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+            radial-gradient(ellipse 55% 60% at 10% 50%,  rgba(180,210,195,.55) 0%, transparent 70%),
+            radial-gradient(ellipse 65% 70% at 80% 40%,  rgba(220,175,130,.55) 0%, transparent 70%),
+            #f0e6d3;
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   2. ХЕДЕР ДАШБОРДУ
+───────────────────────────────────────────────────────────── */
+.db-header {
+    position: relative;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2.5rem;
+    height: 64px;
+}
+
+/* Логотип */
+.db-header__logo {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--text);
+    text-decoration: none;
+    letter-spacing: -0.02em;
+}
+
+/* Pill-контейнер для вкладок */
+.db-header__tabs {
+    display: flex;
+    align-items: center;
+    background: rgba(255,255,255,.65);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: var(--radius-pill);
+    padding: 5px;
+    gap: 2px;
+    box-shadow: 0 2px 12px rgba(0,0,0,.07);
+}
+
+/* Одна вкладка */
+.db-header__tab {
+    padding: .45rem 1.1rem;
+    font-size: .88rem;
+    font-weight: 500;
+    color: #555;
+    border-radius: var(--radius-pill);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background .18s, color .18s;
+}
+
+.db-header__tab:hover {
+    background: rgba(255,255,255,.8);
+    color: var(--text);
+}
+
+/* Активна вкладка — біла підкладка */
+.db-header__tab--active {
+    background: var(--white);
+    color: var(--text);
+    font-weight: 600;
+    box-shadow: 0 1px 6px rgba(0,0,0,.08);
+}
+
+/* Аватар */
+.db-header__avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.7);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gold);
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,.1);
+    transition: background .18s;
+}
+.db-header__avatar:hover { background: var(--white); }
+
+
+/* ─────────────────────────────────────────────────────────────
+   3. СТОРІНКА HUB (AI-аналіз)
+   Контент нижче хедера.
+───────────────────────────────────────────────────────────── */
+.hub {
+    position: relative;
+    z-index: 1;
+    padding: 2rem 2.5rem 4rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   4. ВЕРХНІЙ БЛОК: Upload + AI summary (два блоки в ряд)
+───────────────────────────────────────────────────────────── */
+.hub-top {
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    gap: 1.25rem;
+    margin-bottom: 2rem;
+}
+
+/* ── Upload-картка ── */
+.hub-upload {
+    background: rgba(255,255,255,.72);
+    backdrop-filter: blur(16px);
+    border-radius: var(--radius-card);
+    border: 1.5px dashed #d8c8b8;
+    padding: 2rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: .6rem;
+    transition: border-color .2s;
+}
+
+.hub-upload:hover { border-color: var(--gold); }
+
+/* Зона drag-and-drop (курсор руки при ховері над файлом) */
+.hub-upload.drag-over {
+    border-color: var(--gold);
+    background: rgba(254,243,226,.5);
+}
+
+/* Іконка завантаження */
+.hub-upload__icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--gold-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gold);
+    margin-bottom: .4rem;
+}
+
+.hub-upload__title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.hub-upload__hint {
+    font-size: .78rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+
+/* Прев'ю обраного файлу (показується JS'ом) */
+.hub-upload__preview {
+    display: none;            /* прихований поки немає файлу */
+    width: 100%;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0,0,0,.12);
+    max-height: 220px;
+    object-fit: cover;
+}
+
+/* Назва файлу під прев'ю */
+.hub-upload__filename {
+    display: none;
+    font-size: .8rem;
+    font-weight: 600;
+    color: var(--text);
+    background: var(--gold-light);
+    padding: .3rem .8rem;
+    border-radius: 20px;
+}
+
+/* Кнопки */
+.hub-upload__actions {
+    display: flex;
+    gap: .65rem;
+    margin-top: .5rem;
+    width: 100%;
+    justify-content: center;
+}
+
+.btn-pick {
+    padding: .55rem 1.2rem;
+    border-radius: var(--radius-pill);
+    border: 1.5px solid #c8b89a;
+    background: transparent;
+    font-family: var(--font);
+    font-size: .85rem;
+    font-weight: 600;
+    color: var(--text);
+    cursor: pointer;
+    transition: border-color .18s, color .18s;
+}
+.btn-pick:hover { border-color: var(--gold); color: var(--gold); }
+
+.btn-analyze {
+    padding: .55rem 1.2rem;
+    border-radius: var(--radius-pill);
+    border: none;
+    background: var(--pink);
+    font-family: var(--font);
+    font-size: .85rem;
+    font-weight: 700;
+    color: #fff;
+    cursor: pointer;
+    transition: background .18s, transform .15s, opacity .18s;
+}
+.btn-analyze:hover   { background: #c73d62; transform: translateY(-1px); }
+.btn-analyze:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+
+/* ── AI Summary картка ── */
+.hub-summary {
+    background: rgba(255,255,255,.72);
+    backdrop-filter: blur(16px);
+    border-radius: var(--radius-card);
+    padding: 1.75rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.hub-summary__title {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--text);
+}
+
+/* Score рядок: 82% + текст */
+.hub-summary__score-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.hub-summary__score-num {
+    font-size: 2.8rem;
+    font-weight: 900;
+    color: var(--pink);
+    line-height: 1;
+    min-width: 90px;
+}
+
+.hub-summary__score-label {
+    font-size: .85rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: .25rem;
+}
+
+.hub-summary__score-desc {
+    font-size: .82rem;
+    color: #555;
+    line-height: 1.5;
+}
+
+/* Текстовий блок зворотного зв'язку */
+.hub-summary__feedback {
+    background: var(--pink-light);
+    border-radius: 12px;
+    padding: 1rem 1.2rem;
+    font-size: .88rem;
+    color: #444;
+    line-height: 1.65;
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   5. СЕКЦІЇ ДЕТАЛЬНОГО РОЗБОРУ
+───────────────────────────────────────────────────────────── */
+.hub-sections-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.hub-sections-title {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--text);
+}
+
+.hub-sections-meta {
+    font-size: .78rem;
+    color: var(--text-muted);
+}
+
+/* Грід секцій — 3 колонки */
+.hub-sections-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+/* Одна картка секції */
+.hub-section-card {
+    background: rgba(255,255,255,.72);
+    backdrop-filter: blur(16px);
+    border-radius: var(--radius-card);
+    padding: 1.25rem 1.25rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: .65rem;
+
+    /* Анімація появи — задається JS через animation-delay */
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity .4s ease, transform .4s ease;
+}
+
+/* Клас що JS додає після завантаження */
+.hub-section-card.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Рядок: іконка + назва + відсоток */
+.hub-section-card__header {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+}
+
+.hub-section-card__icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: var(--pink-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--pink);
+    flex-shrink: 0;
+}
+
+.hub-section-card__name {
+    font-size: .9rem;
+    font-weight: 700;
+    color: var(--text);
+    flex: 1;
+}
+
+.hub-section-card__score {
+    font-size: 1rem;
+    font-weight: 800;
+}
+
+/* Колір відсотка залежить від значення — JS додає клас */
+.hub-section-card__score--high   { color: var(--pink); }
+.hub-section-card__score--medium { color: var(--gold); }
+.hub-section-card__score--low    { color: #e05050; }
+
+/* Прогрес-бар */
+.hub-section-card__bar {
+    height: 5px;
+    border-radius: 3px;
+    background: #f0e0e8;
+    overflow: hidden;
+}
+
+.hub-section-card__bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    background: var(--pink);
+    width: 0%;                        /* старт — JS анімує до реального значення */
+    transition: width .8s cubic-bezier(.4,0,.2,1);
+}
+
+/* Текст-фідбек */
+.hub-section-card__text {
+    font-size: .8rem;
+    color: #555;
+    font-style: italic;
+    line-height: 1.55;
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   6. СТАН ЗАВАНТАЖЕННЯ (Loader)
+   Показується поки йде аналіз, прихований — результати.
+───────────────────────────────────────────────────────────── */
+.hub-loader {
+    display: none;              /* показується JS'ом при сабміті */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    gap: 1.25rem;
+}
+
+.hub-loader.is-active { display: flex; }
+
+/* Спінер */
+.hub-loader__spinner {
+    width: 52px;
+    height: 52px;
+    border: 4px solid var(--pink-light);
+    border-top-color: var(--pink);
+    border-radius: 50%;
+    animation: spin .8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.hub-loader__text {
+    font-size: .95rem;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+/* Анімований рядок крапок */
+.hub-loader__dots::after {
+    content: '';
+    animation: dots 1.4s steps(4, end) infinite;
+}
+@keyframes dots {
+    0%   { content: '';    }
+    25%  { content: '.';   }
+    50%  { content: '..';  }
+    75%  { content: '...'; }
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   7. РЕЗУЛЬТАТИ (прихований до завершення аналізу)
+───────────────────────────────────────────────────────────── */
+.hub-results {
+    display: none;
+    flex-direction: column;
+    gap: 1.5rem;
+    animation: fadeUp .5s ease both;
+}
+
+.hub-results.is-active { display: flex; }
+
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   8. АДАПТИВНІСТЬ
+───────────────────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+    .hub-top { grid-template-columns: 1fr; }
+    .hub-sections-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 640px) {
+    .hub { padding: 1rem 1rem 3rem; }
+    .db-header { padding: 0 1rem; }
+    .db-header__tabs { display: none; } /* мобільне меню окремо */
+    .hub-sections-grid { grid-template-columns: 1fr; }
+}

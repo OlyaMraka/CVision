@@ -1,0 +1,55 @@
+@*
+    Views/Hub/Components/_AiSummaryCard.cshtml
+    ═══════════════════════════════════════════
+    Компонент: картка "Загальний висновок AI".
+    Має два стани:
+      - Порожній (#summaryEmpty)   — до аналізу
+      - Результат (#summaryResult) — показується JS після аналізу
+
+    Використовується: Views/Home/Hub.cshtml
+    JS-логіка: wwwroot/js/hub-analysis.js
+*@
+
+<div class="hub-summary" id="summaryCard">
+
+    {{! Стан: до аналізу }}
+    <div id="summaryEmpty">
+        <div class="hub-summary__title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M12 16v-4M12 8h.01"/>
+            </svg>
+            Загальний висновок AI
+        </div>
+        <p style="font-size:.88rem;color:var(--text-muted);margin-top:.5rem;line-height:1.6;">
+            Завантажте ваше резюме та натисніть «Аналізувати»,
+            щоб отримати детальний розбір від AI.
+        </p>
+    </div>
+
+    {{! Стан: після аналізу (прихований, JS показує) }}
+    <div id="summaryResult" style="display:none;">
+        <div class="hub-summary__title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                 stroke="#e8547a" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2a10 10 0 1 0 10 10"/>
+                <path d="M12 6v6l4 2"/>
+            </svg>
+            Загальний висновок AI
+        </div>
+
+        <div class="hub-summary__score-row">
+            <div class="hub-summary__score-num" id="totalScore">0%</div>
+            <div>
+                <div class="hub-summary__score-label" id="scoreLabel">—</div>
+                <div class="hub-summary__score-desc"  id="scoreDesc">—</div>
+            </div>
+        </div>
+
+        <div class="hub-summary__feedback" id="feedbackText">—</div>
+    </div>
+
+</div>

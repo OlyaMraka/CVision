@@ -1,0 +1,18 @@
+@*
+    Views/Hub/Components/_AnalysisLoader.cshtml
+    ════════════════════════════════════════════
+    Компонент: лоадер під час AI-аналізу.
+    Прихований за замовчуванням.
+    JS додає клас .is-active при старті аналізу.
+
+    Використовується: Views/Home/Hub.cshtml
+    JS-логіка: wwwroot/js/hub-analysis.js
+*@
+
+<div class="hub-loader" id="hubLoader">
+    <div class="hub-loader__spinner"></div>
+    <div class="hub-loader__text">
+        AI аналізує ваше резюме
+        <span class="hub-loader__dots"></span>
+    </div>
+</div>
