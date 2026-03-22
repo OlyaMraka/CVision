@@ -5,9 +5,9 @@ using CVision.Models.ViewModels.CVAnalysisViewModels;
 
 namespace CVision.Mappers
 {
-    public class CvAnalysisProfile : Profile
+    public class CVAnalysisProfile : Profile
     {
-        public CvAnalysisProfile()
+        public CVAnalysisProfile()
         {
             CreateMap<CvSectionAnalisysResultDto, CVSectionResultViewModel>();
 

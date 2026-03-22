@@ -1,105 +1,173 @@
-@*
-    Views/Hub/Index.cshtml
-    ═══════════════════════════════════════════════════════════
-    Сторінка "AI поради" — CV аналіз.
-
-    Відкривається при натисканні вкладки "AI поради" у хедері.
-    Маршрут: GET /Hub  або  GET /Hub/Index
-
-    СТИЛІ:
-      Підключає ~/css/HubUser.css через @section Styles.
-      Цей файл містить ВСІ стилі дашборду:
-        - .db-header*        → хедер з вкладками
-        - .dashboard-page*   → фон з mesh-градієнтом
-        - .hub*              → контент сторінки
-        - .hub-upload*       → картка завантаження
-        - .hub-summary*      → AI висновок
-        - .hub-loader*       → спінер
-        - .hub-results*      → грід секцій
-        - .hub-section-card* → одна картка секції
-
-    КОМПОНЕНТИ (Partial Views):
-      _DashboardHeader  → Views/Shared/_DashboardHeader.cshtml
-      _UploadCard       → Views/Hub/Components/_UploadCard.cshtml
-      _AiSummaryCard    → Views/Hub/Components/_AiSummaryCard.cshtml
-      _AnalysisLoader   → Views/Hub/Components/_AnalysisLoader.cshtml
-      _SectionsGrid     → Views/Hub/Components/_SectionsGrid.cshtml
-
-    JS:
-      wwwroot/js/hub-analysis.js — вся логіка взаємодії
-    ═══════════════════════════════════════════════════════════
-*@
-
 @{
-    ViewData["Title"] = "AI поради";
+    ViewData["Title"] = "CV Аналіз";
     ViewData["DashboardCurrentPage"] = "hub";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
- 
+
 @section Styles {
     <link rel="stylesheet" href="~/css/HubUsers.css" asp-append-version="true" />
 }
 
-
 <div class="dashboard-page dashboard-page--hub">
 
-    {{! Mesh-градієнтний фон — position:fixed, z-index:0, pointer-events:none }}
     <div class="dashboard-page__gradient"></div>
 
-    {{!
-        Хедер — Shared компонент.
-        ViewData["DashboardCurrentPage"] = "hub" → підсвічує вкладку "AI поради".
-    }}
     <partial name="~/Views/Shared/_DashboardHeader.cshtml" />
 
     <main class="hub">
 
-        {{!
-            Верхній ряд: два блоки поряд.
-            CSS: .hub-top { display: grid; grid-template-columns: 380px 1fr; }
-        }}
         <div class="hub-top">
 
-            {{!
-                _UploadCard — зона drag-and-drop для завантаження PDF/DOCX.
-                Містить: input[type=file], прев'ю файлу, кнопки "Обрати" і "Аналізувати".
-                JS керує відображенням прев'ю і активацією кнопки аналізу.
-            }}
-            <partial name="~/Views/Hub/Components/_UploadCard.cshtml" />
+            <!-- ── Картка завантаження файлу ── -->
+            <div class="hub-upload" id="dropZone">
 
-            {{!
-                _AiSummaryCard — загальний висновок AI.
-                Два внутрішніх стани (перемикаються JS'ом):
-                  #summaryEmpty  — до аналізу (пояснювальний текст)
-                  #summaryResult — після аналізу (score + feedback)
-            }}
-            <partial name="~/Views/Hub/Components/_AiSummaryCard.cshtml" />
+                
+                <input type="file"
+                       id="cvFileInput"
+                       accept=".pdf,.docx,.doc,.png,.jpg,.jpeg"
+                       style="display:none;" />
+                <!-- Плейсхолдер — до вибору файлу -->
+                <div id="uploadPlaceholder">
+                    <div class="hub-upload__icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="2"
+                             stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="17 8 12 3 7 8"/>
+                            <line x1="12" y1="3" x2="12" y2="15"/>
+                        </svg>
+                    </div>
+                    <div class="hub-upload__title">Завантажте ваше резюме</div>
+                    <p class="hub-upload__hint">
+                        Підтримувані формати: PDF, DOCX.<br />
+                        Максимальний розмір файлу 10MB.
+                    </p>
+                </div>
+
+                <!-- Прев'ю після вибору файлу (керується JS) -->
+                <div id="filePreviewWrap" style="display:none; width:100%; text-align:center;">
+
+                    <img id="filePreviewImg"
+                         src="" alt="Прев'ю CV"
+                         style="display:none; width:100%; border-radius:10px;
+                                max-height:220px; object-fit:cover;
+                                box-shadow:0 4px 16px rgba(0,0,0,.12);" />
+
+                    <div id="filePreviewIcon" style="display:none; margin:0 auto .75rem;">
+                        <div style="width:80px;height:100px;background:#fde8ef;
+                                    border-radius:10px;display:flex;flex-direction:column;
+                                    align-items:center;justify-content:center;
+                                    margin:0 auto;box-shadow:0 4px 16px rgba(0,0,0,.1);">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none"
+                                 stroke="#e8547a" stroke-width="1.8"
+                                 stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                <polyline points="14 2 14 8 20 8"/>
+                            </svg>
+                            <span id="fileExtBadge"
+                                  style="font-size:.6rem;font-weight:800;
+                                         color:#e8547a;margin-top:4px;letter-spacing:.05em;">PDF</span>
+                        </div>
+                    </div>
+
+                    <div id="fileNameLabel"
+                         style="display:none;font-size:.8rem;font-weight:600;
+                                color:#c47c2a;background:#fef3e2;
+                                padding:.3rem .8rem;border-radius:20px;
+                                display:inline-block;"></div>
+                </div>
+
+                <!-- Кнопки -->
+                <div class="hub-upload__actions">
+                    <button class="btn-pick"    type="button" id="pickFileBtn">Обрати файл</button>
+                    <button class="btn-analyze" type="button" id="analyzeBtn" disabled>Аналізувати зараз</button>
+                </div>
+
+            </div>
+
+            <!-- ── Картка AI висновку ── -->
+            <div class="hub-summary" id="summaryCard">
+
+                <!-- Стан: до аналізу -->
+                <div id="summaryEmpty">
+                    <div class="hub-summary__title">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="2"
+                             stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 16v-4M12 8h.01"/>
+                        </svg>
+                        Загальний висновок AI
+                    </div>
+                    <p style="font-size:.88rem;color:#888;margin-top:.5rem;line-height:1.6;">
+                        Завантажте ваше резюме та натисніть «Аналізувати»,
+                        щоб отримати детальний розбір від AI.
+                    </p>
+                </div>
+
+                <!-- Стан: після аналізу (прихований, JS показує) -->
+                <div id="summaryResult" style="display:none;">
+                    <div class="hub-summary__title">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                             stroke="#e8547a" stroke-width="2"
+                             stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2a10 10 0 1 0 10 10"/>
+                            <path d="M12 6v6l4 2"/>
+                        </svg>
+                        Загальний висновок AI
+                    </div>
+
+                    <div class="hub-summary__score-row">
+                        <div class="hub-summary__score-num" id="totalScore">0%</div>
+                        <div>
+                            <div class="hub-summary__score-label" id="scoreLabel">—</div>
+                            <div class="hub-summary__score-desc"  id="scoreDesc">—</div>
+                        </div>
+                    </div>
+
+                    <div class="hub-summary__feedback" id="feedbackText">—</div>
+                </div>
+
+            </div>
 
         </div>
 
-        {{!
-            _AnalysisLoader — спінер з анімованими крапками.
-            Прихований за замовчуванням (display:none).
-            JS додає .is-active при старті аналізу → display:flex.
-        }}
-        <partial name="~/Views/Hub/Components/_AnalysisLoader.cshtml" />
+        <!-- ── Лоадер (прихований, JS показує при аналізі) ── -->
+        <div class="hub-loader" id="hubLoader">
+            <div class="hub-loader__spinner"></div>
+            <div class="hub-loader__text">
+                AI аналізує ваше резюме
+                <span class="hub-loader__dots"></span>
+            </div>
+        </div>
 
-        {{!
-            _SectionsGrid — грід карток детального розбору.
-            Прихований до завершення аналізу (.hub-results без .is-active).
-            JS заповнює #sectionsGrid картками і додає .is-active.
-            Кожна картка з'являється з затримкою 80мс (staggered animation).
-        }}
-        <partial name="~/Views/Hub/Components/_SectionsGrid.cshtml" />
+        <!-- ── Результати секцій (прихований, JS показує після аналізу) ── -->
+        <div class="hub-results" id="hubResults">
+
+            <div class="hub-sections-header">
+                <div class="hub-sections-title">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2"
+                         stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3"  y="3"  width="7" height="7" rx="1"/>
+                        <rect x="14" y="3"  width="7" height="7" rx="1"/>
+                        <rect x="3"  y="14" width="7" height="7" rx="1"/>
+                        <rect x="14" y="14" width="7" height="7" rx="1"/>
+                    </svg>
+                    Детальний розбір секцій
+                </div>
+                <div class="hub-sections-meta" id="sectionsMeta"></div>
+            </div>
+
+            <!-- JS динамічно вставляє картки сюди -->
+            <div class="hub-sections-grid" id="sectionsGrid"></div>
+
+        </div>
 
     </main>
 </div>
 
-
 @section Scripts {
-    {{!
-        Увесь JS для цієї сторінки — в окремому файлі.
-        asp-append-version додає ?v=хеш для кешбастингу.
-    }}
+    @Html.AntiForgeryToken()
     <script src="~/js/hub-analysis.js" asp-append-version="true"></script>
 }

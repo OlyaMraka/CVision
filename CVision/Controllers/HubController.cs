@@ -14,7 +14,7 @@ namespace CVision.Controllers
     {
         // 🔹 GET: /Hub
         [HttpGet]
-        public IActionResult Hub() => View("hub");
+        public IActionResult Index() => View("~/Views/Hub/CVAnalysis.cshtml");
 
         // 🔹 POST: /Hub/Analyze
         [HttpPost]

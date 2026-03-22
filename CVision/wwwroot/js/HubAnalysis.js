@@ -38,7 +38,10 @@
     function handleFile(file) {
         const allowed = [
             'application/pdf',
-            'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'application/msword',           // .doc
+            'image/png',                    // .png
+            'image/jpeg',                   // .jpg / .jpeg
         ];
         const ext = file.name.split('.').pop().toLowerCase();
 
@@ -156,9 +159,9 @@
         summaryResult.style.display = 'block';
 
         animateNumber(totalScore, 0, data.score, 900, '%');
-        scoreLabel.textContent   = getScoreLabel(data.score);
-        scoreDesc.textContent    = getScoreDesc(data.score);
-        feedbackText.textContent = data.feedback;
+        scoreLabel.textContent = getScoreLabel(data.score);
+        scoreDesc.textContent  = getScoreDesc(data.score);
+        feedbackText.textContent = data.feedBack;
 
         /* Секції */
         const count = data.sectionResults?.length ?? 0;
@@ -209,7 +212,7 @@
                 if (bar) bar.style.width = bar.dataset.width + '%';
 
                 const scoreEl = card.querySelector('.hub-section-card__score');
-                if (scoreEl) animateNumber(scoreEl, 0, section.score, 700, '%');
+                if (scoreEl) animateNumber(scoreEl, 0, section.sectionScore, 700, '%');
 
             }, 100 + i * 80);
         });

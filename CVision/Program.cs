@@ -8,6 +8,7 @@ using CVision.BLL.Mappers;
 using CVision.BLL.Options;
 using CVision.BLL.Services;
 using CVision.BLL.Validators.Users;
+using CVision.Mappers;
 using CVision.Extensions;
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;
@@ -30,6 +31,7 @@ builder.Services.AddScoped<ITextExtractor, ImageTextExtractor>();
 builder.Services.AddScoped<ICvParserService, CvParserService>();
 builder.Services.AddScoped<IEmailService, SmtpEmailService>();
 builder.Services.AddAutoMapper(typeof(UsersProfile));
+builder.Services.AddAutoMapper(typeof(CVAnalysisProfile));
 builder.Services.AddValidatorsFromAssembly(typeof(RegisterUserValidator).Assembly);
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(RegisterUserCommand).Assembly));
 

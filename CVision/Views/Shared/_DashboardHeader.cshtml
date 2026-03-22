@@ -8,11 +8,11 @@
        class="dashboard-header__logo">CVision</a>
 
     <nav class="dashboard-nav" aria-label="Основна навігація">
-        <button class="dashboard-nav__item @(currentPage == "hub" ? "is-active" : string.Empty)"
-                type="button"
-                disabled>
-            СV аналіз
-        </button>
+        <a class="dashboard-nav__item @(currentPage == "hub" ? "is-active" : string.Empty)"
+           asp-controller="Hub"
+           asp-action="Index">
+            CV аналіз
+        </a>
         <button class="dashboard-nav__item"
                 type="button"
                 disabled>
