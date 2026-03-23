@@ -123,7 +123,7 @@ namespace CVision.Controllers
         public async Task<IActionResult> Logout()
         {
             await signInManager.SignOutAsync();
-            return RedirectToAction(nameof(Login));
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpGet]
