@@ -6,34 +6,74 @@ public static class UserConstants
     public static readonly int MinEmailLength = 4;
     public static readonly int MaxUserNameLength = 40;
     public static readonly int MinUserNameLength = 4;
+    public static readonly int MinPasswordLength = 8;
 
     public static readonly string EmailRequiredErrorMessage
-        = "Електронна пошта є обов’язковою!";
+        = "Email is required!";
 
     public static readonly string MaxEmailLengthErrorMessage
-        = $"Електронна пошта повинна містити не більше {MaxEmailLength} символів!";
+        = $"Email must be shorter than {MaxEmailLength} characters!";
 
     public static readonly string MinEmailLengthErrorMessage
-        = $"Електронна пошта повинна містити щонайменше {MinEmailLength} символи!";
+        = $"Email must be longer than {MinEmailLength} characters!";
 
     public static readonly string UserNameRequiredErrorMessage
-        = "Ім’я користувача є обов’язковим!";
+        = "Username is required!";
 
     public static readonly string MaxUserNameErrorMessage
-        = $"Ім’я користувача повинно містити не більше {MaxUserNameLength} символів!";
+        = $"Username must be shorter than {MaxUserNameLength} characters!";
 
     public static readonly string MinUserNameErrorMessage
-        = $"Ім’я користувача повинно містити щонайменше {MinUserNameLength} символи!";
+        = $"Username must be longer than {MinUserNameLength} characters!";
 
     public static readonly string PasswordRequiredErrorMessage
-        = "Пароль є обов’язковим!";
+        = "Password is required!";
+
+    public static readonly string PasswordLengthErrorMessage =
+        $"Password must be longer than {MinPasswordLength} characters!";
+
+    public static readonly string PasswordUppercaseLetterErrorMessage =
+        "Password must contain at least one uppercase letter!";
+
+    public static readonly string PasswordDigitErrorMessage =
+        "Password must contain at least one digit!";
+
+    public static readonly string PasswordSpecialCharacterErrorMessage =
+        "Password must contain special characters!";
+
+    public static readonly string UserCreationError
+        = "A user with this information already exists!";
 
     public static readonly string UserLogInError
-        = "Невірний логін або пароль!";
+        = "Incorrect login or password!";
+
+    public static readonly string UserLogOutError
+        = "Invalid token!";
 
     public static readonly string UserNotFound
-        = "Користувача не знайдено!";
+        = "User not found!";
+
+    public static readonly string DbSaveError
+        = "Database save error!";
 
     public static readonly string EmailConfirmationError
-        = "Не вдалося підтвердити електронну пошту!";
+        = "Email confirmation failed!";
+
+    public static readonly string IncorrectCurrentPassword
+        = "Current password is incorrect!";
+
+    public static readonly string PasswordChangeError
+        = "Failed to change password!";
+
+    public static readonly string PasswordResetError
+        = "Password reset failed! The token may be invalid or expired.";
+
+    public static readonly string PasswordResetEmailSent
+        = "If the email exists, a password reset link has been sent.";
+
+    public static readonly string EmailAlreadyInUse
+        = "This email is already in use!";
+
+    public static readonly string ProfileUpdateError
+        = "Failed to update profile!";
 }

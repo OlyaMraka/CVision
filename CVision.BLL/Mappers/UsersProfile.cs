@@ -12,5 +12,6 @@ public class UsersProfile : Profile
         CreateMap<ApplicationUser, RegisterUserResponseDto>();
         CreateMap<ApplicationUser, GetUserResponseDto>();
         CreateMap<ApplicationUser, LoginUserResponseDto>();
+        CreateMap<UpdateProfileRequestDto, ApplicationUser>();
     }
 }
