@@ -58,4 +58,16 @@ public static class UserConstants
 
     public static readonly string EmailConfirmationError
         = "Email confirmation failed!";
+
+    public static readonly string IncorrectCurrentPassword
+        = "Current password is incorrect!";
+
+    public static readonly string PasswordChangeError
+        = "Failed to change password!";
+
+    public static readonly string PasswordResetError
+        = "Password reset failed! The token may be invalid or expired.";
+
+    public static readonly string PasswordResetEmailSent
+        = "If the email exists, a password reset link has been sent.";
 }
