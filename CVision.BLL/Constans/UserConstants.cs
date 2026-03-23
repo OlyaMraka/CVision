@@ -70,4 +70,10 @@ public static class UserConstants
 
     public static readonly string PasswordResetEmailSent
         = "If the email exists, a password reset link has been sent.";
+
+    public static readonly string EmailAlreadyInUse
+        = "This email is already in use!";
+
+    public static readonly string ProfileUpdateError
+        = "Failed to update profile!";
 }
