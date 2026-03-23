@@ -6,6 +6,8 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     string? successMessage = TempData["UserWindowSuccess"] as string;
     string? errorMessage = TempData["UserWindowError"] as string;
+    string? passwordSuccessMessage = TempData["UserPasswordSuccess"] as string;
+    string? passwordErrorMessage = TempData["UserPasswordError"] as string;
 }
 
 @section Styles {
@@ -73,6 +75,56 @@
                     <button type="submit" class="dashboard-submit-btn">Зберегти зміни</button>
                 </div>
             </form>
+
+            <div class="dashboard-section-divider" aria-hidden="true"></div>
+
+            <section class="dashboard-password-block" aria-labelledby="change-password-title">
+                <h2 id="change-password-title" class="dashboard-profile-preview__name">Зміна пароля</h2>
+                <p class="dashboard-profile-preview__text">
+                    Введіть поточний пароль, а потім новий пароль двічі для підтвердження.
+                </p>
+
+                @if (!string.IsNullOrWhiteSpace(passwordSuccessMessage))
+                {
+                    <div class="dashboard-alert dashboard-alert--success" role="status">
+                        @passwordSuccessMessage
+                    </div>
+                }
+
+                @if (!string.IsNullOrWhiteSpace(passwordErrorMessage))
+                {
+                    <div class="dashboard-alert dashboard-alert--error" role="alert">
+                        @passwordErrorMessage
+                    </div>
+                }
+
+                <form asp-controller="Home" asp-action="ChangePassword" method="post" class="dashboard-form dashboard-form--password">
+                    <div class="dashboard-field-grid">
+                        <div class="dashboard-field dashboard-field--full">
+                            <label class="dashboard-field__label" for="currentPassword">Поточний пароль</label>
+                            <input id="currentPassword" name="currentPassword" type="password" class="dashboard-field__input"
+                                   autocomplete="current-password" required minlength="8" />
+                        </div>
+
+                        <div class="dashboard-field">
+                            <label class="dashboard-field__label" for="newPassword">Новий пароль</label>
+                            <input id="newPassword" name="newPassword" type="password" class="dashboard-field__input"
+                                   autocomplete="new-password" required minlength="8" />
+                        </div>
+
+                        <div class="dashboard-field">
+                            <label class="dashboard-field__label" for="confirmNewPassword">Підтвердіть новий пароль</label>
+                            <input id="confirmNewPassword" name="confirmNewPassword" type="password" class="dashboard-field__input"
+                                   autocomplete="new-password" required minlength="8" />
+                        </div>
+                    </div>
+
+                    <div class="dashboard-form__footer">
+                        <span class="dashboard-field__hint">Мінімум 8 символів. Нові паролі мають співпадати.</span>
+                        <button type="submit" class="dashboard-submit-btn">Змінити пароль</button>
+                    </div>
+                </form>
+            </section>
         </section>
 
         <aside class="dashboard-panel dashboard-panel--preview">

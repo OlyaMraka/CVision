@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using CVision.BLL.Commands.Users.UpdateProfile;
+using CVision.BLL.Commands.Users.UpdatePassword;
 using CVision.BLL.Constans;
 using CVision.BLL.DTOs.Users;
 using CVision.BLL.Queries.Users.GetUserById;
@@ -122,6 +123,74 @@ public class HomeController(IMediator mediator, ILogger<HomeController> logger) 
             model.MemberSince = await GetMemberSinceAsync(userId.Value);
 
             return View("user", model);
+        }
+    }
+
+    [Authorize]
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ChangePassword(string currentPassword, string newPassword, string confirmNewPassword)
+    {
+        var userId = GetCurrentUserId();
+        if (userId == null)
+        {
+            return RedirectToAction("Login", "Account");
+        }
+
+        if (string.IsNullOrWhiteSpace(currentPassword))
+        {
+            TempData["UserPasswordError"] = "Введіть поточний пароль.";
+            return RedirectToAction("user");
+        }
+
+        if (string.IsNullOrWhiteSpace(newPassword) || string.IsNullOrWhiteSpace(confirmNewPassword))
+        {
+            TempData["UserPasswordError"] = "Введіть новий пароль та його підтвердження.";
+            return RedirectToAction("user");
+        }
+
+        if (!string.Equals(newPassword, confirmNewPassword, StringComparison.Ordinal))
+        {
+            TempData["UserPasswordError"] = "Нові паролі не співпадають.";
+            return RedirectToAction("user");
+        }
+
+        if (newPassword.Length < UserConstants.MinPasswordLength)
+        {
+            TempData["UserPasswordError"] = $"Новий пароль має містити щонайменше {UserConstants.MinPasswordLength} символів.";
+            return RedirectToAction("user");
+        }
+
+        try
+        {
+            var requestDto = new UpdatePasswordRequestDto
+            {
+                CurrentPassword = currentPassword,
+                NewPassword = newPassword,
+            };
+
+            var result = await mediator.Send(new UpdatePasswordCommand(userId.Value, requestDto));
+            if (result.IsFailed)
+            {
+                if (result.Errors.Any(e => string.Equals(e.Message, UserConstants.IncorrectCurrentPassword, StringComparison.Ordinal)))
+                {
+                    TempData["UserPasswordError"] = "Поточний пароль введено невірно.";
+                    return RedirectToAction("user");
+                }
+
+                TempData["UserPasswordError"] = result.Errors.FirstOrDefault()?.Message
+                    ?? "Не вдалося змінити пароль. Спробуйте ще раз.";
+                return RedirectToAction("user");
+            }
+
+            TempData["UserPasswordSuccess"] = "Пароль успішно змінено.";
+            return RedirectToAction("user");
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Failed to change password for user with id {UserId}", userId.Value);
+            TempData["UserPasswordError"] = "Виникла технічна помилка під час зміни пароля.";
+            return RedirectToAction("user");
         }
     }
 
