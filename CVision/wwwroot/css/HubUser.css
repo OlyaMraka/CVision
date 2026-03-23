@@ -306,10 +306,6 @@
 
 .dashboard-panel--profile-spacer {
     min-height: 520px;
-    background: transparent;
-    border: none;
-    box-shadow: none;
-    backdrop-filter: none;
 }
 
 .dashboard-panel {
@@ -327,6 +323,11 @@
 .dashboard-alert--success {
     background: rgba(34, 197, 94, 0.12);
     color: #126b35;
+}
+
+.dashboard-alert--error {
+    background: rgba(197, 48, 48, 0.12);
+    color: #8b1f1f;
 }
 
 .dashboard-form {
@@ -503,10 +504,6 @@
     .dashboard-main--user,
     .dashboard-advice-grid {
         grid-template-columns: 1fr;
-    }
-
-    .dashboard-panel--profile-spacer {
-        display: none;
     }
 
     .dashboard-nav {

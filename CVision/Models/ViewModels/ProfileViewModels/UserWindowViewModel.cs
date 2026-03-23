@@ -5,11 +5,12 @@ namespace CVision.Models.ViewModels.ProfileViewModels
     public class UserWindowViewModel
     {
         [Required(ErrorMessage = "Введіть ваше ім'я")]
-        [StringLength(100, MinimumLength = 2, ErrorMessage = "Ім'я має містити від 2 до 100 символів")]
+        [StringLength(40, MinimumLength = 4, ErrorMessage = "Ім'я має містити від 4 до 40 символів")]
         public string UserName { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Введіть електронну пошту")]
         [EmailAddress(ErrorMessage = "Невірний формат email")]
+        [StringLength(40, MinimumLength = 4, ErrorMessage = "Email має містити від 4 до 40 символів")]
         public string Email { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Введіть номер телефону")]
