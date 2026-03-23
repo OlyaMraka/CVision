@@ -1,5 +1,6 @@
 using CVision.BLL.DTOs.CvAnalyses;
 using CVision.BLL.Commands.CvAnalyses.Create;
+using CVision.BLL.Queries.CvAnalyses.GetAllCvAnalyses;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CVision.Controllers.ApiControllers;
@@ -14,23 +15,29 @@ public class CvAnalysisController : BaseApiController
             return BadRequest("Файл не вибрано.");
         }
 
-        // Копіюємо файл у пам'ять повністю
         var memoryStream = new MemoryStream();
         await file.CopyToAsync(memoryStream);
-        memoryStream.Position = 0; // Скидаємо на початок перед відправкою
+        memoryStream.Position = 0;
 
         var requestDto = new CreateCvAnalysisRequestDto
         {
-            FileStream = memoryStream, // Тепер це MemoryStream, він не "здохне" завчасно
+            FileStream = memoryStream,
             FileName = file.FileName,
             ContentType = file.ContentType,
             UserId = userId,
         };
 
-        // ВАЖЛИВО: MemoryStream треба закрити ПІСЛЯ завершення всієї команди
         using (memoryStream)
         {
             return HandleResult(await Mediator.Send(new CreateCvAnalysisCommand(requestDto)));
         }
+    }
+
+    [HttpGet("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CvAnalysisResponseShortDto))]
+    public async Task<IActionResult> GetUser([FromRoute] int id)
+    {
+        return HandleResult(await Mediator.Send(new GetAllByUserIdQuery(id)));
     }
 }

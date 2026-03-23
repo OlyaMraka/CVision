@@ -12,5 +12,8 @@ public class CvAnalysisProfile : Profile
             .ForMember(dest => dest.Recommendations, opt => opt.MapFrom(src => src.SectionsResults));
 
         CreateMap<CvSectionAnalisysResultDto, CVAnalysisRecommendation>();
+
+        CreateMap<CVAnalysis, CvAnalysisResponseShortDto>()
+            .ForMember(dest => dest.FileUrl, opt => opt.MapFrom(x => x.CV.FilePath));
     }
 }
