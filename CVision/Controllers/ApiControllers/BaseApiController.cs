@@ -3,7 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 
-namespace CVision.Controllers;
+namespace CVision.Controllers.ApiControllers;
 
 [ApiController]
 [Route("api/[controller]")]

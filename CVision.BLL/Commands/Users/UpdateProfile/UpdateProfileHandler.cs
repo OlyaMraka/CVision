@@ -1,6 +1,7 @@
 using AutoMapper;
 using CVision.BLL.Constans;
 using CVision.BLL.DTOs.Users;
+using CVision.BLL.Interfaces;
 using CVision.DAL.Entities;
 using FluentResults;
 using MediatR;
@@ -10,7 +11,8 @@ namespace CVision.BLL.Commands.Users.UpdateProfile;
 
 public class UpdateProfileHandler(
     UserManager<ApplicationUser> userManager,
-    IMapper mapper) : IRequestHandler<UpdateProfileCommand, Result<GetUserResponseDto>>
+    IMapper mapper,
+    IEmailService emailService) : IRequestHandler<UpdateProfileCommand, Result<GetUserResponseDto>>
 {
     public async Task<Result<GetUserResponseDto>> Handle(UpdateProfileCommand request, CancellationToken cancellationToken)
     {
@@ -23,7 +25,8 @@ public class UpdateProfileHandler(
         user.UserName = request.RequestDto.UserName;
         user.PhoneNumber = request.RequestDto.PhoneNumber;
 
-        if (!string.Equals(user.Email, request.RequestDto.Email, StringComparison.OrdinalIgnoreCase))
+        var emailChanged = !string.Equals(user.Email, request.RequestDto.Email, StringComparison.OrdinalIgnoreCase);
+        if (emailChanged)
         {
             var existingUser = await userManager.FindByEmailAsync(request.RequestDto.Email);
             if (existingUser != null && existingUser.Id != user.Id)
@@ -41,6 +44,13 @@ public class UpdateProfileHandler(
         {
             var errors = result.Errors.Select(e => e.Description).ToList();
             return Result.Fail<GetUserResponseDto>(errors);
+        }
+
+        if (emailChanged)
+        {
+            var emailToken = await userManager.GenerateEmailConfirmationTokenAsync(user);
+            var confirmationLink = $"http://localhost:5128/Account/ConfirmEmail?userId={user.Id}&token={Uri.EscapeDataString(emailToken)}";
+            await emailService.SendEmailChangeConfirmationAsync(user.Email!, confirmationLink);
         }
 
         var response = mapper.Map<GetUserResponseDto>(user);

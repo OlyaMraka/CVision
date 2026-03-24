@@ -110,6 +110,10 @@ namespace CVision.DAL.Migrations
                     b.Property<string>("ParsedText")
                         .HasColumnType("text");
 
+                    b.Property<string>("PublicId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<DateTime>("UploadedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
@@ -173,6 +177,9 @@ namespace CVision.DAL.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<int?>("SectionScore")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Title")
                         .IsRequired()
