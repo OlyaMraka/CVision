@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
-namespace CVision.Controllers;
+namespace CVision.Controllers.ApiControllers;
 
 public class UsersController : BaseApiController
 {

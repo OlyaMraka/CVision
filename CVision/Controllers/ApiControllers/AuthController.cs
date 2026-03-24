@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using FluentResults;
 using System.Security.Claims;
 
-namespace CVision.Controllers;
+namespace CVision.Controllers.ApiControllers;
 
 public class AuthController(
     SignInManager<ApplicationUser> signInManager,
