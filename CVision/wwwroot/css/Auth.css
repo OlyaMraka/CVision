@@ -176,7 +176,17 @@
     border: 1px solid #f4caca;
 }
 
+.form-alert--success {
+    background: #f2fbf2;
+    color: #2b7a2b;
+    border: 1px solid #bfe5bf;
+}
+
 .validation-summary-valid {
+    display: none;
+}
+
+.form-alert.form-alert--error:empty {
     display: none;
 }
 

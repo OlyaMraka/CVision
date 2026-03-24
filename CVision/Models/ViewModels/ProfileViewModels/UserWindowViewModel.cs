@@ -4,14 +4,18 @@ namespace CVision.Models.ViewModels.ProfileViewModels
 {
     public class UserWindowViewModel
     {
+        [Display(Name = "Ім'я користувача")]
         [Required(ErrorMessage = "Введіть ваше ім'я")]
-        [StringLength(100, MinimumLength = 2, ErrorMessage = "Ім'я має містити від 2 до 100 символів")]
+        [StringLength(40, MinimumLength = 4, ErrorMessage = "Ім'я має містити від 4 до 40 символів")]
         public string UserName { get; set; } = string.Empty;
 
+        [Display(Name = "Електронна пошта")]
         [Required(ErrorMessage = "Введіть електронну пошту")]
         [EmailAddress(ErrorMessage = "Невірний формат email")]
+        [StringLength(40, MinimumLength = 4, ErrorMessage = "Email має містити від 4 до 40 символів")]
         public string Email { get; set; } = string.Empty;
 
+        [Display(Name = "Номер телефону")]
         [Required(ErrorMessage = "Введіть номер телефону")]
         [Phone(ErrorMessage = "Невірний формат телефону")]
         [RegularExpression(
@@ -21,6 +25,6 @@ namespace CVision.Models.ViewModels.ProfileViewModels
 
         public string MemberSince { get; set; } = string.Empty;
 
-        public string StatusLabel { get; set; } = "Active profile";
+        public string StatusLabel { get; set; } = "Активний профіль";
     }
 }
