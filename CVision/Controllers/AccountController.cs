@@ -75,26 +75,40 @@ namespace CVision.Controllers
                 Email = model.Email,
                 Password = model.Password,
             };
-            var response = await mediator.Send(new LoginUserCommand(requestDto));
 
-            if (response.IsSuccess)
+            try
             {
-                await signInManager.SignInAsync(response.Value, isPersistent: false);
-                return RedirectToAction("hub", "Home");
-            }
+                var response = await mediator.Send(new LoginUserCommand(requestDto));
 
-            if (!response.Errors.Any())
-            {
-                ModelState.AddModelError(string.Empty, "Не вдалося увійти. Перевірте email та пароль.");
+                if (response.IsSuccess)
+                {
+                    await signInManager.SignInAsync(response.Value, isPersistent: false);
+                    return RedirectToAction("hub", "Home");
+                }
+
+                if (!response.Errors.Any())
+                {
+                    ModelState.AddModelError(string.Empty, "Не вдалося увійти. Перевірте email та пароль.");
+                    return View(model);
+                }
+
+                foreach (var error in response.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, TranslateErrorToUkrainian(error.Message));
+                }
+
                 return View(model);
             }
-
-            foreach (var error in response.Errors)
+            catch (Exception ex) when (IsEmailSendingNetworkOrTimeoutError(ex))
             {
-                ModelState.AddModelError(string.Empty, TranslateErrorToUkrainian(error.Message));
+                ModelState.AddModelError(string.Empty, "Не вдалося увійти через проблеми з мережею або таймаут. Перевірте інтернет і спробуйте ще раз.");
+                return View(model);
             }
-
-            return View(model);
+            catch
+            {
+                ModelState.AddModelError(string.Empty, "Сталася технічна помилка під час входу. Спробуйте ще раз пізніше.");
+                return View(model);
+            }
         }
 
         [HttpGet]

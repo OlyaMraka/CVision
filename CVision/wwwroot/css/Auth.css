@@ -180,6 +180,10 @@
     display: none;
 }
 
+.form-alert.form-alert--error:empty {
+    display: none;
+}
+
 .form-group__label-row {
     display: flex;
     align-items: center;
