@@ -1,0 +1,172 @@
+/* =============================================================
+   wwwroot/css/cv-gallery.css
+   Стилі галереї CV — вкладка "Подивитись на CV".
+   Підключається в hub.cshtml разом з HubUsers.css.
+   Використовує ті самі CSS-змінні що й HubUsers.css.
+   ============================================================= */
+
+/* ── Обгортка галереї ── */
+.cv-gallery {
+    padding: .5rem 0 3rem;
+}
+
+/* ── Грід карток — 4 колонки як на фото ── */
+.cv-gallery__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.25rem;
+}
+
+/* ── Одна картка ── */
+.cv-card-item {
+    background: rgba(255,255,255,.75);
+    backdrop-filter: blur(16px);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,.07);
+    transition: transform .25s ease, box-shadow .25s ease;
+    cursor: pointer;
+}
+
+.cv-card-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 32px rgba(0,0,0,.12);
+}
+
+/* ── Прев'ю (верхня частина картки) ── */
+.cv-card-item__preview {
+    width: 100%;
+    aspect-ratio: 3 / 4;      /* пропорція А4 */
+    background: #f0e8dc;
+    overflow: hidden;
+    position: relative;
+}
+
+.cv-card-item__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Заглушка для PDF/DOCX */
+.cv-card-item__placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+    color: #c0a888;
+}
+
+.cv-card-item__placeholder span {
+    font-size: .7rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: #c0a888;
+}
+
+/* ── Текстова частина ── */
+.cv-card-item__body {
+    padding: 1rem 1rem .9rem;
+}
+
+.cv-card-item__title {
+    font-size: .85rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: .4rem;
+}
+
+/* Три рядки фідбеку з градієнтним затуханням */
+.cv-card-item__feedback {
+    font-size: .78rem;
+    color: #666;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;     /* рівно 3 рядки */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-bottom: .75rem;
+
+    /* Градієнтне затухання знизу */
+    -webkit-mask-image: linear-gradient(
+            to bottom,
+            black 50%,
+            transparent 100%
+    );
+    mask-image: linear-gradient(
+            to bottom,
+            black 50%,
+            transparent 100%
+    );
+}
+
+/* Посилання "Переглянути детальніше" */
+.cv-card-item__link {
+    display: inline-flex;
+    align-items: center;
+    gap: .3rem;
+    font-size: .78rem;
+    font-weight: 600;
+    color: #c47c2a;
+    text-decoration: none;
+    transition: gap .2s, opacity .2s;
+}
+
+.cv-card-item__link:hover {
+    gap: .5rem;
+    opacity: .8;
+}
+
+
+/* ── Порожній стан ── */
+.cv-gallery__empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    text-align: center;
+}
+
+.cv-gallery__empty-icon {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: #fef3e2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #c47c2a;
+    margin-bottom: 1.2rem;
+}
+
+.cv-gallery__empty-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: .5rem;
+}
+
+.cv-gallery__empty-text {
+    font-size: .88rem;
+    color: #999;
+}
+
+
+/* ── Адаптивність ── */
+@media (max-width: 1100px) {
+    .cv-gallery__grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 768px) {
+    .cv-gallery__grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 480px) {
+    .cv-gallery__grid { grid-template-columns: 1fr; }
+}

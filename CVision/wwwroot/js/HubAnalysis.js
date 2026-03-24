@@ -38,14 +38,11 @@
     function handleFile(file) {
         const allowed = [
             'application/pdf',
-            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-            'application/msword',           // .doc
-            'image/png',                    // .png
-            'image/jpeg',                   // .jpg / .jpeg
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
         ];
         const ext = file.name.split('.').pop().toLowerCase();
 
-       
+
 
         selectedFile = file;
 
@@ -95,41 +92,41 @@
         /* Блокуємо UI, показуємо лоадер */
         setLoading(true);
 
-        
-            const formData = new FormData();
-            formData.append('file', selectedFile);
 
-            /*
-                RequestVerificationToken — читаємо з прихованого input
-                який ASP.NET Core рендерить автоматично при наявності
-                @Html.AntiForgeryToken() у View або Layout.
+        const formData = new FormData();
+        formData.append('file', selectedFile);
 
-                Якщо токена немає — додай у _Layout.cshtml перед </body>:
-                @Html.AntiForgeryToken()
-            */
-            const token = document
-                .querySelector('input[name="__RequestVerificationToken"]')
-                ?.value ?? '';
+        /*
+            RequestVerificationToken — читаємо з прихованого input
+            який ASP.NET Core рендерить автоматично при наявності
+            @Html.AntiForgeryToken() у View або Layout.
 
-            const response = await fetch('/Hub/Analyze', {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'RequestVerificationToken': token
-                }
-            });
+            Якщо токена немає — додай у _Layout.cshtml перед </body>:
+            @Html.AntiForgeryToken()
+        */
+        const token = document
+            .querySelector('input[name="__RequestVerificationToken"]')
+            ?.value ?? '';
 
-            /*
-                Парсимо відповідь як JSON в будь-якому випадку —
-                і при успіху (200 OK), і при помилці (400 Bad Request).
-                Контролер завжди повертає JSON.
-            */
-            const data = await response.json();
-            
+        const response = await fetch('/Hub/Analyze', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'RequestVerificationToken': token
+            }
+        });
 
-          
-            showResults(data);
-            
+        /*
+            Парсимо відповідь як JSON в будь-якому випадку —
+            і при успіху (200 OK), і при помилці (400 Bad Request).
+            Контролер завжди повертає JSON.
+        */
+        const data = await response.json();
+
+
+
+        showResults(data);
+
     }
 
     /* Вмикає / вимикає стан завантаження */
@@ -159,8 +156,8 @@
         summaryResult.style.display = 'block';
 
         animateNumber(totalScore, 0, data.score, 900, '%');
-        scoreLabel.textContent = getScoreLabel(data.score);
-        scoreDesc.textContent  = getScoreDesc(data.score);
+        scoreLabel.textContent   = getScoreLabel(data.score);
+        scoreDesc.textContent    = getScoreDesc(data.score);
         feedbackText.textContent = data.feedBack;
 
         /* Секції */

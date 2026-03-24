@@ -23,11 +23,11 @@
                 disabled>
             Завантажити CV
         </button>
-        <button class="dashboard-nav__item"
-                type="button"
-                disabled>
+        <a class="dashboard-nav__item @(currentPage == "gallery" ? "is-active" : "")"
+           asp-controller="Hub"
+           asp-action="CVGallery">
             Подивитись на CV
-        </button>
+        </a>
     </nav>
 
     <a asp-controller="Home"

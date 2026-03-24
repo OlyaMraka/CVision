@@ -10,6 +10,7 @@ namespace CVision.Mappers
         public CVAnalysisProfile()
         {
             CreateMap<CvSectionAnalisysResultDto, CVSectionResultViewModel>();
+            CreateMap<CvAnalysisResponseShortDto, CVGalleryViewModel>();
 
             // 🔹 Main model
             CreateMap<CvAnalysisResultDto, CVAnalysisViewModel>()

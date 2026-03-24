@@ -1,0 +1,127 @@
+@model CVision.Models.ViewModels.CVAnalysisViewModels.CVGalleryPageViewModel
+
+@{
+    ViewData["Title"] = "Галерея CV";
+    ViewData["DashboardCurrentPage"] = "gallery";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/CVGallery.css" asp-append-version="true" />
+}
+
+<div class="dashboard-page dashboard-page--hub">
+
+    <div class="dashboard-page__gradient"></div>
+
+    <partial name="~/Views/Shared/_DashboardHeader.cshtml" />
+
+    <main class="hub">
+
+        <!-- 🔥 ТУТ ТВОЯ ГАЛЕРЕЯ -->
+        <div class="cv-gallery">
+
+            @if (Model?.Items == null || !Model.Items.Any())
+            {
+                <!-- Порожній стан -->
+                <div class="cv-gallery__empty">
+                    <div class="cv-gallery__empty-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="1.6"
+                             stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                            <line x1="12" y1="13" x2="12" y2="17"/>
+                            <line x1="10" y1="15" x2="14" y2="15"/>
+                        </svg>
+                    </div>
+
+                    <div class="cv-gallery__empty-title">
+                        У вас ще немає резюме
+                    </div>
+
+                    <p class="cv-gallery__empty-text">
+                        Завантажте перше резюме у вкладці «CV аналіз»
+                    </p>
+                </div>
+            }
+            else
+            {
+                <!-- Грід карток -->
+                <div class="cv-gallery__grid">
+
+                    @foreach (var item in Model.Items)
+                    {
+                        <div class="cv-card-item">
+
+                            <!-- Прев'ю -->
+                            <div class="cv-card-item__preview">
+
+                                @{
+                                    var isImage = !string.IsNullOrEmpty(item.FileUrl) &&
+                                                  (item.FileUrl.EndsWith(".png", StringComparison.OrdinalIgnoreCase) ||
+                                                   item.FileUrl.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) ||
+                                                   item.FileUrl.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase));
+                                }
+
+                                @if (isImage)
+                                {
+                                    <img src="@item.FileUrl"
+                                         alt="CV #@item.Id"
+                                         class="cv-card-item__img" />
+                                }
+                                else
+                                {
+                                    <div class="cv-card-item__placeholder">
+                                        <svg width="36" height="36" viewBox="0 0 24 24" fill="none"
+                                             stroke="currentColor" stroke-width="1.5"
+                                             stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                            <polyline points="14 2 14 8 20 8"/>
+                                            <line x1="16" y1="13" x2="8" y2="13"/>
+                                            <line x1="16" y1="17" x2="8" y2="17"/>
+                                        </svg>
+                                        <span>CV</span>
+                                    </div>
+                                }
+
+                            </div>
+
+                            <!-- Текст -->
+                            <div class="cv-card-item__body">
+
+                                <h3 class="cv-card-item__title">
+                                    Резюме #@item.Id
+                                </h3>
+
+                                <p class="cv-card-item__feedback">
+                                    @item.ShortFeedBack
+                                </p>
+
+                                <a asp-controller="Hub"
+                                   asp-action="Details"
+                                   asp-route-id="@item.Id"
+                                   class="cv-card-item__link">
+                                    Переглянути детальніше
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                                         stroke="currentColor" stroke-width="2.5"
+                                         stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                                    </svg>
+                                </a>
+
+                            </div>
+
+                        </div>
+                    }
+
+                </div>
+            }
+
+        </div>
+
+    </main>
+</div>
+@section Scripts {
+    <script src="~/js/HubGallery.js" asp-append-version="true"></script>
+}
