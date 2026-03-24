@@ -1,10 +1,12 @@
 using AutoMapper;
+using CVision.BLL.Constans;
 using MediatR;
 using FluentResults;
 using CVision.BLL.DTOs.CvAnalyses;
 using CVision.BLL.Interfaces;
 using CVision.DAL.Entities;
 using CVision.DAL.Repositories.Interfaces.Base;
+using FluentValidation;
 
 namespace CVision.BLL.Commands.CvAnalyses.Create;
 
@@ -13,12 +15,20 @@ public class CreateCvAnalysisHandler(
     ICvParserService cvParser,
     IFileService fileService,
     IRepositoryWrapper repositoryWrapper,
-    IMapper mapper) : IRequestHandler<CreateCvAnalysisCommand, Result<CvAnalysisResultDto>>
+    IMapper mapper,
+    IValidator<CreateCvAnalysisCommand> validator) : IRequestHandler<CreateCvAnalysisCommand, Result<CvAnalysisResultDto>>
 {
     public async Task<Result<CvAnalysisResultDto>> Handle(
         CreateCvAnalysisCommand request,
         CancellationToken cancellationToken)
     {
+        var validationResult = await validator.ValidateAsync(request, cancellationToken);
+
+        if (!validationResult.IsValid)
+        {
+            return Result.Fail<CvAnalysisResultDto>(validationResult.Errors.First().ErrorMessage);
+        }
+
         using var ms = new MemoryStream();
         await request.RequestDto.FileStream.CopyToAsync(ms);
         byte[] fileBytes = ms.ToArray();
@@ -39,7 +49,7 @@ public class CreateCvAnalysisHandler(
 
         if (await repositoryWrapper.SaveChangesAsync() <= 0)
         {
-            return Result.Fail<CvAnalysisResultDto>("Помилка збереження файлу");
+            return Result.Fail<CvAnalysisResultDto>(CvAnalysisConstants.CvSavingError);
         }
 
         if (request.RequestDto.FileStream.CanSeek)
@@ -61,7 +71,7 @@ public class CreateCvAnalysisHandler(
 
         if (await repositoryWrapper.SaveChangesAsync() <= 0)
         {
-            return Result.Fail<CvAnalysisResultDto>("Помилка збереження результатів аналізу");
+            return Result.Fail<CvAnalysisResultDto>(CvAnalysisConstants.CvAnalysisSavingError);
         }
 
         return Result.Ok(aiResult);
