@@ -38,7 +38,10 @@
     function handleFile(file) {
         const allowed = [
             'application/pdf',
-            'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'application/msword',           // .doc
+            'image/png',                    // .png
+            'image/jpeg',
         ];
         const ext = file.name.split('.').pop().toLowerCase();
 

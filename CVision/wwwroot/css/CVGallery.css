@@ -40,6 +40,8 @@
     background: #f0e8dc;
     overflow: hidden;
     position: relative;
+    height: 400px; /* або 500px */
+    border-radius: 16px;
 }
 
 .cv-card-item__img {
@@ -155,6 +157,12 @@
 .cv-gallery__empty-text {
     font-size: .88rem;
     color: #999;
+}
+
+.cv-card-item__preview iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
 }
 
 

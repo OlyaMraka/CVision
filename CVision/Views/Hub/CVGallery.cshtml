@@ -58,30 +58,47 @@
                             <div class="cv-card-item__preview">
 
                                 @{
-                                    var isImage = !string.IsNullOrEmpty(item.FileUrl) &&
-                                                  (item.FileUrl.EndsWith(".png", StringComparison.OrdinalIgnoreCase) ||
-                                                   item.FileUrl.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) ||
-                                                   item.FileUrl.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase));
+                                    var url = item.FileUrl ?? "";
+
+                                    var isImage = url.EndsWith(".png", StringComparison.OrdinalIgnoreCase)
+                                                  || url.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase)
+                                                  || url.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase);
+
+                                    var isPdf = url.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase);
+
+                                    var isDoc = url.EndsWith(".doc", StringComparison.OrdinalIgnoreCase)
+                                                || url.EndsWith(".docx", StringComparison.OrdinalIgnoreCase);
                                 }
 
+                                @* 🖼️ КАРТИНКА *@
                                 @if (isImage)
                                 {
-                                    <img src="@item.FileUrl"
+                                    <img src="@url"
                                          alt="CV #@item.Id"
                                          class="cv-card-item__img" />
                                 }
+
+                                @* 📄 PDF *@
+                                else if (isPdf)
+                                {
+                                    <iframe src="@url"
+                                            class="cv-card-item__pdf">
+                                    </iframe>
+                                }
+
+                                @* 📘 DOC / DOCX *@
+                                else if (isDoc)
+                                {
+                                    <iframe src="https://view.officeapps.live.com/op/embed.aspx?src=@url"
+                                            class="cv-card-item__doc">
+                                    </iframe>
+                                }
+
+                                @* ❓ fallback *@
                                 else
                                 {
                                     <div class="cv-card-item__placeholder">
-                                        <svg width="36" height="36" viewBox="0 0 24 24" fill="none"
-                                             stroke="currentColor" stroke-width="1.5"
-                                             stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                                            <polyline points="14 2 14 8 20 8"/>
-                                            <line x1="16" y1="13" x2="8" y2="13"/>
-                                            <line x1="16" y1="17" x2="8" y2="17"/>
-                                        </svg>
-                                        <span>CV</span>
+                                        <span>Невідомий формат</span>
                                     </div>
                                 }
 
