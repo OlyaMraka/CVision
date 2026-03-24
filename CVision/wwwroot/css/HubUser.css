@@ -369,14 +369,21 @@
 }
 
 .dashboard-field {
-    display: grid;
-    gap: 0.42rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
 }
 
 .dashboard-field__label {
     font-size: 0.95rem;
     font-weight: 700;
     color: #1a1a1a;
+    margin-bottom: 0.42rem;
+}
+
+.dashboard-field > .dashboard-field__label + .dashboard-field__input,
+.dashboard-field > .dashboard-field__label + .dashboard-field__display {
+    margin-top: 0;
 }
 
 .dashboard-field__input {
@@ -417,12 +424,14 @@
     font-size: 0.82rem;
     color: rgba(31, 28, 25, 0.58);
     line-height: 1.5;
+    margin-top: 0.42rem;
 }
 
 .dashboard-field__error {
     min-height: 1rem;
     font-size: 0.82rem;
     color: #c53030;
+    margin-top: 0.2rem;
 }
 
 .dashboard-form__footer {

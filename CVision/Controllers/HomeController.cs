@@ -72,6 +72,9 @@ public class HomeController(IMediator mediator, ILogger<HomeController> logger) 
             return RedirectToAction("Login", "Account");
         }
 
+        var currentUserResult = await mediator.Send(new GetUserByIdQuery(userId.Value));
+        var previousEmail = currentUserResult.ValueOrDefault?.Email;
+
         if (!ModelState.IsValid)
         {
             model.MemberSince = await GetMemberSinceAsync(userId.Value);
@@ -112,7 +115,12 @@ public class HomeController(IMediator mediator, ILogger<HomeController> logger) 
                 return View("user", model);
             }
 
-            TempData["UserWindowSuccess"] = "Дані профілю збережено.";
+            var emailChanged = !string.IsNullOrWhiteSpace(previousEmail)
+                && !string.Equals(previousEmail, model.Email, StringComparison.OrdinalIgnoreCase);
+
+            TempData["UserWindowSuccess"] = emailChanged
+                ? "Дані профілю збережено. На нову пошту надіслано лист підтвердження. Підтвердіть email, щоб входити за новою адресою."
+                : "Дані профілю збережено.";
             return RedirectToAction("user");
         }
         catch (Exception ex)
