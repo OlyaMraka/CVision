@@ -21,6 +21,13 @@
             <h1 class="modal__title" id="loginTitle">Вхід</h1>
             <p class="modal__subtitle">Увійдіть у свій кабінет CVision</p>
 
+            @if (TempData["SuccessMessage"] is string successMessage)
+            {
+                <div class="form-alert form-alert--success" role="status" style="margin-bottom: 1rem;">
+                    @successMessage
+                </div>
+            }
+
             <div asp-validation-summary="ModelOnly" class="form-alert form-alert--error" role="alert" id="summaryAlert"
                  style="margin-bottom: 1rem;"></div>
 
@@ -49,8 +56,10 @@
                 </div>
 
                 <div class="form-group">
-                    
-                    <label class="form-group__label" asp-for="Password">Пароль</label>
+                    <div class="form-group__label-row">
+                        <label class="form-group__label" asp-for="Password">Пароль</label>
+                        <a class="form-group__forgot" asp-controller="Account" asp-action="ForgotPassword">забули пароль?</a>
+                    </div>
 
                     <div class="form-group__input-wrap">
 

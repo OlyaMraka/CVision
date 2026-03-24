@@ -1,6 +1,8 @@
 using CVision.BLL.Commands.Users.Login;
 using CVision.BLL.Commands.Users.ConfirmEmail;
+using CVision.BLL.Commands.Users.ForgotPassword;
 using CVision.BLL.Commands.Users.Register;
+using CVision.BLL.Commands.Users.ResetPassword;
 using CVision.BLL.DTOs.Users;
 using Microsoft.AspNetCore.Mvc;
 using CVision.Models.ViewModels.AuthViewModels;
@@ -115,6 +117,99 @@ namespace CVision.Controllers
         public IActionResult Register()
         {
             return View(new RegisterViewModel());
+        }
+
+        [HttpGet]
+        public IActionResult ForgotPassword(string? email = null)
+        {
+            return View(new ForgotPasswordViewModel
+            {
+                Email = email ?? string.Empty,
+            });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            try
+            {
+                var requestDto = new ForgotPasswordRequestDto
+                {
+                    Email = model.Email,
+                };
+
+                await mediator.Send(new ForgotPasswordCommand(requestDto));
+                return RedirectToAction(nameof(ForgotPasswordConfirmation));
+            }
+            catch (Exception ex) when (IsEmailSendingNetworkOrTimeoutError(ex))
+            {
+                ModelState.AddModelError(string.Empty, "Не вдалося надіслати лист для відновлення через проблеми з мережею або таймаут. Перевірте інтернет і спробуйте ще раз.");
+                return View(model);
+            }
+            catch
+            {
+                ModelState.AddModelError(string.Empty, "Сталася технічна помилка під час відновлення пароля. Спробуйте ще раз пізніше.");
+                return View(model);
+            }
+        }
+
+        [HttpGet]
+        public IActionResult ForgotPasswordConfirmation()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult ResetPassword(string? email = null, string? token = null)
+        {
+            if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(token))
+            {
+                return RedirectToAction(nameof(Login));
+            }
+
+            return View(new ResetPasswordViewModel
+            {
+                Email = email,
+                Token = token,
+            });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var requestDto = new ResetPasswordRequestDto
+            {
+                Email = model.Email,
+                Token = model.Token,
+                NewPassword = model.NewPassword,
+            };
+
+            var result = await mediator.Send(new ResetPasswordCommand(requestDto));
+
+            if (result.IsSuccess)
+            {
+                TempData["SuccessMessage"] = "Пароль успішно змінено. Тепер увійдіть з новим паролем.";
+                return RedirectToAction(nameof(Login));
+            }
+
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, TranslateErrorToUkrainian(error.Message));
+            }
+
+            return View(model);
         }
 
         [HttpPost]
@@ -323,6 +418,16 @@ namespace CVision.Controllers
             if (string.Equals(message, "Failed to change password!", StringComparison.Ordinal))
             {
                 return "Не вдалося змінити пароль.";
+            }
+
+            if (string.Equals(message, "Password reset failed! The token may be invalid or expired.", StringComparison.Ordinal))
+            {
+                return "Не вдалося скинути пароль. Посилання недійсне або вже прострочене.";
+            }
+
+            if (message.Contains("invalid token", StringComparison.OrdinalIgnoreCase))
+            {
+                return "Недійсний токен відновлення. Спробуйте запросити новий лист.";
             }
 
             if (string.Equals(message, "Failed to update profile!", StringComparison.Ordinal))

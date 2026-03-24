@@ -34,8 +34,8 @@ public class ForgotPasswordHandler : IRequestHandler<ForgotPasswordCommand, Resu
 
         var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
-        var baseUrl = _configuration["AppSettings:BaseUrl"] ?? "http://localhost:5000";
-        var resetLink = $"{baseUrl}/reset-password?email={Uri.EscapeDataString(user.Email!)}&token={Uri.EscapeDataString(token)}";
+        var baseUrl = (_configuration["AppSettings:BaseUrl"] ?? "http://localhost:5128").TrimEnd('/');
+        var resetLink = $"{baseUrl}/Account/ResetPassword?email={Uri.EscapeDataString(user.Email!)}&token={Uri.EscapeDataString(token)}";
 
         await _emailService.SendPasswordResetEmailAsync(user.Email!, resetLink);
 
