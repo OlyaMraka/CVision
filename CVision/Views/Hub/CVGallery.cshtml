@@ -7,13 +7,14 @@
 }
 
 @section Styles {
+    <link rel="stylesheet" href="~/css/HubUser.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/CVGallery.css" asp-append-version="true" />
 }
 
 <div class="dashboard-page dashboard-page--hub">
 
     <div class="dashboard-page__gradient"></div>
-
+    
     <partial name="~/Views/Shared/_DashboardHeader.cshtml" />
 
     <main class="hub">
@@ -75,7 +76,7 @@
                                 {
                                     <img src="@url"
                                          alt="CV #@item.Id"
-                                         class="cv-card-item__img" />
+                                         class="cv-card-item__img"/>
                                 }
 
                                 @* 📄 PDF *@

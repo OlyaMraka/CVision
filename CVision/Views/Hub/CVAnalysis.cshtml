@@ -5,6 +5,7 @@
 }
 
 @section Styles {
+    <link rel="stylesheet" href="~/css/HubUser.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/HubUsers.css" asp-append-version="true" />
 }
 
@@ -169,5 +170,6 @@
 
 @section Scripts {
     @Html.AntiForgeryToken()
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="~/js/HubAnalysis.js" asp-append-version="true"></script>
 }

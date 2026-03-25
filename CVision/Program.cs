@@ -23,6 +23,8 @@ builder.Host.UseSerilog((context, loggerConfig) =>
 builder.Services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
 
 builder.Services.AddRepositoriesFromAssembly(typeof(RepositoryWrapper).Assembly);
+builder.Services.AddExceptionHandler<CustomExceptionHandler>();
+builder.Services.AddProblemDetails();
 
 builder.Services.AddScoped<ITextExtractor, PdfTextExtractor>();
 builder.Services.AddScoped<ITextExtractor, DocxTextExtractor>();
@@ -74,13 +76,20 @@ builder.Services.ConfigureApplicationCookie(options =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
-}
+// if (!app.Environment.IsDevelopment())
+// {
+//     app.UseExceptionHandler("/Home/Error");
+//     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+//     app.UseHsts();
+// }
 
+
+app.MapGet("/test-exception", () =>
+{
+    throw new Exception("Test exception");
+});
+
+app.UseExceptionHandler();
 app.UseHttpsRedirection();
 
 app.UseSerilogRequestLogging();
