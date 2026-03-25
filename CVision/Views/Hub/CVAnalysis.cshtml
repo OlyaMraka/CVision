@@ -19,7 +19,7 @@
 
         <div class="hub-top">
 
-            <!-- ── Картка завантаження файлу ── -->
+            
             <div class="hub-upload" id="dropZone">
 
                 
@@ -27,7 +27,7 @@
                        id="cvFileInput"
                        accept=".pdf,.docx,.doc,.png,.jpg,.jpeg"
                        style="display:none;" />
-                <!-- Плейсхолдер — до вибору файлу -->
+                
                 <div id="uploadPlaceholder">
                     <div class="hub-upload__icon">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -45,7 +45,7 @@
                     </p>
                 </div>
 
-                <!-- Прев'ю після вибору файлу (керується JS) -->
+                
                 <div id="filePreviewWrap" style="display:none; width:100%; text-align:center;">
 
                     <img id="filePreviewImg"
@@ -78,7 +78,7 @@
                                 display:inline-block;"></div>
                 </div>
 
-                <!-- Кнопки -->
+                
                 <div class="hub-upload__actions">
                     <button class="btn-pick"    type="button" id="pickFileBtn">Обрати файл</button>
                     <button class="btn-analyze" type="button" id="analyzeBtn" disabled>Аналізувати зараз</button>
@@ -86,10 +86,10 @@
 
             </div>
 
-            <!-- ── Картка AI висновку ── -->
+            
             <div class="hub-summary" id="summaryCard">
 
-                <!-- Стан: до аналізу -->
+                
                 <div id="summaryEmpty">
                     <div class="hub-summary__title">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
@@ -106,7 +106,7 @@
                     </p>
                 </div>
 
-                <!-- Стан: після аналізу (прихований, JS показує) -->
+                
                 <div id="summaryResult" style="display:none;">
                     <div class="hub-summary__title">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
@@ -133,7 +133,7 @@
 
         </div>
 
-        <!-- ── Лоадер (прихований, JS показує при аналізі) ── -->
+        
         <div class="hub-loader" id="hubLoader">
             <div class="hub-loader__spinner"></div>
             <div class="hub-loader__text">
@@ -142,7 +142,7 @@
             </div>
         </div>
 
-        <!-- ── Результати секцій (прихований, JS показує після аналізу) ── -->
+        
         <div class="hub-results" id="hubResults">
 
             <div class="hub-sections-header">
@@ -160,7 +160,7 @@
                 <div class="hub-sections-meta" id="sectionsMeta"></div>
             </div>
 
-            <!-- JS динамічно вставляє картки сюди -->
+            
             <div class="hub-sections-grid" id="sectionsGrid"></div>
 
         </div>

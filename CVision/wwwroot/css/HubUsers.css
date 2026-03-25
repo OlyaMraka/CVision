@@ -1,16 +1,5 @@
-/* =============================================================
-   wwwroot/css/HubUser.css
-   Стилі для:
-     1. Хедер дашборду  (.db-header)
-     2. Фонова сторінка (.dashboard-page)
-     3. Сторінка AI-аналізу CV (.hub-*)
-   ============================================================= */
-
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap');
 
-/* ─────────────────────────────────────────────────────────────
-   ЗМІННІ
-───────────────────────────────────────────────────────────── */
 :root {
     --font:           'DM Sans', sans-serif;
     --gold:           #c47c2a;
@@ -28,10 +17,6 @@
 }
 
 
-/* ─────────────────────────────────────────────────────────────
-   1. СТОРІНКА-ОБГОРТКА
-   Градієнтний фон як на фото (кремово-персиковий mesh).
-───────────────────────────────────────────────────────────── */
 .dashboard-page {
     min-height: 100vh;
     font-family: var(--font);
@@ -40,7 +25,7 @@
     overflow-x: hidden;
 }
 
-/* Mesh-градієнт — два кольорових плями як на фото */
+
 .dashboard-page__gradient {
     position: fixed;
     inset: 0;
@@ -52,10 +37,6 @@
             #f0e6d3;
 }
 
-
-/* ─────────────────────────────────────────────────────────────
-   2. ХЕДЕР ДАШБОРДУ
-───────────────────────────────────────────────────────────── */
 .db-header {
     position: relative;
     z-index: 100;
@@ -66,7 +47,7 @@
     height: 64px;
 }
 
-/* Логотип */
+
 .db-header__logo {
     font-size: 1.3rem;
     font-weight: 800;
@@ -75,7 +56,7 @@
     letter-spacing: -0.02em;
 }
 
-/* Pill-контейнер для вкладок */
+
 .db-header__tabs {
     display: flex;
     align-items: center;
@@ -88,7 +69,7 @@
     box-shadow: 0 2px 12px rgba(0,0,0,.07);
 }
 
-/* Одна вкладка */
+
 .db-header__tab {
     padding: .45rem 1.1rem;
     font-size: .88rem;
@@ -105,7 +86,7 @@
     color: var(--text);
 }
 
-/* Активна вкладка — біла підкладка */
+
 .db-header__tab--active {
     background: var(--white);
     color: var(--text);
@@ -113,7 +94,7 @@
     box-shadow: 0 1px 6px rgba(0,0,0,.08);
 }
 
-/* Аватар */
+
 .db-header__avatar {
     width: 40px;
     height: 40px;
@@ -130,11 +111,6 @@
 }
 .db-header__avatar:hover { background: var(--white); }
 
-
-/* ─────────────────────────────────────────────────────────────
-   3. СТОРІНКА HUB (AI-аналіз)
-   Контент нижче хедера.
-───────────────────────────────────────────────────────────── */
 .hub {
     position: relative;
     z-index: 1;
@@ -143,10 +119,6 @@
     margin: 0 auto;
 }
 
-
-/* ─────────────────────────────────────────────────────────────
-   4. ВЕРХНІЙ БЛОК: Upload + AI summary (два блоки в ряд)
-───────────────────────────────────────────────────────────── */
 .hub-top {
     display: grid;
     grid-template-columns: 380px 1fr;
@@ -154,7 +126,7 @@
     margin-bottom: 2rem;
 }
 
-/* ── Upload-картка ── */
+
 .hub-upload {
     background: rgba(255,255,255,.72);
     backdrop-filter: blur(16px);
@@ -172,13 +144,13 @@
 
 .hub-upload:hover { border-color: var(--gold); }
 
-/* Зона drag-and-drop (курсор руки при ховері над файлом) */
+
 .hub-upload.drag-over {
     border-color: var(--gold);
     background: rgba(254,243,226,.5);
 }
 
-/* Іконка завантаження */
+
 .hub-upload__icon {
     width: 56px;
     height: 56px;
@@ -203,9 +175,9 @@
     line-height: 1.5;
 }
 
-/* Прев'ю обраного файлу (показується JS'ом) */
+
 .hub-upload__preview {
-    display: none;            /* прихований поки немає файлу */
+    display: none;            
     width: 100%;
     border-radius: 10px;
     overflow: hidden;
@@ -214,7 +186,7 @@
     object-fit: cover;
 }
 
-/* Назва файлу під прев'ю */
+
 .hub-upload__filename {
     display: none;
     font-size: .8rem;
@@ -225,7 +197,7 @@
     border-radius: 20px;
 }
 
-/* Кнопки */
+
 .hub-upload__actions {
     display: flex;
     gap: .65rem;
@@ -263,7 +235,7 @@
 .btn-analyze:hover   { background: #c73d62; transform: translateY(-1px); }
 .btn-analyze:disabled { opacity: .5; cursor: not-allowed; transform: none; }
 
-/* ── AI Summary картка ── */
+
 .hub-summary {
     background: rgba(255,255,255,.72);
     backdrop-filter: blur(16px);
@@ -283,7 +255,7 @@
     color: var(--text);
 }
 
-/* Score рядок: 82% + текст */
+
 .hub-summary__score-row {
     display: flex;
     align-items: flex-start;
@@ -311,7 +283,7 @@
     line-height: 1.5;
 }
 
-/* Текстовий блок зворотного зв'язку */
+
 .hub-summary__feedback {
     background: var(--pink-light);
     border-radius: 12px;
@@ -321,10 +293,6 @@
     line-height: 1.65;
 }
 
-
-/* ─────────────────────────────────────────────────────────────
-   5. СЕКЦІЇ ДЕТАЛЬНОГО РОЗБОРУ
-───────────────────────────────────────────────────────────── */
 .hub-sections-header {
     display: flex;
     align-items: center;
@@ -346,14 +314,14 @@
     color: var(--text-muted);
 }
 
-/* Грід секцій — 3 колонки */
+
 .hub-sections-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1rem;
 }
 
-/* Одна картка секції */
+
 .hub-section-card {
     background: rgba(255,255,255,.72);
     backdrop-filter: blur(16px);
@@ -363,19 +331,19 @@
     flex-direction: column;
     gap: .65rem;
 
-    /* Анімація появи — задається JS через animation-delay */
+    
     opacity: 0;
     transform: translateY(16px);
     transition: opacity .4s ease, transform .4s ease;
 }
 
-/* Клас що JS додає після завантаження */
+
 .hub-section-card.is-visible {
     opacity: 1;
     transform: translateY(0);
 }
 
-/* Рядок: іконка + назва + відсоток */
+
 .hub-section-card__header {
     display: flex;
     align-items: center;
@@ -406,12 +374,12 @@
     font-weight: 800;
 }
 
-/* Колір відсотка залежить від значення — JS додає клас */
+
 .hub-section-card__score--high   { color: var(--pink); }
 .hub-section-card__score--medium { color: var(--gold); }
 .hub-section-card__score--low    { color: #e05050; }
 
-/* Прогрес-бар */
+
 .hub-section-card__bar {
     height: 5px;
     border-radius: 3px;
@@ -423,11 +391,11 @@
     height: 100%;
     border-radius: 3px;
     background: var(--pink);
-    width: 0%;                        /* старт — JS анімує до реального значення */
+    width: 0%;                        
     transition: width .8s cubic-bezier(.4,0,.2,1);
 }
 
-/* Текст-фідбек */
+
 .hub-section-card__text {
     font-size: .8rem;
     color: #555;
@@ -436,12 +404,9 @@
 }
 
 
-/* ─────────────────────────────────────────────────────────────
-   6. СТАН ЗАВАНТАЖЕННЯ (Loader)
-   Показується поки йде аналіз, прихований — результати.
-───────────────────────────────────────────────────────────── */
+
 .hub-loader {
-    display: none;              /* показується JS'ом при сабміті */
+    display: none;        
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -451,7 +416,7 @@
 
 .hub-loader.is-active { display: flex; }
 
-/* Спінер */
+
 .hub-loader__spinner {
     width: 52px;
     height: 52px;
@@ -471,7 +436,7 @@
     color: var(--text-muted);
 }
 
-/* Анімований рядок крапок */
+
 .hub-loader__dots::after {
     content: '';
     animation: dots 1.4s steps(4, end) infinite;
@@ -483,10 +448,6 @@
     75%  { content: '...'; }
 }
 
-
-/* ─────────────────────────────────────────────────────────────
-   7. РЕЗУЛЬТАТИ (прихований до завершення аналізу)
-───────────────────────────────────────────────────────────── */
 .hub-results {
     display: none;
     flex-direction: column;
@@ -501,10 +462,6 @@
     to   { opacity: 1; transform: translateY(0); }
 }
 
-
-/* ─────────────────────────────────────────────────────────────
-   8. АДАПТИВНІСТЬ
-───────────────────────────────────────────────────────────── */
 @media (max-width: 1024px) {
     .hub-top { grid-template-columns: 1fr; }
     .hub-sections-grid { grid-template-columns: repeat(2, 1fr); }
@@ -513,6 +470,6 @@
 @media (max-width: 640px) {
     .hub { padding: 1rem 1rem 3rem; }
     .db-header { padding: 0 1rem; }
-    .db-header__tabs { display: none; } /* мобільне меню окремо */
+    .db-header__tabs { display: none; } 
     .hub-sections-grid { grid-template-columns: 1fr; }
 }
