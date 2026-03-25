@@ -2,6 +2,7 @@ using AutoMapper;
 using CVision.BLL.Commands.Users.UpdateProfile;
 using CVision.BLL.Constans;
 using CVision.BLL.DTOs.Users;
+using CVision.BLL.Interfaces;
 using CVision.DAL.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
@@ -14,11 +15,13 @@ public class UpdateProfileHandlerTests
 {
     private readonly Mock<IMapper> _mapperMock;
     private readonly Mock<UserManager<ApplicationUser>> _userManagerMock;
+    private readonly Mock<IEmailService> _emailServiceMock;
     private readonly UpdateProfileHandler _handler;
 
     public UpdateProfileHandlerTests()
     {
         _mapperMock = new Mock<IMapper>();
+        _emailServiceMock = new Mock<IEmailService>();
 
         var store = new Mock<IUserStore<ApplicationUser>>();
         var options = new Mock<IOptions<IdentityOptions>>();
@@ -42,7 +45,7 @@ public class UpdateProfileHandlerTests
             serviceProviderMock.Object,
             loggerMock.Object);
 
-        _handler = new UpdateProfileHandler(_userManagerMock.Object, _mapperMock.Object);
+        _handler = new UpdateProfileHandler(_userManagerMock.Object, _mapperMock.Object, _emailServiceMock.Object);
     }
 
     [Fact]
@@ -105,6 +108,7 @@ public class UpdateProfileHandlerTests
         Assert.Equal("newname", result.Value.UserName);
         Assert.Equal("123456", result.Value.PhoneNumber);
         _userManagerMock.Verify(u => u.FindByEmailAsync(It.IsAny<string>()), Times.Never);
+        _emailServiceMock.Verify(e => e.SendEmailChangeConfirmationAsync(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
     }
 
     [Fact]
@@ -137,6 +141,7 @@ public class UpdateProfileHandlerTests
         _userManagerMock.Setup(u => u.FindByEmailAsync("new@test.com")).ReturnsAsync((ApplicationUser)null!);
         _userManagerMock.Setup(u => u.NormalizeEmail("new@test.com")).Returns("NEW@TEST.COM");
         _userManagerMock.Setup(u => u.UpdateAsync(user)).ReturnsAsync(IdentityResult.Success);
+        _userManagerMock.Setup(u => u.GenerateEmailConfirmationTokenAsync(user)).ReturnsAsync("test-token");
         _mapperMock.Setup(m => m.Map<GetUserResponseDto>(user)).Returns(responseDto);
 
         // Act
@@ -147,6 +152,7 @@ public class UpdateProfileHandlerTests
         Assert.False(user.EmailConfirmed);
         Assert.Equal("new@test.com", user.Email);
         Assert.Equal("NEW@TEST.COM", user.NormalizedEmail);
+        _emailServiceMock.Verify(e => e.SendEmailChangeConfirmationAsync("new@test.com", It.IsAny<string>()), Times.Once);
     }
 
     [Fact]
