@@ -13,7 +13,6 @@ namespace CVision.Controllers
     [Authorize]
     public class HubController(IMediator mediator, IMapper mapper) : Controller
     {
-        // 🔹 GET: /Hub
         [HttpGet]
         public IActionResult Index() => View("~/Views/Hub/CVAnalysis.cshtml");
 
@@ -22,10 +21,8 @@ namespace CVision.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Analyze(IFormFile file)
         {
-            // 1. UserId з Claims
             var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
-            // 2. DTO
             var requestDto = new CreateCvAnalysisRequestDto
             {
                 FileStream = file.OpenReadStream(),
@@ -34,10 +31,9 @@ namespace CVision.Controllers
                 UserId = userId,
             };
 
-            // 3. MediatR команда
             var result = await mediator.Send(new CreateCvAnalysisCommand(requestDto));
 
-            // 4. Перевірка результату
+
             if (result.IsFailed)
             {
                 var error = result.Errors.FirstOrDefault()?.Message
@@ -47,7 +43,7 @@ namespace CVision.Controllers
             }
 
             var viewModel = mapper.Map<CVAnalysisViewModel>(result.Value);
-            // 6. JSON для JS
+
             return Ok(viewModel);
         }
 
@@ -64,20 +60,19 @@ namespace CVision.Controllers
 
             int userId = int.Parse(userIdClaim);
 
-            // Отримуємо дані через MediatR
+
             var result = await mediator.Send(new GetAllByUserIdQuery(userId));
 
-            // Ініціалізація моделі з використанням дужок та trailing commas
+
             if (result.IsFailed)
             {
-                // Тут можна додати логіку обробки помилок, наприклад Redirect або заповнення Error в ViewModel
                 return View("~/Views/Hub/CVGallery.cshtml", new CVGalleryPageViewModel
                 {
                     Items = new List<CVGalleryViewModel>(),
                 });
             }
 
-            // Мапимо саме result.Value, а не сам об'єкт result
+
             var vm = new CVGalleryPageViewModel
             {
                 Items = mapper.Map<List<CVGalleryViewModel>>(result.Value),

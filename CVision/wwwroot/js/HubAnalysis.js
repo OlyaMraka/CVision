@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    /* ── DOM ───────────────────────────────────────────────── */
+    
     const fileInput         = document.getElementById('cvFileInput');
     const pickBtn           = document.getElementById('pickFileBtn');
     const analyzeBtn        = document.getElementById('analyzeBtn');
@@ -24,11 +24,7 @@
     const sectionsMeta      = document.getElementById('sectionsMeta');
 
     let selectedFile = null;
-
-
-    /* ════════════════════════════════════════════════════════
-       A. ВИБІР ФАЙЛУ
-    ════════════════════════════════════════════════════════ */
+    
     pickBtn.addEventListener('click', () => fileInput.click());
 
     fileInput.addEventListener('change', () => {
@@ -39,8 +35,8 @@
         const allowed = [
             'application/pdf',
             'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-            'application/msword',           // .doc
-            'image/png',                    // .png
+            'application/msword',        
+            'image/png',                 
             'image/jpeg',
         ];
         const ext = file.name.split('.').pop().toLowerCase();
@@ -57,12 +53,9 @@
         filePreviewImg.style.display    = 'none';
         fileExtBadge.textContent        = ext.toUpperCase();
         analyzeBtn.disabled             = false;
+        
     }
 
-
-    /* ════════════════════════════════════════════════════════
-       B. DRAG & DROP
-    ════════════════════════════════════════════════════════ */
     ['dragenter', 'dragover'].forEach(ev => {
         dropZone.addEventListener(ev, e => {
             e.preventDefault();
@@ -82,31 +75,19 @@
         if (file) handleFile(file);
     });
 
-
-    /* ════════════════════════════════════════════════════════
-       C. КНОПКА "АНАЛІЗУВАТИ" → POST /Hub/Analyze
-    ════════════════════════════════════════════════════════ */
     analyzeBtn.addEventListener('click', () => {
         if (!selectedFile) return;
         startAnalysis();
     });
 
     async function startAnalysis() {
-        /* Блокуємо UI, показуємо лоадер */
+        
         setLoading(true);
 
 
         const formData = new FormData();
         formData.append('file', selectedFile);
-
-        /*
-            RequestVerificationToken — читаємо з прихованого input
-            який ASP.NET Core рендерить автоматично при наявності
-            @Html.AntiForgeryToken() у View або Layout.
-
-            Якщо токена немає — додай у _Layout.cshtml перед </body>:
-            @Html.AntiForgeryToken()
-        */
+        
         const token = document
             .querySelector('input[name="__RequestVerificationToken"]')
             ?.value ?? '';
@@ -118,12 +99,7 @@
                 'RequestVerificationToken': token
             }
         });
-
-        /*
-            Парсимо відповідь як JSON в будь-якому випадку —
-            і при успіху (200 OK), і при помилці (400 Bad Request).
-            Контролер завжди повертає JSON.
-        */
+        
         const data = await response.json();
 
 
@@ -132,7 +108,7 @@
 
     }
 
-    /* Вмикає / вимикає стан завантаження */
+    
     function setLoading(isLoading) {
         analyzeBtn.disabled = isLoading;
         pickBtn.disabled    = isLoading;
@@ -147,14 +123,10 @@
         }
     }
 
-
-    /* ════════════════════════════════════════════════════════
-       D. ПОКАЗ РЕЗУЛЬТАТІВ
-    ════════════════════════════════════════════════════════ */
     function showResults(data) {
         setLoading(false);
 
-        /* Summary */
+        
         summaryEmpty.style.display  = 'none';
         summaryResult.style.display = 'block';
 
@@ -163,7 +135,7 @@
         scoreDesc.textContent    = getScoreDesc(data.score);
         feedbackText.textContent = data.feedBack;
 
-        /* Секції */
+        
         const count = data.sectionResults?.length ?? 0;
         sectionsMeta.textContent = `На основі ${count * 2} критеріїв оцінки`;
 
@@ -171,11 +143,7 @@
 
         hubResults.classList.add('is-active');
     }
-
-
-    /* ════════════════════════════════════════════════════════
-       E. РЕНДЕР КАРТОК СЕКЦІЙ з анімацією
-    ════════════════════════════════════════════════════════ */
+    
     function renderSections(sections) {
         sectionsGrid.innerHTML = '';
 
@@ -204,7 +172,7 @@
 
             sectionsGrid.appendChild(card);
 
-            /* Кожна картка з'являється з затримкою 80мс — staggered */
+            
             setTimeout(() => {
                 card.classList.add('is-visible');
 
@@ -217,13 +185,7 @@
             }, 100 + i * 80);
         });
     }
-
-
-    /* ════════════════════════════════════════════════════════
-       F. УТИЛІТИ
-    ════════════════════════════════════════════════════════ */
-
-    /* Анімований лічильник — ease-out cubic */
+    
     function animateNumber(el, from, to, duration, suffix) {
         const start = performance.now();
         (function step(now) {
@@ -265,10 +227,6 @@
         return `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>`;
     }
 
-    /*
-        Захист від XSS — екрануємо дані що прийшли з сервера
-        перед вставкою в innerHTML.
-    */
     function escapeHtml(str) {
         return String(str)
             .replace(/&/g, '&amp;')
@@ -309,13 +267,13 @@
 
         document.body.appendChild(toast);
 
-        /* Показати */
+        
         requestAnimationFrame(() => {
             toast.style.opacity   = '1';
             toast.style.transform = 'translateX(-50%) translateY(0)';
         });
 
-        /* Сховати через 4 секунди */
+
         setTimeout(() => {
             toast.style.opacity   = '0';
             toast.style.transform = 'translateX(-50%) translateY(8px)';
