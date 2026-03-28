@@ -5,6 +5,7 @@ using CVision.Models.ViewModels.CVAnalysisViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using AutoMapper;
+using CVision.BLL.Queries.CvAnalyses.GetAllCvAnalyses;
 
 namespace CVision.Controllers;
 
@@ -51,5 +52,38 @@ public class CvAnalysisController(IMediator mediator, IMapper mapper) : Controll
         var viewModel = mapper.Map<CVAnalysisViewModel>(result.Value);
 
         return View("CvAnalysisResult", viewModel);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> CVGallery()
+    {
+        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (userIdClaim == null)
+        {
+            return Unauthorized();
+        }
+
+        int userId = int.Parse(userIdClaim);
+
+
+        var result = await mediator.Send(new GetAllByUserIdQuery(userId));
+
+
+        if (result.IsFailed)
+        {
+            return View("~/Views/CvAnalysis/CVGallery.cshtml", new CVGalleryPageViewModel
+            {
+                Items = new List<CVGalleryViewModel>(),
+            });
+        }
+
+
+        var vm = new CVGalleryPageViewModel
+        {
+            Items = mapper.Map<List<CVGalleryViewModel>>(result.Value),
+        };
+
+        return View("~/Views/CvAnalysis/CVGallery.cshtml", vm);
     }
 }
