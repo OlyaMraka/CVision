@@ -8,11 +8,11 @@
        class="dashboard-header__logo">CVision</a>
 
     <nav class="dashboard-nav" aria-label="Основна навігація">
-        <button class="dashboard-nav__item @(currentPage == "hub" ? "is-active" : string.Empty)"
-                type="button"
-                disabled>
-            AI поради
-        </button>
+        <a class="dashboard-nav__item @(currentPage == "CvAnalysis" ? "is-active" : string.Empty)"
+           asp-controller="CvAnalysis"
+           asp-action="Analyze">
+            CV аналіз
+        </a>
         <button class="dashboard-nav__item"
                 type="button"
                 disabled>
@@ -23,11 +23,11 @@
                 disabled>
             Завантажити CV
         </button>
-        <button class="dashboard-nav__item"
-                type="button"
-                disabled>
+        <a class="dashboard-nav__item @(currentPage == "gallery" ? "is-active" : "")"
+           asp-controller="CvAnalysis"
+           asp-action="CVGallery">
             Подивитись на CV
-        </button>
+        </a>
     </nav>
 
     <a asp-controller="Home"

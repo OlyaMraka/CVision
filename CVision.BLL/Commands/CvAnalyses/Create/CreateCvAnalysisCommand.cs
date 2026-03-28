@@ -5,6 +5,6 @@ using FluentResults;
 namespace CVision.BLL.Commands.CvAnalyses.Create;
 
 public record CreateCvAnalysisCommand(CreateCvAnalysisRequestDto RequestDto)
-    : IRequest<Result<CvAnalysisResultDto>>
+    : IRequest<Result<CvAnalysisResponseDto>>
 {
 }

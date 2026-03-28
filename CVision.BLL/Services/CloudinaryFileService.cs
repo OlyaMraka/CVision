@@ -33,6 +33,8 @@ public class CloudinaryFileService : IFileService
             File = new FileDescription(fileName, fileStream),
             Folder = FolderName,
             PublicId = $"{Guid.NewGuid()}_{Path.GetFileNameWithoutExtension(fileName)}",
+            AccessMode = "public",
+            Type = "upload",
         };
 
         var result = await _cloudinary.UploadAsync(uploadParams);

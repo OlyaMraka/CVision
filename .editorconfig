@@ -1,6 +1,6 @@
 # -------------------------------
 # Загальні правила StyleCop
-# -------------------------------
+# -------------------------------:
 [*.cs]
 # Можна змінити рівень суворості під свої потреби
 dotnet_diagnostic.SA1210.severity = none
@@ -9,6 +9,7 @@ dotnet_diagnostic.SA1309.severity = none
 dotnet_diagnostic.SA1507.severity = none
 dotnet_diagnostic.SA1507.severity = none
 dotnet_diagnostic.NU1903.severity = none
+dotnet_diagnostic.SA1116.severity = none
 dotnet_diagnostic.SA1515.severity = none
 dotnet_diagnostic.MA0051.severity = none
 dotnet_diagnostic.MA0051.severity = none

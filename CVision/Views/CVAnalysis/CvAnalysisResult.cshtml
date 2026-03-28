@@ -1,0 +1,72 @@
+@using CVision.Helpers
+@using CVision.Helpers.Constants
+@model CVision.Models.ViewModels.CVAnalysisViewModels.CVAnalysisViewModel
+
+@{
+    ViewData["Title"] = "CV Аналіз";
+    ViewData["DashboardCurrentPage"] = "hub";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/CvAnalysis/section-card.css" asp-append-version="true">
+    <link rel="stylesheet" href="~/css/CvAnalysis/cv-analysis-result.css" asp-append-version="true">
+    <link rel="stylesheet" href="~/css/HubUser.css" asp-append-version="true" />
+}
+
+<div class="cv-analysis-result-block">
+    <partial name="~/Views/Shared/_DashboardHeader.cshtml" />
+    
+    <div class="main-block">
+        <div class="file-preview-container">
+            @{
+                var fileUrl = Model.FileUrl;
+            }
+
+            @if (FileUtils.IsImage(fileUrl))
+            {
+                <img src="@fileUrl" class="img-fluid"/>
+            }
+            else if (FileUtils.IsDocx(fileUrl))
+            {
+                var encodedUrl = System.Net.WebUtility.UrlEncode(fileUrl);
+                <iframe src="https://view.officeapps.live.com/op/embed.aspx?src=@encodedUrl"></iframe>
+            }
+            else if (FileUtils.IsPdf(fileUrl))
+            {
+                <iframe src="@fileUrl#toolbar=0"></iframe>
+            }
+            else
+            {
+                <div class="alert alert-secondary">@CvAnalysisConstants.UnavailablePreview</div>
+            }
+        </div>
+
+        <div class="main-review-block">
+            <div class="main-review-header">
+                <h2>@CvAnalysisConstants.MainReview</h2>
+                <div class="main-review-score">
+                    <h4>@CvAnalysisConstants.MainScore</h4>
+                    <span>@Model.AnalysisResult.Score</span>
+                </div>
+            </div>
+
+            <div class="main-review-content">
+                <p>@Model.AnalysisResult.FeedBack</p>
+            </div>
+        </div>
+    </div>
+    <div class="additional-analysis-block">
+        @foreach (var section in Model.AnalysisResult.SectionsResults)
+        {
+            <partial name="~/Views/CvAnalysis/components/SectionCard.cshtml" model="section"/>
+        }
+    </div>
+    <div class="footer-block">
+        <a class="back-to-review-button"
+           asp-controller="CvAnalysis"
+           asp-action="Analyze">
+            Повернутися назад
+        </a>
+    </div>
+</div>
