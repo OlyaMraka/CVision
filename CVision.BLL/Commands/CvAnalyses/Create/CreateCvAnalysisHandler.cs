@@ -16,9 +16,9 @@ public class CreateCvAnalysisHandler(
     IFileService fileService,
     IRepositoryWrapper repositoryWrapper,
     IMapper mapper,
-    IValidator<CreateCvAnalysisCommand> validator) : IRequestHandler<CreateCvAnalysisCommand, Result<CvAnalysisResultDto>>
+    IValidator<CreateCvAnalysisCommand> validator) : IRequestHandler<CreateCvAnalysisCommand, Result<CvAnalysisResponseDto>>
 {
-    public async Task<Result<CvAnalysisResultDto>> Handle(
+    public async Task<Result<CvAnalysisResponseDto>> Handle(
         CreateCvAnalysisCommand request,
         CancellationToken cancellationToken)
     {
@@ -26,7 +26,7 @@ public class CreateCvAnalysisHandler(
 
         if (!validationResult.IsValid)
         {
-            return Result.Fail<CvAnalysisResultDto>(validationResult.Errors.First().ErrorMessage);
+            return Result.Fail<CvAnalysisResponseDto>(validationResult.Errors.First().ErrorMessage);
         }
 
         using var ms = new MemoryStream();
@@ -49,7 +49,7 @@ public class CreateCvAnalysisHandler(
 
         if (await repositoryWrapper.SaveChangesAsync() <= 0)
         {
-            return Result.Fail<CvAnalysisResultDto>(CvAnalysisConstants.CvSavingError);
+            return Result.Fail<CvAnalysisResponseDto>(CvAnalysisConstants.CvSavingError);
         }
 
         if (request.RequestDto.FileStream.CanSeek)
@@ -71,9 +71,16 @@ public class CreateCvAnalysisHandler(
 
         if (await repositoryWrapper.SaveChangesAsync() <= 0)
         {
-            return Result.Fail<CvAnalysisResultDto>(CvAnalysisConstants.CvAnalysisSavingError);
+            return Result.Fail<CvAnalysisResponseDto>(CvAnalysisConstants.CvAnalysisSavingError);
         }
 
-        return Result.Ok(aiResult);
+        var response = new CvAnalysisResponseDto
+        {
+            Id = cvAnalysis.Id,
+            FileUrl = cv.FilePath,
+            AnalysisResult = aiResult,
+        };
+
+        return Result.Ok(response);
     }
 }

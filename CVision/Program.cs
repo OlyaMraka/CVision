@@ -32,8 +32,7 @@ builder.Services.AddScoped<ITextExtractor, ImageTextExtractor>();
 
 builder.Services.AddScoped<ICvParserService, CvParserService>();
 builder.Services.AddScoped<IEmailService, SmtpEmailService>();
-builder.Services.AddAutoMapper(typeof(UsersProfile));
-builder.Services.AddAutoMapper(typeof(CVAnalysisProfile));
+builder.Services.AddAutoMapper(typeof(UsersProfile), typeof(CVAnalysisProfile));
 builder.Services.AddValidatorsFromAssembly(typeof(RegisterUserValidator).Assembly);
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(RegisterUserCommand).Assembly));
 

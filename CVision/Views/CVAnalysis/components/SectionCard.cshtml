@@ -1,0 +1,25 @@
+@model CVision.Models.ViewModels.CVAnalysisViewModels.CVSectionResultViewModel
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/CvAnalysis/section-card.css" asp-append-version="true">
+}
+<div class="section-card-block">
+    <div class="section-header">
+        <h3>@Model.Title</h3>
+        <h4>@Model.SectionScore</h4>
+    </div>
+    
+    <div class="cv-progress-container">
+        <div class="cv-progress-bar"
+             role="progressbar"
+             style="width: @Model.SectionScore%;"
+             aria-valuenow="@Model.SectionScore"
+             aria-valuemin="0"
+             aria-valuemax="100"></div>
+    </div>
+    
+    <div class="card-main-content">
+        <h3 class="section-content-title">Аналіз секції:</h3>
+        <p class="section-content">@Model.Content</p>
+    </div>
+</div>

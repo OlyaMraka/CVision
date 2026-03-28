@@ -1,0 +1,75 @@
+@using CVision.Helpers.Constants
+
+@{
+    ViewData["Title"] = "Завантажити CV";
+    ViewData["DashboardCurrentPage"] = "CvAnalysis";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/CvAnalysis/cv-upload-page.css" asp-append-version="true">
+    <link rel="stylesheet" href="~/css/HubUser.css" asp-append-version="true" />
+}
+
+<div class="upload-cv-block">
+    <partial name="~/Views/Shared/_DashboardHeader.cshtml" />
+    
+    <h1>@CvAnalysisConstants.AnalyseYourCv</h1>
+    <form class="upload-cv-input"
+          asp-controller="CvAnalysis"
+          asp-action="Analyze"
+          method="post"
+          enctype="multipart/form-data">
+        
+        @Html.AntiForgeryToken()
+
+        <div class="upload-zone">
+            <input type="file" name="file" id="cvFile" accept=".pdf,.docx,.png,.jpeg,.jpg" required>
+            
+            <div class="upload-zone-deco">
+                <div class="deco-doc pdf">@CvAnalysisConstants.PdfIcon</div>
+                <div class="deco-doc doc">@CvAnalysisConstants.DocsIcon</div>
+                <div class="deco-doc img">@CvAnalysisConstants.ImageIcon</div>
+            </div>
+            <p class="upload-zone-title">@CvAnalysisConstants.ChooseFile</p>
+            <p class="upload-zone-sub">@CvAnalysisConstants.ValidData</p>
+
+            <span id="fileName" style="display: none; margin: 10px 0; font-weight: bold; color: #ff85a2;"></span>
+        </div>
+        
+        <button type="submit" class="btn-pink">@CvAnalysisConstants.AnalyseButton</button>
+    </form>
+    <p class="disclaimer-content">@CvAnalysisConstants.Disclaimer</p>
+    
+    <div id="analysisLoader" class="loader-wrapper" style="display: none;">
+        <div class="spinner"></div>
+        <p class="loader-text">@CvAnalysisConstants.AnalysingCv</p>
+        <p class="loader-subtext">@CvAnalysisConstants.LoaderMessage</p>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const input = document.getElementById('cvFile');
+        const display = document.getElementById('fileName');
+        const form = document.querySelector('.upload-cv-input');
+        const loader = document.getElementById('analysisLoader');
+        const uploadBlock = document.querySelector('.upload-cv-block');
+
+        input.addEventListener('change', () => {
+            if (input.files.length) {
+                display.textContent = input.files[0].name;
+                display.style.display = 'inline-block';
+            }
+        });
+
+        form.addEventListener('submit', function (e) {
+            if (input.files.length > 0) {
+                document.querySelector('h1').classList.add('hidden');
+                form.classList.add('hidden');
+                document.querySelector('.disclaimer-content').classList.add('hidden');
+                loader.style.display = 'block';
+            }
+        });
+    </script>
+}

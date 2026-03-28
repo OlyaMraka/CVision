@@ -1,18 +1,14 @@
-using System.ComponentModel.DataAnnotations;
-
+using CVision.BLL.DTOs.CvAnalyses;
 
 
 namespace CVision.Models.ViewModels.CVAnalysisViewModels
 {
     public class CVAnalysisViewModel
     {
-        [Display(Name = "Загальний бал")]
-        public int Score { get; set; }
+        public int Id { get; set; }
 
-        [Display(Name = "Загальний відгук")]
-        public string FeedBack { get; set; } = string.Empty;
+        public string FileUrl { get; set; } = string.Empty;
 
-        public ICollection<CVSectionResultViewModel> SectionResults { get; set; }
-            = new List<CVSectionResultViewModel>();
+        public required CVAnalysisResultViewModel AnalysisResult { get; set; }
     }
 }

@@ -11,12 +11,8 @@ namespace CVision.Mappers
         {
             CreateMap<CvSectionAnalisysResultDto, CVSectionResultViewModel>();
             CreateMap<CvAnalysisResponseShortDto, CVGalleryViewModel>();
-
-            // 🔹 Main model
-            CreateMap<CvAnalysisResultDto, CVAnalysisViewModel>()
-                .ForMember(
-                    dest => dest.SectionResults,
-                    opt => opt.MapFrom(src => src.SectionsResults));
+            CreateMap<CvAnalysisResultDto, CVAnalysisResultViewModel>();
+            CreateMap<CvAnalysisResponseDto, CVAnalysisViewModel>();
         }
     }
 }

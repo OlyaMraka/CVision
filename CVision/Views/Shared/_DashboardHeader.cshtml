@@ -8,9 +8,9 @@
        class="dashboard-header__logo">CVision</a>
 
     <nav class="dashboard-nav" aria-label="Основна навігація">
-        <a class="dashboard-nav__item @(currentPage == "hub" ? "is-active" : string.Empty)"
-           asp-controller="Hub"
-           asp-action="Index">
+        <a class="dashboard-nav__item @(currentPage == "CvAnalysis" ? "is-active" : string.Empty)"
+           asp-controller="CvAnalysis"
+           asp-action="Analyze">
             CV аналіз
         </a>
         <button class="dashboard-nav__item"
