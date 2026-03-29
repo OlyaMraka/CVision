@@ -1,6 +1,7 @@
 using CVision.DAL.Repositories.Interfaces.CvAnalyses;
 using CVision.DAL.Repositories.Interfaces.CvAnalysisRecommendations;
 using CVision.DAL.Repositories.Interfaces.CVs;
+using CVision.DAL.Repositories.Interfaces.Publications;
 
 namespace CVision.DAL.Repositories.Interfaces.Base;
 
@@ -11,6 +12,8 @@ public interface IRepositoryWrapper
     public ICvAnalysisRepository CvAnalysisRepository { get; }
 
     public ICvAnalysisRecRepository CvAnalysisRecRepository { get; }
+
+    public IPublicationRepository PublicationRepository { get; }
 
     int SaveChanges();
 

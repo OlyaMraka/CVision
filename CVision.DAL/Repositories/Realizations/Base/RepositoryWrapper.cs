@@ -3,9 +3,11 @@ using CVision.DAL.Repositories.Interfaces.Base;
 using CVision.DAL.Repositories.Interfaces.CvAnalyses;
 using CVision.DAL.Repositories.Interfaces.CvAnalysisRecommendations;
 using CVision.DAL.Repositories.Interfaces.CVs;
+using CVision.DAL.Repositories.Interfaces.Publications;
 using CVision.DAL.Repositories.Realizations.CvAnalyses;
 using CVision.DAL.Repositories.Realizations.CvAnalysisRecommendations;
 using CVision.DAL.Repositories.Realizations.CVs;
+using CVision.DAL.Repositories.Realizations.Publications;
 
 namespace CVision.DAL.Repositories.Realizations.Base;
 
@@ -18,6 +20,8 @@ public class RepositoryWrapper : IRepositoryWrapper
     private ICvAnalysisRepository? _cvAnalysisRepository;
 
     private ICvAnalysisRecRepository? _cvAnalysisRecRepository;
+
+    private IPublicationRepository? _publicationRepository;
 
     public RepositoryWrapper(ApplicationDbContext dbContext)
     {
@@ -32,6 +36,9 @@ public class RepositoryWrapper : IRepositoryWrapper
 
     public ICvAnalysisRecRepository CvAnalysisRecRepository
         => _cvAnalysisRecRepository ??= new CvAnalysisRecRepository(context);
+
+    public IPublicationRepository PublicationRepository
+        => _publicationRepository ??= new PublicationRepository(context);
 
     public int SaveChanges()
     {
