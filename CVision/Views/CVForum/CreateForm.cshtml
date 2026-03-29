@@ -1,0 +1,100 @@
+@model CVision.Models.ViewModels.CVForumViewModels.CreateCVForumPostViewModel
+
+<div class="forum-modal-overlay" id="createPostOverlay" aria-hidden="true">
+    <div class="forum-modal" role="dialog" aria-modal="true" aria-labelledby="createPostTitle">
+        
+        <button class="forum-modal__close"
+                type="button"
+                id="closeCreateModal"
+                aria-label="Закрити">
+            &#x2715;
+        </button>
+
+        <h2 class="forum-modal__title" id="createPostTitle">Додати резюме</h2>
+        <p class="forum-modal__subtitle">Поділіться своїм CV зі спільнотою</p>
+
+        <form id="createPostForm"
+              asp-controller="CVForum"
+              asp-action="Create"
+              method="post"
+              enctype="multipart/form-data"
+              novalidate>
+
+            @Html.AntiForgeryToken()
+            <div class="forum-form__field">
+                <label class="forum-form__label">Файл резюме</label>
+
+                <div class="forum-upload-zone" id="forumDropZone">
+                    <input type="file"
+                           name="File"
+                           id="forumFileInput"
+                           accept=".pdf,.docx,.png,.jpeg,.jpg"
+                           style="display:none;"
+                           required />
+
+                    <div id="forumUploadPlaceholder">
+                        <div class="forum-upload-zone__icon">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none"
+                                 stroke="currentColor" stroke-width="1.8"
+                                 stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="17 8 12 3 7 8"/>
+                                <line x1="12" y1="3" x2="12" y2="15"/>
+                            </svg>
+                        </div>
+                        <p class="forum-upload-zone__title">Перетягніть файл або натисніть</p>
+                        <p class="forum-upload-zone__hint">PDF, DOCX, PNG, JPG — до 10MB</p>
+                    </div>
+
+                    <div id="forumFilePreview" style="display:none; text-align:center;">
+                        <div class="forum-upload-zone__file-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                 stroke="#e8547a" stroke-width="1.8"
+                                 stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                <polyline points="14 2 14 8 20 8"/>
+                            </svg>
+                        </div>
+                        <span id="forumFileName" class="forum-upload-zone__filename"></span>
+                    </div>
+                </div>
+
+                <span class="forum-form__error" id="fileError"></span>
+            </div>
+            
+            <div class="forum-form__field">
+                <label asp-for="Title" class="forum-form__label">Заголовок</label>
+                <input asp-for="Title"
+                       class="forum-form__input"
+                       type="text"
+                       placeholder="Наприклад: Senior Frontend Developer | React, TypeScript" />
+                <span asp-validation-for="Title" class="forum-form__error"></span>
+            </div>
+            
+            <div class="forum-form__field">
+                <label asp-for="Description" class="forum-form__label">Опис</label>
+                <textarea asp-for="Description"
+                          class="forum-form__textarea"
+                          rows="4"
+                          placeholder="Розкажіть про свій досвід, навички та цілі..."></textarea>
+                <span asp-validation-for="Description" class="forum-form__error"></span>
+            </div>
+            <div class="forum-form__error forum-form__error--general" id="formGeneralError"
+                 style="display:none;"></div>
+            
+            <div class="forum-modal__actions">
+                <button type="button"
+                        class="forum-modal__cancel"
+                        id="cancelCreateModal">
+                    Скасувати
+                </button>
+                <button type="submit"
+                        class="forum-modal__submit"
+                        id="submitCreatePost">
+                    Опублікувати
+                </button>
+            </div>
+
+        </form>
+    </div>
+</div>

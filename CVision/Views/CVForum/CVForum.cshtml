@@ -1,0 +1,151 @@
+@model CVision.Models.ViewModels.CVForumViewModels.CVForumViewModel
+
+@{
+    ViewData["Title"] = "Форум резюме";
+    ViewData["DashboardCurrentPage"] = "forum";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/HubUser.css"           asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/CVForum/CvForum.css"  asp-append-version="true" />
+}
+
+<div class="dashboard-page">
+    <div class="dashboard-page__gradient"></div>
+
+    <partial name="~/Views/Shared/_DashboardHeader.cshtml" />
+
+    <main class="forum-page">
+
+        <!-- ── Шапка сторінки ─────────────────────────────── -->
+        <div class="forum-page__header">
+            <div class="forum-page__heading">
+                <h1 class="forum-page__title">Форум резюме</h1>
+                <p class="forum-page__subtitle">
+                    Спільнота спеціалістів, де ви можете поділитися своїм досвідом,
+                    отримати зворотній зв'язок від експертів або знайти ідеального
+                    кандидата для вашої команди.
+                </p>
+            </div>
+
+            <!-- Кнопка відкриття модалки -->
+            <button class="forum-page__add-btn"
+                    type="button"
+                    id="openCreateModal"
+                    aria-haspopup="dialog">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2.5"
+                     stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19"/>
+                    <line x1="5"  y1="12" x2="19" y2="12"/>
+                </svg>
+                Додати резюме
+            </button>
+        </div>
+
+        <!-- ── Вкладки + грід ─────────────────────────────── -->
+        <div class="forum-tabs">
+            <div class="forum-tabs__nav">
+                <button class="forum-tabs__btn is-active"
+                        type="button"
+                        data-tab="all">
+                    Всі резюме
+                </button>
+                <button class="forum-tabs__btn"
+                        type="button"
+                        data-tab="my">
+                    Мої резюме
+                </button>
+            </div>
+
+            <!-- Всі пости -->
+            <div class="forum-tabs__panel is-active" id="tab-all">
+                @if (!Model.AllPosts.Any())
+                {
+                    <div class="forum-empty">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="1.3"
+                             stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                        </svg>
+                        <p>Поки немає постів. Будьте першим!</p>
+                    </div>
+                }
+                else
+                {
+                    <div class="forum-grid">
+                        @foreach (var post in Model.AllPosts)
+                        {
+                            <partial name="~/Views/CVForum/components/CVForumPostCard.cshtml"
+                                     model="post" />
+                        }
+                    </div>
+                }
+            </div>
+
+            <!-- Мої пости -->
+            <div class="forum-tabs__panel" id="tab-my" style="display:none;">
+                @if (!Model.MyPosts.Any())
+                {
+                    <div class="forum-empty">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="1.3"
+                             stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                            <line x1="12" y1="13" x2="12" y2="17"/>
+                            <line x1="10" y1="15" x2="14" y2="15"/>
+                        </svg>
+                        <p>У вас ще немає постів. Додайте перше резюме!</p>
+                        <button class="forum-empty__btn"
+                                type="button"
+                                id="openCreateModalEmpty">
+                            Додати резюме
+                        </button>
+                    </div>
+                }
+                else
+                {
+                    <div class="forum-grid">
+                        @foreach (var post in Model.MyPosts)
+                        {
+                            <partial name="~/Views/CVForum/components/PostCard.cshtml"
+                                     model="post" />
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+
+    </main>
+</div>
+
+
+<partial name="~/Views/CVForum/CreateForm.cshtml"
+         model="new CVision.Models.ViewModels.CVForumViewModels.CreateCVForumPostViewModel()" />
+
+@section Scripts {
+    <script>
+    const tabs = document.querySelectorAll(".forum-tabs__btn");
+    const panels = {
+        all: document.getElementById("tab-all"),
+        my: document.getElementById("tab-my")
+    };
+
+    tabs.forEach(btn => {
+        btn.addEventListener("click", () => {
+            const tab = btn.dataset.tab;
+
+            // кнопки
+            tabs.forEach(b => b.classList.remove("is-active"));
+            btn.classList.add("is-active");
+
+            // панелі
+            Object.values(panels).forEach(p => p.style.display = "none");
+            panels[tab].style.display = "block";
+        });
+    });
+</script>
+}
