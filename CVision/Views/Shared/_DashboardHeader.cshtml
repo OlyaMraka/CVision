@@ -13,9 +13,9 @@
            asp-action="Analyze">
             CV аналіз
         </a>
-        <a class="dashboard-nav__item"
-                type="button"
-                disabled>
+        <a class="dashboard-nav__item @(currentPage == "forum" ? "is-active" : string.Empty)"
+           asp-controller="CVForum"
+           asp-action="Index">
             Форум
         </a>
         <button class="dashboard-nav__item"
