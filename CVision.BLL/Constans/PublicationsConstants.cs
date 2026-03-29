@@ -40,6 +40,12 @@ public static class PublicationsConstants
     public static readonly string IncorrectFormatError =
         "Недопустимий формат файлу! Дозволено: PDF, DOCX, JPG, JPEG, PNG";
 
+    public static readonly string CvSaveError
+        = "Під час збереження резюме виникла помилка!";
+
+    public static readonly string PublicationSaveError
+        = "Під час збереження допису виникла помилка!";
+
     public static string FileSizeError(int size)
     {
         return $"Розмір файлу не повинен перевищувати {size} MB!";
