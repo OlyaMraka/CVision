@@ -40,6 +40,15 @@ public static class PublicationsConstants
     public static readonly string IncorrectFormatError =
         "Недопустимий формат файлу! Дозволено: PDF, DOCX, JPG, JPEG, PNG";
 
+    public static readonly string PublicationNotFound
+        = "Публікацію не знайдено!";
+
+    public static readonly string PublicationDeleteError
+        = "Помилка при видаленні публікації!";
+
+    public static readonly string PublicationUpdateError
+        = "Помилка при оновленні публікації!";
+
     public static string FileSizeError(int size)
     {
         return $"Розмір файлу не повинен перевищувати {size} MB!";
