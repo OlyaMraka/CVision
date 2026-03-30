@@ -18,11 +18,11 @@
                 disabled>
             Поради
         </button>
-        <button class="dashboard-nav__item"
-                type="button"
-                disabled>
-            Завантажити CV
-        </button>
+        <a class="dashboard-nav__item"
+                asp-controller="Publication"
+                asp-action="CvForum">
+            CV Форум
+        </a>
         <a class="dashboard-nav__item @(currentPage == "gallery" ? "is-active" : "")"
            asp-controller="CvAnalysis"
            asp-action="CVGallery">

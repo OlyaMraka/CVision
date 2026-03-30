@@ -1,0 +1,42 @@
+@using CVision.Helpers.Constants
+@model CVision.Models.ViewModels.CvForum.CvForumViewModel
+
+@{
+    ViewData["Title"] = "CV Форум";
+    ViewData["DashboardCurrentPage"] = "CvForum";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/HubUser.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/CvForum/cv-forum.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/CvForum/publication-card.css" asp-append-version="true" />
+}
+
+<div class="cv-forum-main-block">
+    <partial name="~/Views/Shared/_DashboardHeader.cshtml" />
+    
+    <div class="cv-forum-header">
+        <div class="title-section">
+            <h1 class="cv-forum-title">@PublicationConstants.CvForum</h1>
+            <p class="cv-forum-subtitle">@PublicationConstants.ForumSubtitle</p>
+        </div>
+        
+        <div class="cv-forum-toolbar">
+            <div class="publications-buttons">
+                <a href="#">@PublicationConstants.All</a>
+                <a href="#">@PublicationConstants.Mine</a>
+            </div>
+            
+            <a asp-controller="Publication"
+               asp-action="CreateForm">@PublicationConstants.CreatePublication</a>
+        </div>
+    </div>
+    
+    <div class="publications-list-block">
+        @foreach (var publication in Model.Publications)
+        {
+            <partial name="~/Views/CvForum/components/PublicationCard.cshtml" model="publication"/>
+        }
+    </div>
+</div>
