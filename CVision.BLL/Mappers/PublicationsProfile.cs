@@ -12,5 +12,9 @@ public class PublicationsProfile : Profile
 
         CreateMap<Publication, CreatePublicationResponseDto>()
             .ForMember(dest => dest.FileUrl, opt => opt.MapFrom(x => x.CV!.FilePath));
+
+        CreateMap<Publication, PublicationResponseShortDto>()
+            .ForMember(dest => dest.FilePath, opt => opt.MapFrom(x => x.CV!.FilePath))
+            .ForMember(dest => dest.CreatorUserName, opt => opt.MapFrom(x => x.User.UserName));
     }
 }

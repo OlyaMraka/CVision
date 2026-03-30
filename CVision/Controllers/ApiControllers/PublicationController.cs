@@ -1,5 +1,6 @@
 using CVision.BLL.Commands.Publications.Create;
 using CVision.BLL.DTOs.Publications;
+using CVision.BLL.Queries.Publications.GetAllPublications;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CVision.Controllers.ApiControllers;
@@ -36,5 +37,13 @@ public class PublicationController : BaseApiController
         {
             return HandleResult(await Mediator.Send(new CreatePublicationCommand(requestDto)));
         }
+    }
+
+    [HttpGet]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetUser()
+    {
+        return HandleResult(await Mediator.Send(new GetAllPublicationsQuery()));
     }
 }
