@@ -1,0 +1,44 @@
+@using CVision.Helpers
+@using CVision.Helpers.Constants
+@model CVision.Models.ViewModels.CvForum.PublicationViewModelShort
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/CvForum/publication-card.css" asp-append-version="true">
+}
+
+<div class="publication-card-block">
+    <h3 class="publication-title">@Model.Title</h3>
+    
+    <div class="file-preview-container">
+        @{
+            var fileUrl = Model.FilePath;
+        }
+
+        @if (FileUtils.IsImage(fileUrl))
+        {
+            <img src="@fileUrl" class="img-fluid"/>
+        }
+        else if (FileUtils.IsDocx(fileUrl))
+        {
+            var encodedUrl = System.Net.WebUtility.UrlEncode(fileUrl);
+            <iframe src="https://view.officeapps.live.com/op/embed.aspx?src=@encodedUrl"></iframe>
+        }
+        else if (FileUtils.IsPdf(fileUrl))
+        {
+            <iframe src="@fileUrl#toolbar=0"></iframe>
+        }
+    </div>
+    
+    <div class="additional-info">
+        <div class="author-block">
+            <h5>@PublicationConstants.Publisher</h5>
+            <span>@Model.CreatorUserName</span>
+        </div>
+        
+        <div class="published-at-block">
+            <h5>@PublicationConstants.PublishedAt</h5>
+            <span>@Model.PublishedAt</span>
+        </div>
+    </div>
+</div>
+

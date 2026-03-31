@@ -1,0 +1,110 @@
+.cv-forum-main-block {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: calc(64px + 2rem) 1.5rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.cv-forum-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #faeae4;
+}
+
+.title-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.cv-forum-title {
+    font-size: 26px;
+    font-weight: 700;
+    color: #2c1f1b;
+    letter-spacing: -0.02em;
+    margin: 0;
+}
+
+.cv-forum-subtitle {
+    font-size: 13.5px;
+    color: #c4a49c;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.cv-forum-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-shrink: 0;
+}
+
+.publications-buttons {
+    display: flex;
+    gap: 0.25rem;
+    background: #faeae4;
+    border-radius: 10px;
+    padding: 3px;
+}
+
+.publications-buttons a {
+    font-size: 13px;
+    font-weight: 600;
+    color: #c47a6a;
+    text-decoration: none;
+    padding: 0.4rem 1rem;
+    border-radius: 8px;
+    transition: background 0.2s, color 0.2s;
+}
+
+.publications-buttons a.active,
+.publications-buttons a:hover {
+    background: #fff;
+    color: #e8907c;
+}
+
+.cv-forum-toolbar > a {
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+    text-decoration: none;
+    background: #e8907c;
+    border-radius: 10px;
+    padding: 0.5rem 1.25rem;
+    transition: background 0.2s;
+    white-space: nowrap;
+}
+
+.cv-forum-toolbar > a:hover { background: #de7d68; }
+
+.publications-list-block {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+}
+
+@media (max-width: 900px) {
+    .cv-forum-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .publications-list-block {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .cv-forum-main-block {
+        padding: calc(64px + 1.25rem) 1rem 1.5rem;
+    }
+
+    .publications-list-block {
+        grid-template-columns: 1fr;
+    }
+}

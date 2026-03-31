@@ -1,0 +1,76 @@
+@using CVision.Helpers.Constants
+
+@{
+    ViewData["Title"] = "CV Форум";
+    ViewData["DashboardCurrentPage"] = "CvForum";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/HubUser.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/CvForum/cv-forum-create.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/CvAnalysis/cv-upload-page.css" asp-append-version="true">
+    <link rel="stylesheet" href="~/css/CvAnalysis/cv-analysis-result.css" asp-append-version="true" />
+}
+
+<div class="create-publication-block">
+    <partial name="~/Views/Shared/_DashboardHeader.cshtml" />
+    
+    <form class="create-publication-form"
+          asp-controller="Publication"
+          asp-action="CreatePublication"
+          method="post"
+          enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
+        
+        <div class="upload-zone">
+            <input type="file" name="file" id="cvFile" accept=".pdf,.docx,.png,.jpeg,.jpg" required>
+
+            <div class="upload-zone-deco">
+                <div class="deco-doc pdf">@CvAnalysisConstants.PdfIcon</div>
+                <div class="deco-doc doc">@CvAnalysisConstants.DocsIcon</div>
+                <div class="deco-doc img">@CvAnalysisConstants.ImageIcon</div>
+            </div>
+            <p class="upload-zone-title">@CvAnalysisConstants.ChooseFile</p>
+            <p class="upload-zone-sub">@CvAnalysisConstants.ValidData</p>
+
+            <span id="fileName" style="display: none; margin: 10px 0; font-weight: bold; color: #ff85a2;"></span>
+        </div>
+
+        <div class="title-block">
+            <span>@PublicationConstants.Title</span>
+            <input type="text" name="title" id="title" required>
+        </div>
+
+        <div class="description-block">
+            <span>@PublicationConstants.Description</span>
+            <input type="text" name="description" id="desctiption" required>
+        </div>
+
+        <button type="submit" class="btn-pink">@PublicationConstants.CreatePublication</button>
+    </form>
+    
+    <div class="footer-block">
+        <a class="back-to-review-button"
+           asp-controller="Publication"
+           asp-action="CvForum">
+            Повернутися назад
+        </a>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const input = document.getElementById('cvFile');
+        const display = document.getElementById('fileName');
+        const form = document.querySelector('.upload-cv-input');
+        const uploadBlock = document.querySelector('.upload-cv-block');
+
+        input.addEventListener('change', () => {
+            if (input.files.length) {
+                display.textContent = input.files[0].name;
+                display.style.display = 'inline-block';
+            }
+        });
+    </script>
+}

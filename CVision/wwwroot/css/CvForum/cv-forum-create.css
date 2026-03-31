@@ -1,0 +1,96 @@
+/* Контейнер сторінки */
+.create-publication-block {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: calc(64px + 2rem) 1rem 3rem;
+}
+
+/* Форма */
+.create-publication-form {
+    background: #ffffff;
+    border: 1px solid #f5ddd4;
+    border-radius: 20px;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    box-shadow: 0 4px 24px rgba(230, 150, 120, 0.08);
+}
+
+/* Блоки введення (Title та Description) */
+.title-block,
+.description-block {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+/* Лейбли (Span над інпутами) */
+.title-block span,
+.description-block span {
+    font-size: 11px;
+    font-weight: 600;
+    color: #d4957f;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding-left: 4px;
+}
+
+/* Стилізація текстових інпутів */
+.create-publication-form input[type="text"] {
+    width: 100%;
+    padding: 0.875rem 1.1rem;
+    background: #fef9f7;
+    border: 1.5px solid #faeae4;
+    border-radius: 12px;
+    font-size: 14.5px;
+    color: #7a6560;
+    transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+    outline: none;
+}
+
+.create-publication-form input[type="text"]:focus {
+    border-color: #f0b8a4;
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(232, 144, 124, 0.08);
+}
+
+/* Специфічне налаштування для опису, якщо захочеш змінити на textarea */
+.description-block input {
+    min-height: 50px;
+}
+
+/* Кнопка відправки (btn-pink вже є в тебе, але додамо гармонійності) */
+.create-publication-form .btn-pink {
+    margin-top: 0.5rem;
+    height: 54px;
+    font-size: 16px;
+    letter-spacing: 0.02em;
+    box-shadow: 0 4px 12px rgba(232, 144, 124, 0.25);
+}
+
+.create-publication-form .btn-pink:hover {
+    box-shadow: 0 6px 16px rgba(232, 144, 124, 0.35);
+}
+
+/* Футер з кнопкою "Назад" */
+.footer-block {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+/* Адаптивність */
+@media (max-width: 600px) {
+    .create-publication-block {
+        padding-top: calc(64px + 1rem);
+    }
+
+    .create-publication-form {
+        padding: 1.5rem;
+        border-radius: 16px;
+    }
+}
