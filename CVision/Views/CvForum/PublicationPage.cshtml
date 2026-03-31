@@ -68,7 +68,7 @@
                                 title="@PublicationConstants.EditPublication">
                             <i class="fa-regular fa-pen-to-square"></i>
                         </button>
-                        <button type="button" class="operation-btn" disabled
+                        <button type="button" class="operation-btn" id="openDeletePublicationModal"
                                 title="@PublicationConstants.DeletePublication">
                             <i class="fa-regular fa-trash-can"></i>
                         </button>
@@ -120,188 +120,365 @@
                     </form>
                 </div>
             </div>
-        }
-    </div>
 
-    @section Scripts {
-        @if (Model.IsOwner)
-        {
-            <script>
-                const modal = document.getElementById('publicationEditModal');
-                const openBtn = document.getElementById('openEditPublicationModal');
-                const closeBtn = document.getElementById('closeEditPublicationModal');
-                const editForm = document.getElementById('publicationEditForm');
-                const saveBtn = document.getElementById('saveEditPublicationBtn');
-                const editTitleInput = document.getElementById('edit-title');
-                const editDescriptionInput = document.getElementById('edit-description');
-                const editErrors = document.getElementById('editModalErrors');
-                const editErrorsList = document.getElementById('editModalErrorsList');
-                const publicationId = @Model.Id;
-                const apiUrl = `/api/Publications/${publicationId}`;
+            <div class="publication-modal-backdrop" id="publicationDeleteModal" hidden>
+                <div class="publication-modal publication-modal--confirm" role="dialog" aria-modal="true"
+                     aria-labelledby="publication-delete-title">
+                    <h2 id="publication-delete-title" class="publication-modal__title">
+                        @PublicationConstants.DeletePublicationModalTitle</h2>
+                        <p class="publication-modal__confirm-text">@PublicationConstants.DeletePublicationConfirmationText</p>
 
-                function showErrors(messages) {
-                    editErrorsList.innerHTML = '';
-                    messages.forEach(message => {
-                        const li = document.createElement('li');
-                        li.textContent = message;
-                        editErrorsList.appendChild(li);
-                    });
-                    editErrors.hidden = false;
-                }
+                        <div id="deleteModalErrors" class="dashboard-alert dashboard-alert--error publication-modal__feedback"
+                             role="alert" hidden>
+                            <ul id="deleteModalErrorsList"></ul>
+                        </div>
 
-                function hideErrors() {
-                    editErrors.hidden = true;
-                    editErrorsList.innerHTML = '';
-                }
+                        <div class="publication-modal__actions">
+                            <button type="button" class="modal-btn modal-btn--ghost" id="cancelDeletePublicationModal">
+                                @PublicationConstants.Cancel
+                            </button>
+                            <button type="button" class="modal-btn modal-btn--danger" id="confirmDeletePublicationBtn">
+                                @PublicationConstants.ConfirmDelete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
 
-                function setLoading(isLoading) {
-                    saveBtn.disabled = isLoading;
-                    editTitleInput.disabled = isLoading;
-                    editDescriptionInput.disabled = isLoading;
-                    saveBtn.textContent = isLoading ? 'Збереження...' : '@PublicationConstants.SaveChanges';
-                }
+        @section Scripts {
+            @if (Model.IsOwner)
+            {
+                <script>
+                    const modal = document.getElementById('publicationEditModal');
+                    const openBtn = document.getElementById('openEditPublicationModal');
+                    const closeBtn = document.getElementById('closeEditPublicationModal');
+                    const deleteModal = document.getElementById('publicationDeleteModal');
+                    const openDeleteBtn = document.getElementById('openDeletePublicationModal');
+                    const cancelDeleteBtn = document.getElementById('cancelDeletePublicationModal');
+                    const confirmDeleteBtn = document.getElementById('confirmDeletePublicationBtn');
+                    const editForm = document.getElementById('publicationEditForm');
+                    const saveBtn = document.getElementById('saveEditPublicationBtn');
+                    const editTitleInput = document.getElementById('edit-title');
+                    const editDescriptionInput = document.getElementById('edit-description');
+                    const editErrors = document.getElementById('editModalErrors');
+                    const editErrorsList = document.getElementById('editModalErrorsList');
+                    const deleteErrors = document.getElementById('deleteModalErrors');
+                    const deleteErrorsList = document.getElementById('deleteModalErrorsList');
+                    const publicationId = @Model.Id;
+                    const apiUrl = `/api/Publications/${publicationId}`;
+                    const forumUrl = '@Url.Action("CvForum", "Publication")';
 
-                function splitDetail(detail) {
-                    if (!detail) {
-                        return [];
-                    }
-
-                    return detail
-                        .split(';')
-                        .map(x => x.trim())
-                        .filter(Boolean);
-                }
-
-                function extractValidationErrors(payload) {
-                    const result = [];
-
-                    if (!payload || typeof payload !== 'object') {
-                        return result;
-                    }
-
-                    if (payload.errors && typeof payload.errors === 'object') {
-                        Object.values(payload.errors).forEach(value => {
-                            if (Array.isArray(value)) {
-                                value.forEach(item => {
-                                    if (item) {
-                                        result.push(item);
-                                    }
-                                });
-                            }
+                    function showErrors(messages) {
+                        editErrorsList.innerHTML = '';
+                        messages.forEach(message => {
+                            const li = document.createElement('li');
+                            li.textContent = message;
+                            editErrorsList.appendChild(li);
                         });
+                        editErrors.hidden = false;
                     }
 
-                    result.push(...splitDetail(payload.detail));
-
-                    if (result.length === 0 && payload.title) {
-                        result.push(payload.title);
+                    function hideErrors() {
+                        editErrors.hidden = true;
+                        editErrorsList.innerHTML = '';
                     }
 
-                    return [...new Set(result)];
-                }
+                    function showDeleteErrors(messages) {
+                        deleteErrorsList.innerHTML = '';
+                        messages.forEach(message => {
+                            const li = document.createElement('li');
+                            li.textContent = message;
+                            deleteErrorsList.appendChild(li);
+                        });
+                        deleteErrors.hidden = false;
+                    }
 
-                if (modal && openBtn && closeBtn) {
-                    openBtn.addEventListener('click', () => {
-                        hideErrors();
-                        modal.hidden = false;
-                    });
+                    function hideDeleteErrors() {
+                        deleteErrors.hidden = true;
+                        deleteErrorsList.innerHTML = '';
+                    }
 
-                    closeBtn.addEventListener('click', () => {
-                        modal.hidden = true;
-                        hideErrors();
-                    });
+                    function setLoading(isLoading) {
+                        saveBtn.disabled = isLoading;
+                        editTitleInput.disabled = isLoading;
+                        editDescriptionInput.disabled = isLoading;
+                        saveBtn.textContent = isLoading ? 'Збереження...' : '@PublicationConstants.SaveChanges';
+                    }
 
-                    modal.addEventListener('click', (event) => {
-                        if (event.target === modal) {
-                            modal.hidden = true;
-                            hideErrors();
-                        }
-                    });
+                    function setDeleteLoading(isLoading) {
+                        confirmDeleteBtn.disabled = isLoading;
+                        cancelDeleteBtn.disabled = isLoading;
+                        confirmDeleteBtn.textContent = isLoading
+                            ? '@PublicationConstants.DeleteInProgress'
+                            : '@PublicationConstants.ConfirmDelete';
+                    }
 
-                    editForm.addEventListener('submit', async (event) => {
-                        event.preventDefault();
-                        hideErrors();
-
-                        const title = editTitleInput.value.trim();
-                        const description = editDescriptionInput.value.trim();
-                        const clientErrors = [];
-
-                        if (title.length < 3 || title.length > 30) {
-                            clientErrors.push('Назва повинна містити від 3 до 30 символів.');
-                        }
-
-                        if (description.length < 10 || description.length > 1000) {
-                            clientErrors.push('Опис повинен містити від 10 до 1000 символів.');
+                    function splitDetail(detail) {
+                        if (!detail) {
+                            return [];
                         }
 
-                        if (clientErrors.length) {
-                            showErrors(clientErrors);
-                            return;
+                        return detail
+                            .split(';')
+                            .map(x => x.trim())
+                            .filter(Boolean);
+                    }
+
+                    function extractValidationErrors(payload) {
+                        const result = [];
+
+                        if (!payload || typeof payload !== 'object') {
+                            return result;
                         }
 
-                        if (!navigator.onLine) {
-                            showErrors(['Немає з’єднання з інтернетом. Перевірте мережу і спробуйте ще раз.']);
-                            return;
+                        if (payload.errors && typeof payload.errors === 'object') {
+                            Object.values(payload.errors).forEach(value => {
+                                if (Array.isArray(value)) {
+                                    value.forEach(item => {
+                                        if (item) {
+                                            result.push(item);
+                                        }
+                                    });
+                                }
+                            });
                         }
 
-                        setLoading(true);
+                        result.push(...splitDetail(payload.detail));
 
-                        const abortController = new AbortController();
-                        const timeoutId = setTimeout(() => abortController.abort(), 12000);
+                        if (result.length === 0 && payload.title) {
+                            result.push(payload.title);
+                        }
+
+                        return [...new Set(result)];
+                    }
+
+                    async function readResponsePayload(response) {
+                        const contentType = response.headers.get('content-type') || '';
+
+                        if (contentType.includes('application/json')) {
+                            try {
+                                return await response.json();
+                            } catch {
+                                return null;
+                            }
+                        }
 
                         try {
-                            const response = await fetch(apiUrl, {
-                                method: 'PUT',
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                },
-                                body: JSON.stringify({ title, description }),
-                                signal: abortController.signal
-                            });
+                            const text = await response.text();
+                            if (!text) {
+                                return null;
+                            }
 
-                            if (response.ok) {
-                                document.querySelector('.main-content-title').textContent = title;
-                                document.querySelector('.main-content-description p').textContent = description;
+                            return { detail: text };
+                        } catch {
+                            return null;
+                        }
+                    }
 
+                    function getStatusFallbackMessages(status, mode) {
+                        const isDelete = mode === 'delete';
+
+                        if (status === 400) {
+                            return [isDelete ? '@PublicationConstants.DeleteBadRequestError' : '@PublicationConstants.EditBadRequestError'];
+                        }
+
+                        if (status === 401) {
+                            return [isDelete ? '@PublicationConstants.DeleteUnauthorizedError' : '@PublicationConstants.EditUnauthorizedError'];
+                        }
+
+                        if (status === 403) {
+                            return [isDelete ? '@PublicationConstants.DeleteForbiddenError' : '@PublicationConstants.EditForbiddenError'];
+                        }
+
+                        if (status === 404) {
+                            return [isDelete ? '@PublicationConstants.DeleteNotFoundError' : '@PublicationConstants.EditNotFoundError'];
+                        }
+
+                        if (status === 409) {
+                            return [isDelete ? '@PublicationConstants.DeleteConflictError' : '@PublicationConstants.EditConflictError'];
+                        }
+
+                        if (status === 422) {
+                            return [isDelete ? '@PublicationConstants.DeleteUnprocessableError' : '@PublicationConstants.EditUnprocessableError'];
+                        }
+
+                        if (status === 429) {
+                            return [isDelete ? '@PublicationConstants.DeleteTooManyRequestsError' : '@PublicationConstants.EditTooManyRequestsError'];
+                        }
+
+                        if (status === 502 || status === 504) {
+                            return [isDelete ? '@PublicationConstants.DeleteGatewayError' : '@PublicationConstants.EditGatewayError'];
+                        }
+
+                        if (status === 503) {
+                            return [isDelete ? '@PublicationConstants.DeleteServiceUnavailableError' : '@PublicationConstants.EditServiceUnavailableError'];
+                        }
+
+                        if (status >= 500) {
+                            return [isDelete ? '@PublicationConstants.DeleteServerError' : '@PublicationConstants.EditServerError'];
+                        }
+
+                        return ['@PublicationConstants.GenericUnexpectedError'];
+                    }
+
+                    function getConnectionErrorMessages(error, mode) {
+                        const isDelete = mode === 'delete';
+
+                        if (error && error.name === 'AbortError') {
+                            return [isDelete ? '@PublicationConstants.DeleteTimeoutError' : '@PublicationConstants.EditTimeoutError'];
+                        }
+
+                        return [isDelete ? '@PublicationConstants.DeleteConnectionError' : '@PublicationConstants.EditConnectionError'];
+                    }
+
+                    if (modal && openBtn && closeBtn) {
+                        openBtn.addEventListener('click', () => {
+                            hideErrors();
+                            modal.hidden = false;
+                        });
+
+                        closeBtn.addEventListener('click', () => {
+                            modal.hidden = true;
+                            hideErrors();
+                        });
+
+                        modal.addEventListener('click', (event) => {
+                            if (event.target === modal) {
                                 modal.hidden = true;
                                 hideErrors();
-                                setLoading(false);
-                                clearTimeout(timeoutId);
+                            }
+                        });
 
-                                window.location.reload();
+                        if (deleteModal && openDeleteBtn && cancelDeleteBtn && confirmDeleteBtn) {
+                            openDeleteBtn.addEventListener('click', () => {
+                                hideDeleteErrors();
+                                deleteModal.hidden = false;
+                            });
+
+                            cancelDeleteBtn.addEventListener('click', () => {
+                                deleteModal.hidden = true;
+                                hideDeleteErrors();
+                            });
+
+                            deleteModal.addEventListener('click', (event) => {
+                                if (event.target === deleteModal) {
+                                    deleteModal.hidden = true;
+                                    hideDeleteErrors();
+                                }
+                            });
+
+                            confirmDeleteBtn.addEventListener('click', async () => {
+                                hideDeleteErrors();
+
+                                if (!navigator.onLine) {
+                                    showDeleteErrors(['@PublicationConstants.DeleteOfflineError']);
+                                    return;
+                                }
+
+                                setDeleteLoading(true);
+
+                                const abortController = new AbortController();
+                                const timeoutId = setTimeout(() => abortController.abort(), 12000);
+
+                                try {
+                                    const response = await fetch(apiUrl, {
+                                        method: 'DELETE',
+                                        signal: abortController.signal
+                                    });
+
+                                    if (response.ok) {
+                                        window.location.href = forumUrl;
+                                        return;
+                                    }
+
+                                    const payload = await readResponsePayload(response);
+
+                                    const backendErrors = extractValidationErrors(payload);
+
+                                    showDeleteErrors(
+                                        backendErrors.length
+                                            ? backendErrors
+                                            : getStatusFallbackMessages(response.status, 'delete'));
+                                } catch (error) {
+                                    showDeleteErrors(getConnectionErrorMessages(error, 'delete'));
+                                } finally {
+                                    clearTimeout(timeoutId);
+                                    setDeleteLoading(false);
+                                }
+                            });
+                        }
+
+                        editForm.addEventListener('submit', async (event) => {
+                            event.preventDefault();
+                            hideErrors();
+
+                            const title = editTitleInput.value.trim();
+                            const description = editDescriptionInput.value.trim();
+                            const clientErrors = [];
+
+                            if (title.length < 3 || title.length > 30) {
+                                clientErrors.push('Назва повинна містити від 3 до 30 символів.');
+                            }
+
+                            if (description.length < 10 || description.length > 1000) {
+                                clientErrors.push('Опис повинен містити від 10 до 1000 символів.');
+                            }
+
+                            if (clientErrors.length) {
+                                showErrors(clientErrors);
                                 return;
                             }
 
-                            let payload = null;
+                            if (!navigator.onLine) {
+                                showErrors(['@PublicationConstants.EditOfflineError']);
+                                return;
+                            }
+
+                            setLoading(true);
+
+                            const abortController = new AbortController();
+                            const timeoutId = setTimeout(() => abortController.abort(), 12000);
+
                             try {
-                                payload = await response.json();
-                            } catch {
-                                payload = null;
-                            }
+                                const response = await fetch(apiUrl, {
+                                    method: 'PUT',
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({ title, description }),
+                                    signal: abortController.signal
+                                });
 
-                            const backendErrors = extractValidationErrors(payload);
+                                if (response.ok) {
+                                    document.querySelector('.main-content-title').textContent = title;
+                                    document.querySelector('.main-content-description p').textContent = description;
 
-                            if (response.status === 400) {
-                                showErrors(backendErrors.length ? backendErrors : ['Некоректні дані для оновлення допису.']);
-                            } else if (response.status === 401) {
-                                showErrors(['Сесію завершено або немає доступу. Увійдіть знову.']);
-                            } else if (response.status === 404) {
-                                showErrors(['Допис не знайдено або вже видалено.']);
-                            } else {
-                                showErrors(['Сталася серверна помилка. Спробуйте ще раз пізніше.']);
+                                    modal.hidden = true;
+                                    hideErrors();
+                                    setLoading(false);
+                                    clearTimeout(timeoutId);
+
+                                    window.location.reload();
+                                    return;
+                                }
+
+                                const payload = await readResponsePayload(response);
+
+                                const backendErrors = extractValidationErrors(payload);
+
+                                showErrors(
+                                    backendErrors.length
+                                        ? backendErrors
+                                        : getStatusFallbackMessages(response.status, 'edit'));
+                            } catch (error) {
+                                showErrors(getConnectionErrorMessages(error, 'edit'));
+                            } finally {
+                                clearTimeout(timeoutId);
+                                setLoading(false);
                             }
-                        } catch (error) {
-                            if (error && error.name === 'AbortError') {
-                                showErrors(['Запит перевищив час очікування. Перевірте з’єднання та спробуйте ще раз.']);
-                            } else {
-                                showErrors(['Не вдалося з’єднатися із сервером. Перевірте інтернет і спробуйте ще раз.']);
-                            }
-                        } finally {
-                            clearTimeout(timeoutId);
-                            setLoading(false);
-                        }
-                    });
-                }
-            </script>
+                        });
+                    }
+                </script>
+            }
         }
-    }
