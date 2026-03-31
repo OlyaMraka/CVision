@@ -4,6 +4,8 @@ public class PublicationResponseShortDto
 {
     public int Id { get; set; }
 
+    public int UserId { get; set; }
+
     public string CreatorUserName { get; set; } = string.Empty;
 
     public string FilePath { get; set; } = string.Empty;
