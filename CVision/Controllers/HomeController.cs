@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using CVision.BLL.Commands.Users.UpdateProfile;
 using CVision.BLL.Commands.Users.UpdatePassword;
 using CVision.BLL.Constans;
@@ -12,7 +11,7 @@ using Microsoft.Extensions.Logging;
 
 namespace CVision.Controllers;
 
-public class HomeController(IMediator mediator, ILogger<HomeController> logger) : Controller
+public class HomeController(IMediator mediator, ILogger<HomeController> logger) : BaseController
 {
     public IActionResult Index() => View();
 
@@ -204,12 +203,6 @@ public class HomeController(IMediator mediator, ILogger<HomeController> logger) 
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error() => View();
-
-    private int? GetCurrentUserId()
-    {
-        var claim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        return int.TryParse(claim, out var id) ? id : null;
-    }
 
     private async Task<string> GetMemberSinceAsync(int userId)
     {

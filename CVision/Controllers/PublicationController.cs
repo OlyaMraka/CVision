@@ -4,13 +4,12 @@ using CVision.BLL.DTOs.Publications;
 using CVision.BLL.Queries.Publications.GetAllPublications;
 using CVision.Models.ViewModels.CvForum;
 using MediatR;
-using System.Security.Claims;
 using CVision.BLL.Queries.Publications.GetByUserId;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CVision.Controllers;
 
-public class PublicationController(IMediator mediator, IMapper mapper) : Controller
+public class PublicationController(IMediator mediator, IMapper mapper) : BaseController
 {
     [HttpGet]
     public async Task<IActionResult> CvForum()
@@ -26,10 +25,13 @@ public class PublicationController(IMediator mediator, IMapper mapper) : Control
     [HttpGet]
     public async Task<IActionResult> OwnPublications()
     {
-        var claim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        var userId = int.TryParse(claim, out var id) ? id : 0;
+        var userId = GetCurrentUserId();
+        if (userId is null)
+        {
+            return RedirectToLogin();
+        }
 
-        var result = await mediator.Send(new GetByUserIdQuery(userId));
+        var result = await mediator.Send(new GetByUserIdQuery(userId.Value));
         var parameters = new CvForumViewModel
         {
             Publications = mapper.Map<IEnumerable<PublicationViewModelShort>>(result.Value),
@@ -49,10 +51,14 @@ public class PublicationController(IMediator mediator, IMapper mapper) : Control
     {
         if (file == null || file.Length == 0)
         {
-            ModelState.AddModelError("file", "Будь ласка, завантажте файл");
+            ModelState.AddModelError("file", FileIsRequiredError);
         }
 
-        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var userId = GetCurrentUserId();
+        if (userId is null)
+        {
+            return RedirectToLogin();
+        }
 
         using var stream = file!.OpenReadStream();
 
@@ -61,7 +67,7 @@ public class PublicationController(IMediator mediator, IMapper mapper) : Control
             FileStream = stream,
             FileName = file.FileName,
             ContentType = file.ContentType,
-            UserId = userId,
+            UserId = userId.Value,
             Title = title,
             Description = description,
         };
@@ -70,7 +76,7 @@ public class PublicationController(IMediator mediator, IMapper mapper) : Control
 
         if (result.IsFailed)
         {
-            var errorMessage = result.Errors.FirstOrDefault()?.Message ?? "Помилка аналізу CV";
+            var errorMessage = result.Errors.FirstOrDefault()?.Message ?? CvAnalysisFailedError;
             ModelState.AddModelError(string.Empty, errorMessage);
         }
 

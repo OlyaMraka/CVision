@@ -3,13 +3,12 @@ using CVision.BLL.Commands.CvAnalyses.Create;
 using CVision.BLL.DTOs.CvAnalyses;
 using CVision.Models.ViewModels.CVAnalysisViewModels;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 using AutoMapper;
 using CVision.BLL.Queries.CvAnalyses.GetAllCvAnalyses;
 
 namespace CVision.Controllers;
 
-public class CvAnalysisController(IMediator mediator, IMapper mapper) : Controller
+public class CvAnalysisController(IMediator mediator, IMapper mapper) : BaseController
 {
     [HttpGet]
     public IActionResult Analyze()
@@ -23,11 +22,15 @@ public class CvAnalysisController(IMediator mediator, IMapper mapper) : Controll
     {
         if (file == null || file.Length == 0)
         {
-            ModelState.AddModelError("file", "Будь ласка, завантажте файл");
+            ModelState.AddModelError("file", FileIsRequiredError);
             return View("CvAnalysisUpload");
         }
 
-        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var userId = GetCurrentUserId();
+        if (userId is null)
+        {
+            return RedirectToLogin();
+        }
 
         using var stream = file.OpenReadStream();
 
@@ -36,14 +39,14 @@ public class CvAnalysisController(IMediator mediator, IMapper mapper) : Controll
             FileStream = stream,
             FileName = file.FileName,
             ContentType = file.ContentType,
-            UserId = userId,
+            UserId = userId.Value,
         };
 
         var result = await mediator.Send(new CreateCvAnalysisCommand(requestDto));
 
         if (result.IsFailed)
         {
-            var errorMessage = result.Errors.FirstOrDefault()?.Message ?? "Помилка аналізу CV";
+            var errorMessage = result.Errors.FirstOrDefault()?.Message ?? CvAnalysisFailedError;
             ModelState.AddModelError(string.Empty, errorMessage);
 
             return View("CvAnalysisUpload");
@@ -57,17 +60,13 @@ public class CvAnalysisController(IMediator mediator, IMapper mapper) : Controll
     [HttpGet]
     public async Task<IActionResult> CVGallery()
     {
-        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-        if (userIdClaim == null)
+        var userId = GetCurrentUserId();
+        if (userId is null)
         {
-            return Unauthorized();
+            return RedirectToLogin();
         }
 
-        int userId = int.Parse(userIdClaim);
-
-
-        var result = await mediator.Send(new GetAllByUserIdQuery(userId));
+        var result = await mediator.Send(new GetAllByUserIdQuery(userId.Value));
 
 
         if (result.IsFailed)
