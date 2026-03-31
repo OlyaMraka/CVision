@@ -46,6 +46,15 @@ public static class PublicationsConstants
     public static readonly string PublicationSaveError
         = "Під час збереження допису виникла помилка!";
 
+    public static readonly string PublicationNotFound
+        = "Публікацію не знайдено!";
+
+    public static readonly string PublicationDeleteError
+        = "Помилка при видаленні публікації!";
+
+    public static readonly string PublicationUpdateError
+        = "Помилка при оновленні публікації!";
+
     public static string FileSizeError(int size)
     {
         return $"Розмір файлу не повинен перевищувати {size} MB!";
