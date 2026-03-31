@@ -88,6 +88,11 @@
     gap: 1.25rem;
 }
 
+.publications-buttons a.active {
+    background: #fff;
+    color: #e8907c;
+}
+
 @media (max-width: 900px) {
     .cv-forum-header {
         flex-direction: column;

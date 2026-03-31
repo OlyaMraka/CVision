@@ -5,6 +5,7 @@ using CVision.BLL.Queries.Publications.GetAllPublications;
 using CVision.Models.ViewModels.CvForum;
 using MediatR;
 using System.Security.Claims;
+using CVision.BLL.Queries.Publications.GetByUserId;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CVision.Controllers;
@@ -15,6 +16,20 @@ public class PublicationController(IMediator mediator, IMapper mapper) : Control
     public async Task<IActionResult> CvForum()
     {
         var result = await mediator.Send(new GetAllPublicationsQuery());
+        var parameters = new CvForumViewModel
+        {
+            Publications = mapper.Map<IEnumerable<PublicationViewModelShort>>(result.Value),
+        };
+        return View("~/Views/CvForum/CvForumMainPage.cshtml", parameters);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> OwnPublications()
+    {
+        var claim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var userId = int.TryParse(claim, out var id) ? id : 0;
+
+        var result = await mediator.Send(new GetByUserIdQuery(userId));
         var parameters = new CvForumViewModel
         {
             Publications = mapper.Map<IEnumerable<PublicationViewModelShort>>(result.Value),
