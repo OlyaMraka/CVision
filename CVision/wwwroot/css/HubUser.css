@@ -312,6 +312,33 @@
     padding: 1.8rem;
 }
 
+.dashboard-error-window {
+    position: fixed;
+    top: calc(var(--header-height) + 1rem);
+    right: 1.2rem;
+    width: min(430px, calc(100vw - 2rem));
+    max-height: calc(100vh - var(--header-height) - 2rem);
+    overflow-y: auto;
+    z-index: 260;
+    padding: 1.1rem;
+    border-radius: 22px;
+    background: rgba(255, 251, 245, 0.94);
+    border: 1px solid rgba(197, 48, 48, 0.2);
+    box-shadow: 0 24px 54px rgba(126, 45, 45, 0.2);
+    backdrop-filter: blur(8px);
+}
+
+.dashboard-error-window__title {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #8b1f1f;
+}
+
+.dashboard-error-window .dashboard-alert {
+    margin-top: 0.8rem;
+}
+
 .dashboard-alert {
     margin-top: 1.3rem;
     border-radius: 18px;
@@ -574,5 +601,12 @@
 
     .dashboard-title {
         max-width: none;
+    }
+
+    .dashboard-error-window {
+        top: calc(var(--header-height) + 0.75rem);
+        right: 0.75rem;
+        left: 0.75rem;
+        width: auto;
     }
 }

@@ -1,0 +1,24 @@
+@model CVision.Models.ViewModels.ProfileViewModels.ErrorWindowViewModel
+@using CVision.Helpers.Constants
+
+@if (Model is not null && Model.HasErrors)
+{
+    <aside class="dashboard-error-window" role="alert" aria-live="assertive"
+           aria-label="@ErorrWindowConstants.WindowAriaLabel">
+        <h2 class="dashboard-error-window__title">@ErorrWindowConstants.WindowTitle</h2>
+
+        @if (!string.IsNullOrWhiteSpace(Model.UserWindowError))
+        {
+            <div class="dashboard-alert dashboard-alert--error" role="alert">
+                @Model.UserWindowError
+            </div>
+        }
+
+        @if (!string.IsNullOrWhiteSpace(Model.PasswordWindowError))
+        {
+            <div class="dashboard-alert dashboard-alert--error" role="alert">
+                @Model.PasswordWindowError
+            </div>
+        }
+    </aside>
+}

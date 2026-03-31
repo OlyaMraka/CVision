@@ -8,6 +8,11 @@
     string? errorMessage = TempData["UserWindowError"] as string;
     string? passwordSuccessMessage = TempData["UserPasswordSuccess"] as string;
     string? passwordErrorMessage = TempData["UserPasswordError"] as string;
+    var errorWindowModel = new CVision.Models.ViewModels.ProfileViewModels.ErrorWindowViewModel
+    {
+        UserWindowError = errorMessage,
+        PasswordWindowError = passwordErrorMessage
+    };
 }
 
 @section Styles {
@@ -18,6 +23,7 @@
     <div class="dashboard-page__gradient"></div>
 
     <partial name="~/Views/Shared/_DashboardHeader.cshtml" />
+    <partial name="~/Views/Shared/_ErrorWindow.cshtml" model="errorWindowModel" />
 
     <main class="dashboard-main dashboard-main--user">
         <section class="dashboard-panel dashboard-panel--profile-spacer">
@@ -32,13 +38,6 @@
             {
                 <div class="dashboard-alert dashboard-alert--success" role="status">
                     @successMessage
-                </div>
-            }
-
-            @if (!string.IsNullOrWhiteSpace(errorMessage))
-            {
-                <div class="dashboard-alert dashboard-alert--error" role="alert">
-                    @errorMessage
                 </div>
             }
 
@@ -92,13 +91,6 @@
                     {
                         <div class="dashboard-alert dashboard-alert--success" role="status">
                             @passwordSuccessMessage
-                        </div>
-                    }
-
-                    @if (!string.IsNullOrWhiteSpace(passwordErrorMessage))
-                    {
-                        <div class="dashboard-alert dashboard-alert--error" role="alert">
-                            @passwordErrorMessage
                         </div>
                     }
 
