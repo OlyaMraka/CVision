@@ -1,0 +1,62 @@
+@using CVision.Helpers;
+@using CVision.Helpers.Constants
+
+@model CVision.Models.ViewModels.CvForum.PublicationsViewModel
+
+@{
+    ViewData["Title"] = "CV Форум";
+    ViewData["DashboardCurrentPage"] = "CvForum";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="publication-info-block">
+    <partial name="~/Views/Shared/_DashboardHeader.cshtml" />
+    
+    <div class="main-info=block">
+        <div class="file-preview-container">
+            @{
+                var fileUrl = Model.FilePath;
+            }
+
+            @if (FileUtils.IsImage(fileUrl))
+            {
+                <img src="@fileUrl" class="img-fluid"/>
+            }
+            else if (FileUtils.IsDocx(fileUrl))
+            {
+                var encodedUrl = System.Net.WebUtility.UrlEncode(fileUrl);
+                <iframe src="https://view.officeapps.live.com/op/embed.aspx?src=@encodedUrl"></iframe>
+            }
+            else if (FileUtils.IsPdf(fileUrl))
+            {
+                <iframe src="@fileUrl#toolbar=0"></iframe>
+            }
+            else
+            {
+                <div class="alert alert-secondary">@CvAnalysisConstants.UnavailablePreview</div>
+            }
+        </div>
+        
+        <div class="main-content-block">
+            <div class="main-content-header">
+                <h1 class="main-content-title">@Model.Title</h1>
+                <div class="operations-block">
+                    <button class="operation-btn">
+                        <i class="fa-regular fa-pen-to-square"></i>
+                    </button>
+                    <button class="operation-btn">
+                        <i class="fa-regular fa-trash-can"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="main-content-description">
+                <p>@Model.Description</p>
+            </div>
+        </div>
+        
+        <div class="discussion-block">
+            <h2>Коментарі: </h2>
+        </div>
+    </div>
+</div>

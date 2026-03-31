@@ -24,8 +24,10 @@
         
         <div class="cv-forum-toolbar">
             <div class="publications-buttons">
-                <a href="#">@PublicationConstants.All</a>
-                <a href="#">@PublicationConstants.Mine</a>
+                <a asp-controller="Publication"
+                   asp-action="CvForum">@PublicationConstants.All</a>
+                <a asp-controller="Publication"
+                   asp-action="OwnPublications">@PublicationConstants.Mine</a>
             </div>
             
             <a asp-controller="Publication"
@@ -40,3 +42,16 @@
         }
     </div>
 </div>
+
+@section Scripts {
+<script>
+    const path = window.location.pathname.toLowerCase();
+    const buttons = document.querySelectorAll('.publications-buttons a');
+
+    buttons.forEach(btn => {
+        if (btn.href.toLowerCase().includes(path)) {
+            btn.classList.add('active');
+        }
+    });
+</script>
+}
