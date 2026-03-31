@@ -1,11 +1,16 @@
 using AutoMapper;
 using CVision.BLL.Commands.Publications.Create;
+using CVision.BLL.Commands.Publications.Update;
+using CVision.BLL.Constans;
 using CVision.BLL.DTOs.Publications;
 using CVision.BLL.Queries.Publications.GetAllPublications;
+using CVision.BLL.Queries.Publications.GetByPublicationId;
+using CVision.Helpers.Constants;
 using CVision.Models.ViewModels.CvForum;
 using MediatR;
 using CVision.BLL.Queries.Publications.GetByUserId;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CVision.Controllers;
 
@@ -43,6 +48,22 @@ public class PublicationController(IMediator mediator, IMapper mapper) : BaseCon
     public IActionResult CreateForm()
     {
         return View("~/Views/CvForum/CvForumCreateModal.cshtml");
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> PublicationPage(int id)
+    {
+        var result = await mediator.Send(new GetPublicationByIdQuery(id));
+        if (result.IsFailed || result.ValueOrDefault is null)
+        {
+            return RedirectToAction(nameof(CvForum));
+        }
+
+        var model = mapper.Map<PublicationsViewModel>(result.Value);
+        var currentUserId = GetCurrentUserId();
+        model.IsOwner = currentUserId.HasValue && currentUserId.Value == model.UserId;
+
+        return View("~/Views/CvForum/PublicationPage.cshtml", model);
     }
 
     [HttpPost]
@@ -86,5 +107,34 @@ public class PublicationController(IMediator mediator, IMapper mapper) : BaseCon
             Publications = mapper.Map<IEnumerable<PublicationViewModelShort>>(publications.Value),
         };
         return View("~/Views/CvForum/CvForumMainPage.cshtml", parameters);
+    }
+
+    [Authorize]
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> UpdatePublication(int id, string title, string description)
+    {
+        var userId = GetCurrentUserId();
+        if (userId is null)
+        {
+            return RedirectToLogin();
+        }
+
+        var requestDto = new UpdatePublicationRequestDto
+        {
+            Title = title,
+            Description = description,
+        };
+
+        var result = await mediator.Send(new UpdatePublicationCommand(id, userId.Value, requestDto));
+        if (result.IsFailed)
+        {
+            TempData[PublicationConstants.EditErrorTempDataKey] = result.Errors.FirstOrDefault()?.Message
+                ?? PublicationsConstants.PublicationUpdateError;
+            return RedirectToAction(nameof(PublicationPage), new { id });
+        }
+
+        TempData[PublicationConstants.EditSuccessTempDataKey] = PublicationConstants.EditSuccessMessage;
+        return RedirectToAction(nameof(PublicationPage), new { id });
     }
 }

@@ -24,4 +24,20 @@ public static class PublicationConstants
     public static readonly string Title = "Заголовок: ";
 
     public static readonly string Description = "Опис: ";
+
+    public static readonly string EditPublication = "Редагувати";
+
+    public static readonly string DeletePublication = "Видалити";
+
+    public static readonly string EditPublicationModalTitle = "Редагування допису";
+
+    public static readonly string SaveChanges = "Зберегти зміни";
+
+    public static readonly string Cancel = "Скасувати";
+
+    public static readonly string EditSuccessMessage = "Допис успішно оновлено.";
+
+    public static readonly string EditErrorTempDataKey = "PublicationEditError";
+
+    public static readonly string EditSuccessTempDataKey = "PublicationEditSuccess";
 }

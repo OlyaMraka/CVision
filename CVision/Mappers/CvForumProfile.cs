@@ -9,5 +9,6 @@ public class CvForumProfile : Profile
     public CvForumProfile()
     {
         CreateMap<PublicationResponseShortDto, PublicationViewModelShort>();
+        CreateMap<PublicationResponseShortDto, PublicationsViewModel>();
     }
 }

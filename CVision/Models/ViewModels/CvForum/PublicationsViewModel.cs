@@ -15,4 +15,6 @@ public class PublicationsViewModel
     public string Title { get; set; } = string.Empty;
 
     public DateTime PublishedAt { get; set; }
+
+    public bool IsOwner { get; set; }
 }

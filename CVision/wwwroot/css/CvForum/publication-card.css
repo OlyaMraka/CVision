@@ -26,6 +26,14 @@
     text-overflow: ellipsis;
 }
 
+.publication-card-link {
+    color: inherit;
+    text-decoration: none;
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
 /* ── Превʼю файлу ── */
 .file-preview-container {
     width: 100%;

@@ -6,6 +6,7 @@ using CVision.DAL.Entities;
 using CVision.DAL.Repositories.Interfaces.Base;
 using CVision.DAL.Repositories.Options;
 using Microsoft.EntityFrameworkCore;
+using CVision.BLL.Constans;
 
 namespace CVision.BLL.Queries.Publications.GetByPublicationId;
 
@@ -18,13 +19,18 @@ public class GetPublicationByIdHandler(IRepositoryWrapper repositoryWrapper, IMa
     {
         var queryOptions = new QueryOptions<Publication>
         {
+            Filter = x => x.Id == request.PublicationId,
             Include = p => p.Include(x => x.CV)
                 .Include(x => x.User),
         };
 
-        var publications = await repositoryWrapper.PublicationRepository.GetFirstOrDefaultAsync(queryOptions);
+        var publication = await repositoryWrapper.PublicationRepository.GetFirstOrDefaultAsync(queryOptions);
+        if (publication is null)
+        {
+            return Result.Fail(PublicationsConstants.PublicationNotFound);
+        }
 
-        var response = mapper.Map<PublicationResponseShortDto>(publications);
+        var response = mapper.Map<PublicationResponseShortDto>(publication);
 
         return Result.Ok(response);
     }

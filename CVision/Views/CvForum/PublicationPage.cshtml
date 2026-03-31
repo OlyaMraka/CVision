@@ -7,12 +7,33 @@
     ViewData["Title"] = "CV Форум";
     ViewData["DashboardCurrentPage"] = "CvForum";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    string? editError = TempData[PublicationConstants.EditErrorTempDataKey] as string;
+    string? editSuccess = TempData[PublicationConstants.EditSuccessTempDataKey] as string;
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/HubUser.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/CvForum/publication-page.css" asp-append-version="true" />
 }
 
 <div class="publication-info-block">
     <partial name="~/Views/Shared/_DashboardHeader.cshtml" />
+
+    @if (!string.IsNullOrWhiteSpace(editSuccess))
+    {
+        <div class="dashboard-alert dashboard-alert--success" role="status">
+            @editSuccess
+        </div>
+    }
+
+    @if (!string.IsNullOrWhiteSpace(editError))
+    {
+        <div class="dashboard-alert dashboard-alert--error" role="alert">
+            @editError
+        </div>
+    }
     
-    <div class="main-info=block">
+    <div class="main-info-block">
         <div class="file-preview-container">
             @{
                 var fileUrl = Model.FilePath;
@@ -20,7 +41,7 @@
 
             @if (FileUtils.IsImage(fileUrl))
             {
-                <img src="@fileUrl" class="img-fluid"/>
+                <img src="@fileUrl" class="img-fluid" />
             }
             else if (FileUtils.IsDocx(fileUrl))
             {
@@ -40,14 +61,19 @@
         <div class="main-content-block">
             <div class="main-content-header">
                 <h1 class="main-content-title">@Model.Title</h1>
-                <div class="operations-block">
-                    <button class="operation-btn">
-                        <i class="fa-regular fa-pen-to-square"></i>
-                    </button>
-                    <button class="operation-btn">
-                        <i class="fa-regular fa-trash-can"></i>
-                    </button>
-                </div>
+                @if (Model.IsOwner)
+                {
+                    <div class="operations-block">
+                        <button type="button" class="operation-btn" id="openEditPublicationModal"
+                                title="@PublicationConstants.EditPublication">
+                            <i class="fa-regular fa-pen-to-square"></i>
+                        </button>
+                        <button type="button" class="operation-btn" disabled
+                                title="@PublicationConstants.DeletePublication">
+                            <i class="fa-regular fa-trash-can"></i>
+                        </button>
+                    </div>
+                }
             </div>
             
             <div class="main-content-description">
@@ -59,4 +85,223 @@
             <h2>Коментарі: </h2>
         </div>
     </div>
-</div>
+
+    @if (Model.IsOwner)
+    {
+        <div class="publication-modal-backdrop" id="publicationEditModal" hidden>
+            <div class="publication-modal" role="dialog" aria-modal="true" aria-labelledby="publication-edit-title">
+                <h2 id="publication-edit-title" class="publication-modal__title">
+                    @PublicationConstants.EditPublicationModalTitle</h2>
+
+                    <form class="publication-modal__form" id="publicationEditForm">
+                        <div id="editModalErrors" class="dashboard-alert dashboard-alert--error publication-modal__feedback"
+                             role="alert" hidden>
+                            <ul id="editModalErrorsList"></ul>
+                        </div>
+
+                        <div class="publication-modal__field">
+                            <label for="edit-title">@PublicationConstants.Title</label>
+                            <input id="edit-title" type="text" name="title" value="@Model.Title" required minlength="3"
+                                   maxlength="30" />
+                        </div>
+
+                        <div class="publication-modal__field">
+                            <label for="edit-description">@PublicationConstants.Description</label>
+                            <textarea id="edit-description" name="description" required minlength="10"
+                                      maxlength="1000">@Model.Description</textarea>
+                        </div>
+
+                        <div class="publication-modal__actions">
+                            <button type="button" class="modal-btn modal-btn--ghost"
+                                    id="closeEditPublicationModal">@PublicationConstants.Cancel</button>
+                            <button type="submit" id="saveEditPublicationBtn"
+                                    class="modal-btn modal-btn--primary">@PublicationConstants.SaveChanges</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        }
+    </div>
+
+    @section Scripts {
+        @if (Model.IsOwner)
+        {
+            <script>
+                const modal = document.getElementById('publicationEditModal');
+                const openBtn = document.getElementById('openEditPublicationModal');
+                const closeBtn = document.getElementById('closeEditPublicationModal');
+                const editForm = document.getElementById('publicationEditForm');
+                const saveBtn = document.getElementById('saveEditPublicationBtn');
+                const editTitleInput = document.getElementById('edit-title');
+                const editDescriptionInput = document.getElementById('edit-description');
+                const editErrors = document.getElementById('editModalErrors');
+                const editErrorsList = document.getElementById('editModalErrorsList');
+                const publicationId = @Model.Id;
+                const apiUrl = `/api/Publications/${publicationId}`;
+
+                function showErrors(messages) {
+                    editErrorsList.innerHTML = '';
+                    messages.forEach(message => {
+                        const li = document.createElement('li');
+                        li.textContent = message;
+                        editErrorsList.appendChild(li);
+                    });
+                    editErrors.hidden = false;
+                }
+
+                function hideErrors() {
+                    editErrors.hidden = true;
+                    editErrorsList.innerHTML = '';
+                }
+
+                function setLoading(isLoading) {
+                    saveBtn.disabled = isLoading;
+                    editTitleInput.disabled = isLoading;
+                    editDescriptionInput.disabled = isLoading;
+                    saveBtn.textContent = isLoading ? 'Збереження...' : '@PublicationConstants.SaveChanges';
+                }
+
+                function splitDetail(detail) {
+                    if (!detail) {
+                        return [];
+                    }
+
+                    return detail
+                        .split(';')
+                        .map(x => x.trim())
+                        .filter(Boolean);
+                }
+
+                function extractValidationErrors(payload) {
+                    const result = [];
+
+                    if (!payload || typeof payload !== 'object') {
+                        return result;
+                    }
+
+                    if (payload.errors && typeof payload.errors === 'object') {
+                        Object.values(payload.errors).forEach(value => {
+                            if (Array.isArray(value)) {
+                                value.forEach(item => {
+                                    if (item) {
+                                        result.push(item);
+                                    }
+                                });
+                            }
+                        });
+                    }
+
+                    result.push(...splitDetail(payload.detail));
+
+                    if (result.length === 0 && payload.title) {
+                        result.push(payload.title);
+                    }
+
+                    return [...new Set(result)];
+                }
+
+                if (modal && openBtn && closeBtn) {
+                    openBtn.addEventListener('click', () => {
+                        hideErrors();
+                        modal.hidden = false;
+                    });
+
+                    closeBtn.addEventListener('click', () => {
+                        modal.hidden = true;
+                        hideErrors();
+                    });
+
+                    modal.addEventListener('click', (event) => {
+                        if (event.target === modal) {
+                            modal.hidden = true;
+                            hideErrors();
+                        }
+                    });
+
+                    editForm.addEventListener('submit', async (event) => {
+                        event.preventDefault();
+                        hideErrors();
+
+                        const title = editTitleInput.value.trim();
+                        const description = editDescriptionInput.value.trim();
+                        const clientErrors = [];
+
+                        if (title.length < 3 || title.length > 30) {
+                            clientErrors.push('Назва повинна містити від 3 до 30 символів.');
+                        }
+
+                        if (description.length < 10 || description.length > 1000) {
+                            clientErrors.push('Опис повинен містити від 10 до 1000 символів.');
+                        }
+
+                        if (clientErrors.length) {
+                            showErrors(clientErrors);
+                            return;
+                        }
+
+                        if (!navigator.onLine) {
+                            showErrors(['Немає з’єднання з інтернетом. Перевірте мережу і спробуйте ще раз.']);
+                            return;
+                        }
+
+                        setLoading(true);
+
+                        const abortController = new AbortController();
+                        const timeoutId = setTimeout(() => abortController.abort(), 12000);
+
+                        try {
+                            const response = await fetch(apiUrl, {
+                                method: 'PUT',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({ title, description }),
+                                signal: abortController.signal
+                            });
+
+                            if (response.ok) {
+                                document.querySelector('.main-content-title').textContent = title;
+                                document.querySelector('.main-content-description p').textContent = description;
+
+                                modal.hidden = true;
+                                hideErrors();
+                                setLoading(false);
+                                clearTimeout(timeoutId);
+
+                                window.location.reload();
+                                return;
+                            }
+
+                            let payload = null;
+                            try {
+                                payload = await response.json();
+                            } catch {
+                                payload = null;
+                            }
+
+                            const backendErrors = extractValidationErrors(payload);
+
+                            if (response.status === 400) {
+                                showErrors(backendErrors.length ? backendErrors : ['Некоректні дані для оновлення допису.']);
+                            } else if (response.status === 401) {
+                                showErrors(['Сесію завершено або немає доступу. Увійдіть знову.']);
+                            } else if (response.status === 404) {
+                                showErrors(['Допис не знайдено або вже видалено.']);
+                            } else {
+                                showErrors(['Сталася серверна помилка. Спробуйте ще раз пізніше.']);
+                            }
+                        } catch (error) {
+                            if (error && error.name === 'AbortError') {
+                                showErrors(['Запит перевищив час очікування. Перевірте з’єднання та спробуйте ще раз.']);
+                            } else {
+                                showErrors(['Не вдалося з’єднатися із сервером. Перевірте інтернет і спробуйте ще раз.']);
+                            }
+                        } finally {
+                            clearTimeout(timeoutId);
+                            setLoading(false);
+                        }
+                    });
+                }
+            </script>
+        }
+    }
