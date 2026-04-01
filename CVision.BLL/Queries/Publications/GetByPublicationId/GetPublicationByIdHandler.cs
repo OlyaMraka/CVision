@@ -18,6 +18,7 @@ public class GetPublicationByIdHandler(IRepositoryWrapper repositoryWrapper, IMa
     {
         var queryOptions = new QueryOptions<Publication>
         {
+            Filter = p => p.Id == request.PublicationId,
             Include = p => p.Include(x => x.CV)
                 .Include(x => x.User),
         };

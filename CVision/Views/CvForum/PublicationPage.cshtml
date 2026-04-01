@@ -9,6 +9,11 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@section Styles {
+    <link rel="stylesheet" href="~/css/HubUser.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/CvForum/publication-page.css" asp-append-version="true" />
+}
+
 <div class="publication-info-block">
     <partial name="~/Views/Shared/_DashboardHeader.cshtml" />
     
@@ -40,14 +45,21 @@
         <div class="main-content-block">
             <div class="main-content-header">
                 <h1 class="main-content-title">@Model.Title</h1>
-                <div class="operations-block">
-                    <button class="operation-btn">
-                        <i class="fa-regular fa-pen-to-square"></i>
-                    </button>
-                    <button class="operation-btn">
-                        <i class="fa-regular fa-trash-can"></i>
-                    </button>
-                </div>
+                @if (Model.IsOwn)
+                {
+                    <div class="operations-block">
+                        <a asp-controller="Publication"
+                           asp-action="EditPublication"
+                           asp-route-publicationId="@Model.Id" class="operation-btn">
+                            <i class="fa-regular fa-pen-to-square"></i>
+                        </a>
+                        <a asp-controller="Publication"
+                           asp-action="ConfirmDelete"
+                           asp-route-publicationId="@Model.Id" class="operation-btn">
+                            <i class="fa-regular fa-trash-can"></i>
+                        </a>
+                    </div>
+                }
             </div>
             
             <div class="main-content-description">

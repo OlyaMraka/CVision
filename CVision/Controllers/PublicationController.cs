@@ -5,12 +5,15 @@ using CVision.BLL.Queries.Publications.GetAllPublications;
 using CVision.Models.ViewModels.CvForum;
 using MediatR;
 using System.Security.Claims;
+using CVision.BLL.Commands.Publications.Delete;
+using CVision.BLL.Commands.Publications.Update;
+using CVision.BLL.Queries.Publications.GetByPublicationId;
 using CVision.BLL.Queries.Publications.GetByUserId;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CVision.Controllers;
 
-public class PublicationController(IMediator mediator, IMapper mapper) : Controller
+public class PublicationController(IMediator mediator, IMapper mapper) : BaseController
 {
     [HttpGet]
     public async Task<IActionResult> CvForum()
@@ -24,10 +27,52 @@ public class PublicationController(IMediator mediator, IMapper mapper) : Control
     }
 
     [HttpGet]
+    public async Task<IActionResult> GetPublication(int publicationId)
+    {
+        var userId = GetUserId();
+
+        var result = await mediator.Send(new GetPublicationByIdQuery(publicationId));
+        var parameter = mapper.Map<PublicationsViewModel>(result.Value);
+        parameter.IsOwn = userId == parameter.UserId;
+        return View("~/Views/CvForum/PublicationPage.cshtml", parameter);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeletePublication(int publicationId)
+    {
+        var userId = GetUserId();
+
+        var result = await mediator.Send(new DeletePublicationCommand(publicationId, userId));
+
+        if (result.IsFailed)
+        {
+            var errorMessage = result.Errors.FirstOrDefault()?.Message ?? "Не вдалося видалити публікацію";
+
+            var backUrl = Url.Action("GetPublication", "Publication", new { publicationId });
+
+            return RedirectToAction("ShowError", "Publication", new
+            {
+                message = errorMessage,
+                returnUrl = backUrl,
+            });
+        }
+
+        return RedirectToAction("CvForum");
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> ConfirmDelete(int publicationId)
+    {
+        var result = await mediator.Send(new GetPublicationByIdQuery(publicationId));
+        var parameter = mapper.Map<ConfirmationViewModal>(result.Value);
+        return View("~/Views/CvForum/ConfirmationPopup.cshtml", parameter);
+    }
+
+    [HttpGet]
     public async Task<IActionResult> OwnPublications()
     {
-        var claim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        var userId = int.TryParse(claim, out var id) ? id : 0;
+        var userId = GetUserId();
 
         var result = await mediator.Send(new GetByUserIdQuery(userId));
         var parameters = new CvForumViewModel
@@ -41,6 +86,58 @@ public class PublicationController(IMediator mediator, IMapper mapper) : Control
     public IActionResult CreateForm()
     {
         return View("~/Views/CvForum/CvForumCreateModal.cshtml");
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> EditPublication(int publicationId)
+    {
+        var result = await mediator.Send(new GetPublicationByIdQuery(publicationId));
+
+        var model = mapper.Map<PublicationsViewModel>(result.Value);
+
+        return View("~/Views/CvForum/EditPublication.cshtml", model);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> EditPublication(PublicationsViewModel model)
+    {
+        var userId = GetUserId();
+
+        var requestDto = new UpdatePublicationRequestDto
+        {
+            Title = model.Title,
+            Description = model.Description,
+        };
+
+        var command = new UpdatePublicationCommand(model.Id, userId, requestDto);
+        var result = await mediator.Send(command);
+
+        if (result.IsFailed)
+        {
+            var errorMessage = result.Errors.FirstOrDefault()?.Message ?? "Невідома помилка при оновленні";
+            var backUrl = Url.Action("GetPublication", "Publication", new { publicationId = model.Id });
+
+            return RedirectToAction("ShowError", "Publication", new
+            {
+                message = errorMessage,
+                returnUrl = backUrl,
+            });
+        }
+
+        return RedirectToAction("GetPublication", new { publicationId = model.Id });
+    }
+
+    [HttpGet]
+    public IActionResult ShowError(string message, string returnUrl)
+    {
+        var model = new ErrorWindowViewModal
+        {
+            Message = message,
+            ReturnUrl = returnUrl ?? Url.Action("Index", "Home"),
+        };
+
+        return View("~/Views/CvForum/CustomErrorModal.cshtml", model);
     }
 
     [HttpPost]
