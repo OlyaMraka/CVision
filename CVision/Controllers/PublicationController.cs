@@ -128,18 +128,6 @@ public class PublicationController(IMediator mediator, IMapper mapper) : BaseCon
         return RedirectToAction("GetPublication", new { publicationId = model.Id });
     }
 
-    [HttpGet]
-    public IActionResult ShowError(string message, string returnUrl)
-    {
-        var model = new ErrorWindowViewModal
-        {
-            Message = message,
-            ReturnUrl = returnUrl ?? Url.Action("Index", "Home"),
-        };
-
-        return View("~/Views/CvForum/CustomErrorModal.cshtml", model);
-    }
-
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> CreatePublication(IFormFile file, string title, string description)
@@ -167,8 +155,14 @@ public class PublicationController(IMediator mediator, IMapper mapper) : BaseCon
 
         if (result.IsFailed)
         {
-            var errorMessage = result.Errors.FirstOrDefault()?.Message ?? "Помилка аналізу CV";
-            ModelState.AddModelError(string.Empty, errorMessage);
+            var errorMessage = result.Errors.FirstOrDefault()?.Message ?? "Невідома помилка при оновленні";
+            var backUrl = Url.Action("CreateForm");
+
+            return RedirectToAction("ShowError", "Publication", new
+            {
+                message = errorMessage,
+                returnUrl = backUrl,
+            });
         }
 
         var publications = await mediator.Send(new GetAllPublicationsQuery());
