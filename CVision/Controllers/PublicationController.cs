@@ -153,9 +153,9 @@ public class PublicationController(IMediator mediator, IMapper mapper) : BaseCon
 
         var result = await mediator.Send(new CreatePublicationCommand(requestDto));
 
-        if (result.IsFailed)
+        if (!result.IsSuccess)
         {
-            var errorMessage = result.Errors.FirstOrDefault()?.Message ?? "Невідома помилка при оновленні";
+            var errorMessage = result.Error;
             var backUrl = Url.Action("CreateForm");
 
             return RedirectToAction("ShowError", "Publication", new
