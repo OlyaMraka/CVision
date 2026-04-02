@@ -80,3 +80,25 @@
     font-weight: 500;
     color: #7a6560;
 }
+
+.operation-btn {
+    display: block;
+    width: calc(100% - 2.5rem);
+    margin: 0 1.25rem 1.1rem;
+    padding: 0.65rem;
+    background: transparent;
+    border: 1.5px solid #f0b8a4;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #c47a6a;
+    cursor: pointer;
+    text-align: center;
+    transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.operation-btn:hover {
+    background: #faeae4;
+    border-color: #e8907c;
+    color: #e8907c;
+}

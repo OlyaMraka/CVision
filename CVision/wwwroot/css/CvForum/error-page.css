@@ -1,0 +1,82 @@
+/* ── Основний блок ── */
+.error-info-block {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: calc(64px + 2rem) 1.5rem 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+/* ── Блок помилки ── */
+.info-block {
+    background: #fff;
+    border: 1px solid #f5ddd4;
+    border-radius: 20px;
+    padding: 2.5rem 2.5rem 2rem;
+    max-width: 440px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    text-align: center;
+    box-shadow: 0 8px 40px rgba(230, 150, 120, 0.1);
+}
+
+/* ── Іконка ── */
+.info-block::before {
+    content: '!';
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: #faeae4;
+    color: #e8907c;
+    font-size: 22px;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+/* ── Заголовок ── */
+.info-block h1 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #2c1f1b;
+    letter-spacing: -0.01em;
+    margin: 0;
+}
+
+/* ── Текст помилки ── */
+.info-block p {
+    font-size: 13.5px;
+    color: #7a6560;
+    line-height: 1.7;
+    margin: 0;
+    padding-bottom: 0.5rem;
+}
+
+/* ── Кнопка ── */
+.info-block a {
+    width: 100%;
+    padding: 0.8rem;
+    border-radius: 12px;
+    font-size: 13.5px;
+    font-weight: 600;
+    text-decoration: none;
+    text-align: center;
+    background: #e8907c;
+    color: #fff;
+    border: 1.5px solid #e8907c;
+    transition: background 0.2s, border-color 0.2s;
+    margin-top: 0.25rem;
+}
+
+.info-block a:hover {
+    background: #de7d68;
+    border-color: #de7d68;
+}

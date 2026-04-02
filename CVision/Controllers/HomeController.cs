@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using CVision.BLL.Commands.Users.UpdateProfile;
 using CVision.BLL.Commands.Users.UpdatePassword;
 using CVision.BLL.Constans;
@@ -8,11 +7,10 @@ using CVision.Models.ViewModels.ProfileViewModels;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace CVision.Controllers;
 
-public class HomeController(IMediator mediator, ILogger<HomeController> logger) : Controller
+public class HomeController(IMediator mediator, ILogger<HomeController> logger) : BaseController
 {
     public IActionResult Index() => View();
 
@@ -20,20 +18,16 @@ public class HomeController(IMediator mediator, ILogger<HomeController> logger) 
     [ActionName("hub")]
     public IActionResult Hub() => View("hub");
 
-    [Authorize]
     [HttpGet]
+    [Authorize]
     [ActionName("user")]
     public async Task<IActionResult> UserProfile()
     {
-        var userId = GetCurrentUserId();
-        if (userId == null)
-        {
-            return RedirectToAction("Login", "Account");
-        }
+        var userId = GetUserId();
 
         try
         {
-            var result = await mediator.Send(new GetUserByIdQuery(userId.Value));
+            var result = await mediator.Send(new GetUserByIdQuery(userId));
             if (result.IsFailed || result.ValueOrDefault == null)
             {
                 TempData["UserWindowError"] = "Не вдалося завантажити дані профілю. Спробуйте ще раз.";
@@ -54,7 +48,7 @@ public class HomeController(IMediator mediator, ILogger<HomeController> logger) 
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Failed to load profile for user with id {UserId}", userId.Value);
+            logger.LogError(ex, "Failed to load profile for user with id {UserId}", userId);
             TempData["UserWindowError"] = "Виникла технічна помилка при завантаженні профілю.";
             return View("user", new UserWindowViewModel());
         }
@@ -66,18 +60,14 @@ public class HomeController(IMediator mediator, ILogger<HomeController> logger) 
     [ActionName("user")]
     public async Task<IActionResult> SaveUserProfile(UserWindowViewModel model)
     {
-        var userId = GetCurrentUserId();
-        if (userId == null)
-        {
-            return RedirectToAction("Login", "Account");
-        }
+        var userId = GetUserId();
 
-        var currentUserResult = await mediator.Send(new GetUserByIdQuery(userId.Value));
+        var currentUserResult = await mediator.Send(new GetUserByIdQuery(userId));
         var previousEmail = currentUserResult.ValueOrDefault?.Email;
 
         if (!ModelState.IsValid)
         {
-            model.MemberSince = await GetMemberSinceAsync(userId.Value);
+            model.MemberSince = await GetMemberSinceAsync(userId);
 
             return View("user", model);
         }
@@ -91,7 +81,7 @@ public class HomeController(IMediator mediator, ILogger<HomeController> logger) 
                 PhoneNumber = model.PhoneNumber,
             };
 
-            var updateResult = await mediator.Send(new UpdateProfileCommand(userId.Value, updateRequestDto));
+            var updateResult = await mediator.Send(new UpdateProfileCommand(userId, updateRequestDto));
             if (updateResult.IsFailed)
             {
                 if (!updateResult.Errors.Any())
@@ -110,7 +100,7 @@ public class HomeController(IMediator mediator, ILogger<HomeController> logger) 
                     ModelState.AddModelError(string.Empty, error.Message);
                 }
 
-                model.MemberSince = await GetMemberSinceAsync(userId.Value);
+                model.MemberSince = await GetMemberSinceAsync(userId);
 
                 return View("user", model);
             }
@@ -125,10 +115,10 @@ public class HomeController(IMediator mediator, ILogger<HomeController> logger) 
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Failed to save profile for user with id {UserId}", userId.Value);
+            logger.LogError(ex, "Failed to save profile for user with id {UserId}", userId);
             TempData["UserWindowError"] = "Виникла технічна помилка під час збереження профілю.";
             ModelState.AddModelError(string.Empty, "Не вдалося зберегти зміни. Спробуйте ще раз.");
-            model.MemberSince = await GetMemberSinceAsync(userId.Value);
+            model.MemberSince = await GetMemberSinceAsync(userId);
 
             return View("user", model);
         }
@@ -139,11 +129,7 @@ public class HomeController(IMediator mediator, ILogger<HomeController> logger) 
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> ChangePassword(string currentPassword, string newPassword, string confirmNewPassword)
     {
-        var userId = GetCurrentUserId();
-        if (userId == null)
-        {
-            return RedirectToAction("Login", "Account");
-        }
+        var userId = GetUserId();
 
         if (string.IsNullOrWhiteSpace(currentPassword))
         {
@@ -177,7 +163,7 @@ public class HomeController(IMediator mediator, ILogger<HomeController> logger) 
                 NewPassword = newPassword,
             };
 
-            var result = await mediator.Send(new UpdatePasswordCommand(userId.Value, requestDto));
+            var result = await mediator.Send(new UpdatePasswordCommand(userId, requestDto));
             if (result.IsFailed)
             {
                 if (result.Errors.Any(e => string.Equals(e.Message, UserConstants.IncorrectCurrentPassword, StringComparison.Ordinal)))
@@ -196,7 +182,7 @@ public class HomeController(IMediator mediator, ILogger<HomeController> logger) 
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Failed to change password for user with id {UserId}", userId.Value);
+            logger.LogError(ex, "Failed to change password for user with id {UserId}", userId);
             TempData["UserPasswordError"] = "Виникла технічна помилка під час зміни пароля.";
             return RedirectToAction("user");
         }
@@ -204,12 +190,6 @@ public class HomeController(IMediator mediator, ILogger<HomeController> logger) 
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error() => View();
-
-    private int? GetCurrentUserId()
-    {
-        var claim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        return int.TryParse(claim, out var id) ? id : null;
-    }
 
     private async Task<string> GetMemberSinceAsync(int userId)
     {

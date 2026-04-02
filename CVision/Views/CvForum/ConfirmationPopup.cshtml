@@ -1,0 +1,33 @@
+@model CVision.Models.ViewModels.CvForum.ConfirmationViewModal
+
+@{
+    ViewData["Title"] = "CV Форум";
+    ViewData["DashboardCurrentPage"] = "CvForum";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/HubUser.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/CvForum/confirmation-page.css" asp-append-version="true" />
+}
+
+<div class="confirmation-pop-up-block">
+    <partial name="~/Views/Shared/_DashboardHeader.cshtml" />
+    
+    <div class="confirm-block">
+        <h2>Підтвердження</h2>
+        <p>Ви дійсно хочете видалити допис: "@Model.Title"</p>
+        
+        <div class="operations-block">
+            <form asp-controller="Publication" asp-action="DeletePublication" method="post">
+                <input type="hidden" name="publicationId" value="@Model.Id" />
+                <button type="submit" class="btn-danger-custom">
+                    Так, видалити
+                </button>
+            </form>
+            <a asp-controller="Publication"
+               asp-action="GetPublication"
+               asp-route-publicationId="@Model.Id">Скасувати</a>
+        </div>
+    </div>
+</div>

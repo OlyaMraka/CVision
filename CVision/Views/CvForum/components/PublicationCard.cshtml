@@ -40,5 +40,9 @@
             <span>@Model.PublishedAt</span>
         </div>
     </div>
+    
+    <a asp-controller="Publication"
+            asp-action="GetPublication"
+            asp-route-publicationId="@Model.Id" class="operation-btn">Детальніше</a>
 </div>
 

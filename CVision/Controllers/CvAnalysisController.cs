@@ -3,21 +3,23 @@ using CVision.BLL.Commands.CvAnalyses.Create;
 using CVision.BLL.DTOs.CvAnalyses;
 using CVision.Models.ViewModels.CVAnalysisViewModels;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 using AutoMapper;
 using CVision.BLL.Queries.CvAnalyses.GetAllCvAnalyses;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CVision.Controllers;
 
-public class CvAnalysisController(IMediator mediator, IMapper mapper) : Controller
+public class CvAnalysisController(IMediator mediator, IMapper mapper) : BaseController
 {
     [HttpGet]
+    [Authorize]
     public IActionResult Analyze()
     {
         return View("CvAnalysisUpload");
     }
 
     [HttpPost]
+    [Authorize]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Analyze(IFormFile file)
     {
@@ -27,7 +29,7 @@ public class CvAnalysisController(IMediator mediator, IMapper mapper) : Controll
             return View("CvAnalysisUpload");
         }
 
-        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var userId = GetUserId();
 
         using var stream = file.OpenReadStream();
 
@@ -43,10 +45,7 @@ public class CvAnalysisController(IMediator mediator, IMapper mapper) : Controll
 
         if (result.IsFailed)
         {
-            var errorMessage = result.Errors.FirstOrDefault()?.Message ?? "Помилка аналізу CV";
-            ModelState.AddModelError(string.Empty, errorMessage);
-
-            return View("CvAnalysisUpload");
+            return ShowError(result.Errors.FirstOrDefault()?.Message ?? "Помилка аналізу CV", Url.Action("Analyze")!);
         }
 
         var viewModel = mapper.Map<CVAnalysisViewModel>(result.Value);
@@ -55,20 +54,12 @@ public class CvAnalysisController(IMediator mediator, IMapper mapper) : Controll
     }
 
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> CVGallery()
     {
-        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-        if (userIdClaim == null)
-        {
-            return Unauthorized();
-        }
-
-        int userId = int.Parse(userIdClaim);
-
+        int userId = GetUserId();
 
         var result = await mediator.Send(new GetAllByUserIdQuery(userId));
-
 
         if (result.IsFailed)
         {

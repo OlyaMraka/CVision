@@ -5,6 +5,7 @@ using FluentResults;
 using FluentValidation;
 using CVision.BLL.Interfaces;
 using CVision.BLL.DTOs.Publications;
+using CVision.BLL.Helpers;
 using CVision.DAL.Entities;
 using CVision.DAL.Repositories.Interfaces.Base;
 
@@ -14,9 +15,9 @@ public class CreatePublicationHandler(
     IValidator<CreatePublicationCommand> validator,
     IMapper mapper,
     IFileService fileService,
-    IRepositoryWrapper repositoryWrapper) : IRequestHandler<CreatePublicationCommand, Result<CreatePublicationResponseDto>>
+    IRepositoryWrapper repositoryWrapper) : IRequestHandler<CreatePublicationCommand, MyResult<CreatePublicationResponseDto>>
 {
-    public async Task<Result<CreatePublicationResponseDto>> Handle(
+    public async Task<MyResult<CreatePublicationResponseDto>> Handle(
         CreatePublicationCommand request,
         CancellationToken cancellationToken)
     {
@@ -24,7 +25,7 @@ public class CreatePublicationHandler(
 
         if (!validationResult.IsValid)
         {
-            return Result.Fail<CreatePublicationResponseDto>(validationResult.Errors.First().ErrorMessage);
+            return validationResult.Errors.First().ErrorMessage;
         }
 
         using var ms = new MemoryStream();
@@ -47,7 +48,7 @@ public class CreatePublicationHandler(
 
         if (await repositoryWrapper.SaveChangesAsync() <= 0)
         {
-            return Result.Fail<CreatePublicationResponseDto>(PublicationsConstants.CvSaveError);
+            return PublicationsConstants.CvSaveError;
         }
 
         var newPublication = mapper.Map<Publication>(request.Request);
@@ -57,11 +58,11 @@ public class CreatePublicationHandler(
 
         if (await repositoryWrapper.SaveChangesAsync() <= 0)
         {
-            return Result.Fail<CreatePublicationResponseDto>(PublicationsConstants.PublicationSaveError);
+            return PublicationsConstants.PublicationSaveError;
         }
 
         var response = mapper.Map<CreatePublicationResponseDto>(newPublication);
 
-        return Result.Ok(response);
+        return response;
     }
 }

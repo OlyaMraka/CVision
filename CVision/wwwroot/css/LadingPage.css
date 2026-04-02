@@ -446,3 +446,87 @@ a {
         width: 160px;
     }
 }
+
+/* ── Бекдроп з блюром ── */
+.modal-backdrop {
+    backdrop-filter: blur(4px);
+    background-color: rgba(44, 31, 27, 0.3);
+}
+
+/* ── Вікно модалу ── */
+.modal-content {
+    border: 1px solid #f5ddd4;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 16px 48px rgba(230, 150, 120, 0.15);
+}
+
+/* ── Хедер ── */
+.modal-header.bg-danger {
+    background: #faeae4 !important;
+    border-bottom: 1px solid #f5ddd4;
+    padding: 1.25rem 1.5rem;
+}
+
+.modal-header.bg-danger .modal-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #c47a6a;
+}
+
+.modal-header .btn-close {
+    filter: none;
+    opacity: 0.5;
+}
+
+.modal-header .btn-close:hover {
+    opacity: 1;
+}
+
+/* ── Іконка попередження ── */
+.modal-header.bg-danger::before {
+    content: '!';
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #f5ddd4;
+    color: #e8907c;
+    font-size: 15px;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-right: 0.75rem;
+}
+
+/* ── Тіло ── */
+.modal-body {
+    padding: 1.5rem;
+    font-size: 13.5px;
+    color: #7a6560;
+    line-height: 1.7;
+}
+
+/* ── Футер ── */
+.modal-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #faeae4;
+}
+
+.modal-footer .btn-secondary {
+    background: transparent;
+    border: 1.5px solid #f0b8a4;
+    border-radius: 10px;
+    color: #c47a6a;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 0.5rem 1.5rem;
+    transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.modal-footer .btn-secondary:hover {
+    background: #faeae4;
+    border-color: #e8907c;
+    color: #e8907c;
+}

@@ -10,6 +10,7 @@ using CVision.DAL.Repositories.Interfaces.Publications;
 using FluentValidation;
 using FluentValidation.Results;
 using Moq;
+using Xunit;
 
 namespace CVisionUnitTests.HandlerTests.Publications;
 
@@ -51,8 +52,8 @@ public class CreatePublicationHandlerTests
         var result = await _handler.Handle(command, CancellationToken.None);
 
         // Assert
-        Assert.True(result.IsFailed);
-        Assert.Equal("Title is required", result.Errors.First().Message);
+        Assert.False(result.IsSuccess);
+        Assert.Equal("Title is required", result.Error);
     }
 
     [Fact]
@@ -62,14 +63,15 @@ public class CreatePublicationHandlerTests
         var command = CreateCommand();
         SetupValidFlow();
 
+        // Імітуємо неуспішне збереження (0 змінених рядків)
         _repoMock.Setup(r => r.SaveChangesAsync()).ReturnsAsync(0);
 
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);
 
         // Assert
-        Assert.True(result.IsFailed);
-        Assert.Equal(PublicationsConstants.CvSaveError, result.Errors.First().Message);
+        Assert.False(result.IsSuccess);
+        Assert.Equal(PublicationsConstants.CvSaveError, result.Error);
     }
 
     [Fact]
@@ -79,7 +81,7 @@ public class CreatePublicationHandlerTests
         var command = CreateCommand();
         SetupValidFlow();
 
-        // Перше збереження (CV) успішне (1), друге (Publication) - помилка (0)
+        // Sequence: CV зберігається (1), а сама публікація — ні (0)
         _repoMock.SetupSequence(r => r.SaveChangesAsync())
             .ReturnsAsync(1)
             .ReturnsAsync(0);
@@ -88,8 +90,8 @@ public class CreatePublicationHandlerTests
         var result = await _handler.Handle(command, CancellationToken.None);
 
         // Assert
-        Assert.True(result.IsFailed);
-        Assert.Equal(PublicationsConstants.PublicationSaveError, result.Errors.First().Message);
+        Assert.False(result.IsSuccess);
+        Assert.Equal(PublicationsConstants.PublicationSaveError, result.Error);
     }
 
     [Fact]
@@ -106,8 +108,8 @@ public class CreatePublicationHandlerTests
 
         // Assert
         Assert.True(result.IsSuccess);
-        Assert.IsType<CreatePublicationResponseDto>(result.Value);
-        Assert.Equal("Test Title", result.Value.Title);
+        Assert.NotNull(result.Value);
+        Assert.Equal("Test Title", result.Value!.Title);
     }
 
     [Fact]
@@ -126,6 +128,8 @@ public class CreatePublicationHandlerTests
         _fileServiceMock.Verify(f => f.UploadFileAsync(It.IsAny<Stream>(), "test.pdf"), Times.Once);
         _cvRepoMock.Verify(r => r.CreateAsync(It.IsAny<CV>()), Times.Once);
         _publicationRepoMock.Verify(r => r.CreateAsync(It.IsAny<Publication>()), Times.Once);
+
+        // Перевіряємо, що SaveChangesAsync викликався двічі (для CV і для Publication)
         _repoMock.Verify(r => r.SaveChangesAsync(), Times.Exactly(2));
     }
 
@@ -156,6 +160,7 @@ public class CreatePublicationHandlerTests
         {
             UserId = 1,
             FileName = "test.pdf",
+            // Створюємо стрім, який можна читати
             FileStream = new MemoryStream(new byte[] { 0x1, 0x2 }),
             ContentType = "application/pdf",
             Title = "Test Title",
