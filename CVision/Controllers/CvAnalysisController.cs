@@ -3,7 +3,6 @@ using CVision.BLL.Commands.CvAnalyses.Create;
 using CVision.BLL.DTOs.CvAnalyses;
 using CVision.Models.ViewModels.CVAnalysisViewModels;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 using AutoMapper;
 using CVision.BLL.Queries.CvAnalyses.GetAllCvAnalyses;
 using Microsoft.AspNetCore.Authorization;

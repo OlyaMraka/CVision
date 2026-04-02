@@ -165,11 +165,6 @@ public class PublicationController(IMediator mediator, IMapper mapper) : BaseCon
             });
         }
 
-        var publications = await mediator.Send(new GetAllPublicationsQuery());
-        var parameters = new CvForumViewModel
-        {
-            Publications = mapper.Map<IEnumerable<PublicationViewModelShort>>(publications.Value),
-        };
-        return View("~/Views/CvForum/CvForumMainPage.cshtml", parameters);
+        return RedirectToAction("CvForum");
     }
 }
