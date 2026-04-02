@@ -29,7 +29,7 @@ public class CvAnalysisController : BaseApiController
 
         using (memoryStream)
         {
-            return HandleResult(await Mediator.Send(new CreateCvAnalysisCommand(requestDto)));
+            return Ok(await Mediator.Send(new CreateCvAnalysisCommand(requestDto)));
         }
     }
 

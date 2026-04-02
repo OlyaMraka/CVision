@@ -53,8 +53,8 @@ public class CreateCvAnalysisHandlerTests
 
         var result = await _handler.Handle(command, CancellationToken.None);
 
-        Assert.True(result.IsFailed);
-        Assert.Equal("Validation error", result.Errors.First().Message);
+        Assert.False(result.IsSuccess);
+        Assert.Equal("Validation error", result.Error);
     }
 
     [Fact]
@@ -67,8 +67,8 @@ public class CreateCvAnalysisHandlerTests
 
         var result = await _handler.Handle(command, CancellationToken.None);
 
-        Assert.True(result.IsFailed);
-        Assert.Equal(CvAnalysisConstants.CvSavingError, result.Errors.First().Message);
+        Assert.False(result.IsSuccess);
+        Assert.Equal(CvAnalysisConstants.CvSavingError, result.Error);
     }
 
     [Fact]
@@ -83,8 +83,8 @@ public class CreateCvAnalysisHandlerTests
 
         var result = await _handler.Handle(command, CancellationToken.None);
 
-        Assert.True(result.IsFailed);
-        Assert.Equal(CvAnalysisConstants.CvAnalysisSavingError, result.Errors.First().Message);
+        Assert.False(result.IsSuccess);
+        Assert.Equal(CvAnalysisConstants.CvAnalysisSavingError, result.Error);
     }
 
     [Fact]

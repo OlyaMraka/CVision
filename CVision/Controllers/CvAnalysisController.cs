@@ -43,9 +43,9 @@ public class CvAnalysisController(IMediator mediator, IMapper mapper) : BaseCont
 
         var result = await mediator.Send(new CreateCvAnalysisCommand(requestDto));
 
-        if (result.IsFailed)
+        if (!result.IsSuccess)
         {
-            return ShowError(result.Errors.FirstOrDefault()?.Message ?? "Помилка аналізу CV", Url.Action("Analyze")!);
+            return ShowError(result.Error ?? "Помилка аналізу CV", Url.Action("Analyze")!);
         }
 
         var viewModel = mapper.Map<CVAnalysisViewModel>(result.Value);
