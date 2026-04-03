@@ -1,0 +1,47 @@
+@model CVision.Models.ViewModels.CvForum.CreateCommentViewModel
+
+<div class="comment-editor-box" id="commentEditor" style="display: none; margin-top: 1rem;">
+    <form asp-controller="Publication" asp-action="AddComment" method="post">
+        <input type="hidden" asp-for="PublicationId" />
+        <input type="hidden" asp-for="ParentCommentId" />
+        
+        <div class="textarea-wrapper">
+            <textarea 
+                asp-for="Content" 
+                placeholder="Ваш відгук про це CV..." 
+                class="comment-input" 
+                required></textarea>
+        </div>
+        
+        <div class="editor-actions">
+            <button type="button" class="btn-close-editor" onclick="hideCommentForm()">Скасувати</button>
+            <button type="submit" class="btn-send-comment">Надіслати</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    // Виносимо функції в глобальну область, щоб кнопка з головного файлу їх бачила
+    function showCommentForm() {
+        const editor = document.getElementById('commentEditor');
+        const btn = document.getElementById('btnOpenEditor'); // Ця кнопка в основному файлі
+        
+        if (editor && btn) {
+            editor.style.display = 'block';
+            btn.style.display = 'none';
+            
+            const textarea = editor.querySelector('textarea');
+            if (textarea) textarea.focus();
+        }
+    }
+
+    function hideCommentForm() {
+        const editor = document.getElementById('commentEditor');
+        const btn = document.getElementById('btnOpenEditor');
+        
+        if (editor && btn) {
+            editor.style.display = 'none';
+            btn.style.display = 'flex';
+        }
+    }
+</script>
