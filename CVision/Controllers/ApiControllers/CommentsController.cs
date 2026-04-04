@@ -1,5 +1,6 @@
 using CVision.BLL.Commands.Comments.Create;
 using CVision.BLL.DTOs.Comments;
+using CVision.BLL.Queries.Comments.GetByPublicationId;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CVision.Controllers.ApiControllers;
@@ -14,5 +15,13 @@ public class CommentsController : BaseApiController
     public async Task<IActionResult> CreateComment([FromBody] CreateCommentRequestDto requestDto)
     {
         return Ok(await Mediator.Send(new CreateCommentCommand(requestDto)));
+    }
+
+    [HttpGet("publication-comments/{publicationId:int}")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetCommentsByPublicationId([FromRoute] int publicationId)
+    {
+        return Ok(await Mediator.Send(new GetByPublicationIdQuery(publicationId)));
     }
 }
