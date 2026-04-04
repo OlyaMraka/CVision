@@ -17,4 +17,10 @@ public static class CommentsConstants
 
     public static readonly string SaveCommentError
         = "Помилка збереження коментаря! Спробуйте ще раз!";
+
+    public static readonly string CommentNotFound
+        = "Коментар не знайдено!";
+
+    public static readonly string DeleteCommentError
+        = "Помилка видалення коментаря! Спробуйте ще раз!";
 }
