@@ -1,11 +1,10 @@
 using MediatR;
 using AutoMapper;
 using CVision.BLL.Constans;
-using FluentResults;
+using CVision.BLL.Helpers;
 using FluentValidation;
 using CVision.BLL.Interfaces;
 using CVision.BLL.DTOs.Publications;
-using CVision.BLL.Helpers;
 using CVision.DAL.Entities;
 using CVision.DAL.Repositories.Interfaces.Base;
 
@@ -15,9 +14,9 @@ public class CreatePublicationHandler(
     IValidator<CreatePublicationCommand> validator,
     IMapper mapper,
     IFileService fileService,
-    IRepositoryWrapper repositoryWrapper) : IRequestHandler<CreatePublicationCommand, MyResult<CreatePublicationResponseDto>>
+    IRepositoryWrapper repositoryWrapper) : IRequestHandler<CreatePublicationCommand, Result<CreatePublicationResponseDto>>
 {
-    public async Task<MyResult<CreatePublicationResponseDto>> Handle(
+    public async Task<Result<CreatePublicationResponseDto>> Handle(
         CreatePublicationCommand request,
         CancellationToken cancellationToken)
     {

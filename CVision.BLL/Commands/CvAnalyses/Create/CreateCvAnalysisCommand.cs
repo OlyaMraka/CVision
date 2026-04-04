@@ -1,6 +1,6 @@
 using CVision.BLL.DTOs.CvAnalyses;
 using MediatR;
-using FluentResults;
+using CVision.BLL.Helpers;
 
 namespace CVision.BLL.Commands.CvAnalyses.Create;
 

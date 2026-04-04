@@ -1,7 +1,7 @@
 using AutoMapper;
 using CVision.BLL.Constans;
 using MediatR;
-using FluentResults;
+using CVision.BLL.Helpers;
 using CVision.BLL.DTOs.CvAnalyses;
 using CVision.BLL.Interfaces;
 using CVision.DAL.Entities;
@@ -26,7 +26,7 @@ public class CreateCvAnalysisHandler(
 
         if (!validationResult.IsValid)
         {
-            return Result.Fail<CvAnalysisResponseDto>(validationResult.Errors.First().ErrorMessage);
+            return validationResult.Errors.First().ErrorMessage;
         }
 
         using var ms = new MemoryStream();
@@ -49,7 +49,7 @@ public class CreateCvAnalysisHandler(
 
         if (await repositoryWrapper.SaveChangesAsync() <= 0)
         {
-            return Result.Fail<CvAnalysisResponseDto>(CvAnalysisConstants.CvSavingError);
+            return CvAnalysisConstants.CvSavingError;
         }
 
         if (request.RequestDto.FileStream.CanSeek)
@@ -71,7 +71,7 @@ public class CreateCvAnalysisHandler(
 
         if (await repositoryWrapper.SaveChangesAsync() <= 0)
         {
-            return Result.Fail<CvAnalysisResponseDto>(CvAnalysisConstants.CvAnalysisSavingError);
+            return CvAnalysisConstants.CvAnalysisSavingError;
         }
 
         var response = new CvAnalysisResponseDto
@@ -81,6 +81,6 @@ public class CreateCvAnalysisHandler(
             AnalysisResult = aiResult,
         };
 
-        return Result.Ok(response);
+        return response;
     }
 }

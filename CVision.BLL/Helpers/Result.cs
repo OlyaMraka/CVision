@@ -1,14 +1,14 @@
 namespace CVision.BLL.Helpers;
 
-public class MyResult<T>
+public class Result<T>
 {
-    private MyResult(T value)
+    private Result(T value)
     {
         Value = value;
         Error = null;
     }
 
-    private MyResult(string error)
+    private Result(string error)
     {
         Value = default;
         Error = error;
@@ -20,7 +20,7 @@ public class MyResult<T>
 
     public bool IsSuccess => Error == null;
 
-    public static implicit operator MyResult<T>(T value) => new(value);
+    public static implicit operator Result<T>(T value) => new(value);
 
-    public static implicit operator MyResult<T>(string error) => new(error);
+    public static implicit operator Result<T>(string error) => new(error);
 }
