@@ -4,7 +4,6 @@ using CVision.BLL.Queries.Publications.GetByPublicationId;
 using CVision.DAL.Entities;
 using CVision.DAL.Repositories.Interfaces.Base;
 using CVision.DAL.Repositories.Options;
-using FluentResults;
 using Moq;
 using Xunit;
 
@@ -56,7 +55,7 @@ public class GetPublicationByIdHandlerTests
 
         // Assert
         Assert.True(result.IsSuccess);
-        Assert.Equal(publicationId, result.Value.Id);
+        Assert.Equal(publicationId, result.Value!.Id);
         _repositoryWrapperMock.Verify(r => r.PublicationRepository.GetFirstOrDefaultAsync(It.IsAny<QueryOptions<Publication>>()), Times.Once);
     }
 

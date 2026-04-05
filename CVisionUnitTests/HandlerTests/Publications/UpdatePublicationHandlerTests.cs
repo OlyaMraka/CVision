@@ -44,8 +44,8 @@ public class UpdatePublicationHandlerTests
         var result = await _handler.Handle(command, CancellationToken.None);
 
         // Assert
-        Assert.True(result.IsFailed);
-        Assert.Equal(PublicationsConstants.TitleRequired, result.Errors.First().Message);
+        Assert.False(result.IsSuccess);
+        Assert.Equal(PublicationsConstants.TitleRequired, result.Error);
     }
 
     [Fact]
@@ -62,8 +62,8 @@ public class UpdatePublicationHandlerTests
         var result = await _handler.Handle(command, CancellationToken.None);
 
         // Assert
-        Assert.True(result.IsFailed);
-        Assert.Equal(PublicationsConstants.PublicationNotFound, result.Errors.First().Message);
+        Assert.False(result.IsSuccess);
+        Assert.Equal(PublicationsConstants.PublicationNotFound, result.Error);
     }
 
     [Fact]
@@ -88,8 +88,8 @@ public class UpdatePublicationHandlerTests
         var result = await _handler.Handle(command, CancellationToken.None);
 
         // Assert
-        Assert.True(result.IsFailed);
-        Assert.Equal("Unauthorized", result.Errors.First().Message);
+        Assert.False(result.IsSuccess);
+        Assert.Equal("Unauthorized", result.Error);
     }
 
     [Fact]
@@ -116,8 +116,8 @@ public class UpdatePublicationHandlerTests
         var result = await _handler.Handle(command, CancellationToken.None);
 
         // Assert
-        Assert.True(result.IsFailed);
-        Assert.Equal(PublicationsConstants.PublicationUpdateError, result.Errors.First().Message);
+        Assert.False(result.IsSuccess);
+        Assert.Equal(PublicationsConstants.PublicationUpdateError, result.Error);
     }
 
     [Fact]

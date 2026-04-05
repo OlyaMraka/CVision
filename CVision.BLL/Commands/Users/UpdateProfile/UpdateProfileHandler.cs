@@ -3,7 +3,7 @@ using CVision.BLL.Constans;
 using CVision.BLL.DTOs.Users;
 using CVision.BLL.Interfaces;
 using CVision.DAL.Entities;
-using FluentResults;
+using CVision.BLL.Helpers;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 
@@ -19,7 +19,7 @@ public class UpdateProfileHandler(
         var user = await userManager.FindByIdAsync(request.UserId.ToString());
         if (user == null)
         {
-            return Result.Fail<GetUserResponseDto>(UserConstants.UserNotFound);
+            return UserConstants.UserNotFound;
         }
 
         user.UserName = request.RequestDto.UserName;
@@ -31,7 +31,7 @@ public class UpdateProfileHandler(
             var existingUser = await userManager.FindByEmailAsync(request.RequestDto.Email);
             if (existingUser != null && existingUser.Id != user.Id)
             {
-                return Result.Fail<GetUserResponseDto>(UserConstants.EmailAlreadyInUse);
+                return UserConstants.EmailAlreadyInUse;
             }
 
             user.Email = request.RequestDto.Email;
@@ -42,8 +42,7 @@ public class UpdateProfileHandler(
         var result = await userManager.UpdateAsync(user);
         if (!result.Succeeded)
         {
-            var errors = result.Errors.Select(e => e.Description).ToList();
-            return Result.Fail<GetUserResponseDto>(errors);
+            return string.Join("; ", result.Errors.Select(e => e.Description));
         }
 
         if (emailChanged)
@@ -54,6 +53,6 @@ public class UpdateProfileHandler(
         }
 
         var response = mapper.Map<GetUserResponseDto>(user);
-        return Result.Ok(response);
+        return response;
     }
 }

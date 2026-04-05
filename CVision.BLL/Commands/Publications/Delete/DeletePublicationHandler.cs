@@ -1,15 +1,15 @@
 using CVision.BLL.Constans;
+using CVision.BLL.Helpers;
 using CVision.DAL.Repositories.Interfaces.Base;
 using CVision.DAL.Repositories.Options;
-using FluentResults;
 using MediatR;
 
 namespace CVision.BLL.Commands.Publications.Delete;
 
 public class DeletePublicationHandler(
-    IRepositoryWrapper repositoryWrapper) : IRequestHandler<DeletePublicationCommand, Result>
+    IRepositoryWrapper repositoryWrapper) : IRequestHandler<DeletePublicationCommand, Result<bool>>
 {
-    public async Task<Result> Handle(
+    public async Task<Result<bool>> Handle(
         DeletePublicationCommand request,
         CancellationToken cancellationToken)
     {
@@ -22,21 +22,21 @@ public class DeletePublicationHandler(
 
         if (publication is null)
         {
-            return Result.Fail(PublicationsConstants.PublicationNotFound);
+            return PublicationsConstants.PublicationNotFound;
         }
 
         if (publication.UserId != request.UserId)
         {
-            return Result.Fail("Unauthorized");
+            return "Unauthorized";
         }
 
         repositoryWrapper.PublicationRepository.Delete(publication);
 
         if (await repositoryWrapper.SaveChangesAsync() <= 0)
         {
-            return Result.Fail(PublicationsConstants.PublicationDeleteError);
+            return PublicationsConstants.PublicationDeleteError;
         }
 
-        return Result.Ok();
+        return true;
     }
 }

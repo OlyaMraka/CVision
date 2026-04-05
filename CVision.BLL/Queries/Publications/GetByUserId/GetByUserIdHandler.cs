@@ -1,10 +1,10 @@
 using AutoMapper;
-using FluentResults;
-using MediatR;
 using CVision.BLL.DTOs.Publications;
+using CVision.BLL.Helpers;
 using CVision.DAL.Entities;
 using CVision.DAL.Repositories.Interfaces.Base;
 using CVision.DAL.Repositories.Options;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace CVision.BLL.Queries.Publications.GetByUserId;
@@ -28,6 +28,6 @@ public class GetByUserIdHandler(
 
         var response = mapper.Map<IEnumerable<PublicationResponseShortDto>>(publications);
 
-        return Result.Ok(response);
+        return Result<IEnumerable<PublicationResponseShortDto>>.Ok(response);
     }
 }

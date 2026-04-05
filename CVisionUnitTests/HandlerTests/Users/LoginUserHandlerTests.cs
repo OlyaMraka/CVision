@@ -74,8 +74,8 @@ public class LoginUserHandlerTests
         var result = await _handler.Handle(command, CancellationToken.None);
 
         // Assert
-        Assert.True(result.IsFailed);
-        Assert.Equal(UserConstants.EmailRequiredErrorMessage, result.Errors.First().Message);
+        Assert.False(result.IsSuccess);
+        Assert.Equal(UserConstants.EmailRequiredErrorMessage, result.Error);
 
         _userManagerMock.Verify(u => u.FindByEmailAsync(It.IsAny<string>()), Times.Never);
     }
@@ -97,8 +97,8 @@ public class LoginUserHandlerTests
         var result = await _handler.Handle(command, CancellationToken.None);
 
         // Assert
-        Assert.True(result.IsFailed);
-        Assert.Equal(UserConstants.UserLogInError, result.Errors.First().Message);
+        Assert.False(result.IsSuccess);
+        Assert.Equal(UserConstants.UserLogInError, result.Error);
     }
 
     [Fact]
@@ -122,8 +122,8 @@ public class LoginUserHandlerTests
         var result = await _handler.Handle(command, CancellationToken.None);
 
         // Assert
-        Assert.True(result.IsFailed);
-        Assert.Equal(UserConstants.UserLogInError, result.Errors.First().Message);
+        Assert.False(result.IsSuccess);
+        Assert.Equal(UserConstants.UserLogInError, result.Error);
     }
 
     [Fact]
@@ -132,7 +132,7 @@ public class LoginUserHandlerTests
         // Arrange
         var requestDto = new LoginUserRequestDto { Email = "ihor@test.com", Password = "SecurePassword123!" };
         var command = new LoginUserCommand(requestDto);
-        var user = new ApplicationUser { Id = 1, Email = requestDto.Email, UserName = "ihor_prots" };
+        var user = new ApplicationUser { Id = 1, Email = requestDto.Email, UserName = "ihor_prots", EmailConfirmed = true };
 
         _validatorMock.Setup(v => v.ValidateAsync(command, It.IsAny<CancellationToken>()))
             .ReturnsAsync(new ValidationResult());
@@ -148,7 +148,7 @@ public class LoginUserHandlerTests
 
         // Assert
         Assert.True(result.IsSuccess);
-        Assert.Equal(requestDto.Email, result.Value.Email);
-        Assert.Equal("olya_mraka", result.Value.UserName);
+        Assert.Equal(requestDto.Email, result.Value!.Email);
+        Assert.Equal("ihor_prots", result.Value.UserName);
     }
 }

@@ -56,8 +56,8 @@ public class UpdatePasswordHandlerTests
         var result = await _handler.Handle(command, CancellationToken.None);
 
         // Assert
-        result.IsFailed.Should().BeTrue();
-        result.Errors.First().Message.Should().Be(UserConstants.UserNotFound);
+        result.IsSuccess.Should().BeFalse();
+        result.Error.Should().Be(UserConstants.UserNotFound);
 
         _userManagerMock.Verify(u => u.ChangePasswordAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
     }
@@ -86,8 +86,8 @@ public class UpdatePasswordHandlerTests
         var result = await _handler.Handle(command, CancellationToken.None);
 
         // Assert
-        result.IsFailed.Should().BeTrue();
-        result.Errors.First().Message.Should().Be(UserConstants.IncorrectCurrentPassword);
+        result.IsSuccess.Should().BeFalse();
+        result.Error.Should().Be(UserConstants.IncorrectCurrentPassword);
     }
 
     [Fact]
@@ -110,8 +110,8 @@ public class UpdatePasswordHandlerTests
         var result = await _handler.Handle(command, CancellationToken.None);
 
         // Assert
-        result.IsFailed.Should().BeTrue();
-        result.Errors.First().Message.Should().Be("Password too short");
+        result.IsSuccess.Should().BeFalse();
+        result.Error.Should().Be("Password too short");
     }
 
     [Fact]

@@ -49,7 +49,7 @@ namespace CVision.Controllers
                 return RedirectToAction(nameof(RegistrationConfirmed), new { isConfirmed = true });
             }
 
-            string errorMessage = TranslateErrorToUkrainian(result.Errors.FirstOrDefault()?.Message)
+            string errorMessage = TranslateErrorToUkrainian(result.Error)
                 ?? "Не вдалося підтвердити email. Спробуйте ще раз.";
 
             return RedirectToAction(nameof(RegistrationConfirmed), new { isConfirmed = false, errorMessage });
@@ -84,20 +84,17 @@ namespace CVision.Controllers
 
                 if (response.IsSuccess)
                 {
-                    await signInManager.SignInAsync(response.Value, isPersistent: false);
+                    await signInManager.SignInAsync(response.Value!, isPersistent: false);
                     return RedirectToAction("hub", "Home");
                 }
 
-                if (!response.Errors.Any())
+                if (response.Error == null)
                 {
                     ModelState.AddModelError(string.Empty, "Не вдалося увійти. Перевірте email та пароль.");
                     return View(model);
                 }
 
-                foreach (var error in response.Errors)
-                {
-                    ModelState.AddModelError(string.Empty, TranslateErrorToUkrainian(error.Message));
-                }
+                ModelState.AddModelError(string.Empty, TranslateErrorToUkrainian(response.Error));
 
                 return View(model);
             }
@@ -204,9 +201,9 @@ namespace CVision.Controllers
                 return RedirectToAction(nameof(Login));
             }
 
-            foreach (var error in result.Errors)
+            if (result.Error != null)
             {
-                ModelState.AddModelError(string.Empty, TranslateErrorToUkrainian(error.Message));
+                ModelState.AddModelError(string.Empty, TranslateErrorToUkrainian(result.Error));
             }
 
             return View(model);
@@ -233,18 +230,15 @@ namespace CVision.Controllers
             {
                 var response = await mediator.Send(new RegisterUserCommand(requestDto));
 
-                if (response.IsFailed)
+                if (!response.IsSuccess)
                 {
-                    if (!response.Errors.Any())
+                    if (response.Error == null)
                     {
                         ModelState.AddModelError(string.Empty, "Не вдалося зареєструвати акаунт.");
                         return View(model);
                     }
 
-                    foreach (var error in response.Errors)
-                    {
-                        ModelState.AddModelError(string.Empty, TranslateErrorToUkrainian(error.Message));
-                    }
+                    ModelState.AddModelError(string.Empty, TranslateErrorToUkrainian(response.Error));
 
                     return View(model);
                 }

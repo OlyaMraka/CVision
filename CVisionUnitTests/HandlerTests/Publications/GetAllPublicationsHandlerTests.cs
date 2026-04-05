@@ -54,8 +54,8 @@ public class GetAllPublicationsHandlerTests
 
         // Assert
         Assert.True(result.IsSuccess);
-        Assert.Equal(2, result.Value.Count());
-        Assert.Equal("Test 1", result.Value.First().Title);
+        Assert.Equal(2, result.Value!.Count());
+        Assert.Equal("Test 1", result.Value!.First().Title);
 
         _repositoryWrapperMock.Verify(r => r.PublicationRepository.GetAllAsync(It.IsAny<QueryOptions<Publication>>()), Times.Once);
         _mapperMock.Verify(m => m.Map<IEnumerable<PublicationResponseShortDto>>(publications), Times.Once);
@@ -82,7 +82,7 @@ public class GetAllPublicationsHandlerTests
 
         // Assert
         Assert.True(result.IsSuccess);
-        Assert.Empty(result.Value);
+        Assert.Empty(result.Value!);
         _repositoryWrapperMock.Verify(r => r.PublicationRepository.GetAllAsync(It.IsAny<QueryOptions<Publication>>()), Times.Once);
     }
 

@@ -45,9 +45,9 @@ public class PublicationController(IMediator mediator, IMapper mapper) : BaseCon
 
         var result = await mediator.Send(new DeletePublicationCommand(publicationId, userId));
 
-        if (result.IsFailed)
+        if (!result.IsSuccess)
         {
-            var errorMessage = result.Errors.FirstOrDefault()?.Message ?? "Не вдалося видалити публікацію";
+            var errorMessage = result.Error ?? "Не вдалося видалити публікацію";
 
             var backUrl = Url.Action("GetPublication", "Publication", new { publicationId });
 
@@ -113,9 +113,9 @@ public class PublicationController(IMediator mediator, IMapper mapper) : BaseCon
         var command = new UpdatePublicationCommand(model.Id, userId, requestDto);
         var result = await mediator.Send(command);
 
-        if (result.IsFailed)
+        if (!result.IsSuccess)
         {
-            var errorMessage = result.Errors.FirstOrDefault()?.Message ?? "Невідома помилка при оновленні";
+            var errorMessage = result.Error ?? "Невідома помилка при оновленні";
             var backUrl = Url.Action("GetPublication", "Publication", new { publicationId = model.Id });
 
             return RedirectToAction("ShowError", "Publication", new

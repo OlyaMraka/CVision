@@ -1,5 +1,5 @@
 using CVision.BLL.DTOs.Users;
-using FluentResults;
+using CVision.BLL.Helpers;
 using MediatR;
 
 namespace CVision.BLL.Commands.Users.UpdateProfile;

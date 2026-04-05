@@ -1,12 +1,12 @@
 using CVision.BLL.Constans;
+using CVision.BLL.Helpers;
 using CVision.DAL.Entities;
-using FluentResults;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 
 namespace CVision.BLL.Commands.Users.UpdatePassword;
 
-public class UpdatePasswordHandler : IRequestHandler<UpdatePasswordCommand, Result>
+public class UpdatePasswordHandler : IRequestHandler<UpdatePasswordCommand, Result<bool>>
 {
     private readonly UserManager<ApplicationUser> _userManager;
 
@@ -15,12 +15,12 @@ public class UpdatePasswordHandler : IRequestHandler<UpdatePasswordCommand, Resu
         _userManager = userManager;
     }
 
-    public async Task<Result> Handle(UpdatePasswordCommand request, CancellationToken cancellationToken)
+    public async Task<Result<bool>> Handle(UpdatePasswordCommand request, CancellationToken cancellationToken)
     {
         var user = await _userManager.FindByIdAsync(request.UserId.ToString());
         if (user == null)
         {
-            return Result.Fail(UserConstants.UserNotFound);
+            return UserConstants.UserNotFound;
         }
 
         var result = await _userManager.ChangePasswordAsync(
@@ -31,12 +31,12 @@ public class UpdatePasswordHandler : IRequestHandler<UpdatePasswordCommand, Resu
             var errors = result.Errors.Select(e => e.Description).ToList();
             if (errors.Any(e => e.Contains("incorrect", StringComparison.OrdinalIgnoreCase)))
             {
-                return Result.Fail(UserConstants.IncorrectCurrentPassword);
+                return UserConstants.IncorrectCurrentPassword;
             }
 
-            return Result.Fail(errors);
+            return string.Join("; ", errors);
         }
 
-        return Result.Ok();
+        return true;
     }
 }

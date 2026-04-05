@@ -28,7 +28,7 @@ public class HomeController(IMediator mediator, ILogger<HomeController> logger) 
         try
         {
             var result = await mediator.Send(new GetUserByIdQuery(userId));
-            if (result.IsFailed || result.ValueOrDefault == null)
+            if (!result.IsSuccess || result.Value == null)
             {
                 TempData["UserWindowError"] = "Не вдалося завантажити дані профілю. Спробуйте ще раз.";
                 return View("user", new UserWindowViewModel());
@@ -63,7 +63,7 @@ public class HomeController(IMediator mediator, ILogger<HomeController> logger) 
         var userId = GetUserId();
 
         var currentUserResult = await mediator.Send(new GetUserByIdQuery(userId));
-        var previousEmail = currentUserResult.ValueOrDefault?.Email;
+        var previousEmail = currentUserResult.Value?.Email;
 
         if (!ModelState.IsValid)
         {
@@ -82,22 +82,22 @@ public class HomeController(IMediator mediator, ILogger<HomeController> logger) 
             };
 
             var updateResult = await mediator.Send(new UpdateProfileCommand(userId, updateRequestDto));
-            if (updateResult.IsFailed)
+            if (!updateResult.IsSuccess)
             {
-                if (!updateResult.Errors.Any())
+                if (updateResult.Error != null)
                 {
-                    ModelState.AddModelError(string.Empty, "Не вдалося оновити профіль. Спробуйте ще раз.");
-                }
-
-                foreach (var error in updateResult.Errors)
-                {
-                    if (string.Equals(error.Message, UserConstants.EmailAlreadyInUse, StringComparison.Ordinal))
+                    if (string.Equals(updateResult.Error, UserConstants.EmailAlreadyInUse, StringComparison.Ordinal))
                     {
                         ModelState.AddModelError(nameof(UserWindowViewModel.Email), "Ця електронна пошта вже зайнята.");
-                        continue;
                     }
-
-                    ModelState.AddModelError(string.Empty, error.Message);
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, updateResult.Error);
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Не вдалося оновити профіль. Спробуйте ще раз.");
                 }
 
                 model.MemberSince = await GetMemberSinceAsync(userId);
@@ -164,15 +164,15 @@ public class HomeController(IMediator mediator, ILogger<HomeController> logger) 
             };
 
             var result = await mediator.Send(new UpdatePasswordCommand(userId, requestDto));
-            if (result.IsFailed)
+            if (!result.IsSuccess)
             {
-                if (result.Errors.Any(e => string.Equals(e.Message, UserConstants.IncorrectCurrentPassword, StringComparison.Ordinal)))
+                if (result.Error != null && string.Equals(result.Error, UserConstants.IncorrectCurrentPassword, StringComparison.Ordinal))
                 {
                     TempData["UserPasswordError"] = "Поточний пароль введено невірно.";
                     return RedirectToAction("user");
                 }
 
-                TempData["UserPasswordError"] = result.Errors.FirstOrDefault()?.Message
+                TempData["UserPasswordError"] = result.Error
                     ?? "Не вдалося змінити пароль. Спробуйте ще раз.";
                 return RedirectToAction("user");
             }
@@ -194,6 +194,6 @@ public class HomeController(IMediator mediator, ILogger<HomeController> logger) 
     private async Task<string> GetMemberSinceAsync(int userId)
     {
         var userResult = await mediator.Send(new GetUserByIdQuery(userId));
-        return userResult.ValueOrDefault?.CreatedAt.ToString("dd.MM.yyyy") ?? string.Empty;
+        return userResult.Value?.CreatedAt.ToString("dd.MM.yyyy") ?? string.Empty;
     }
 }

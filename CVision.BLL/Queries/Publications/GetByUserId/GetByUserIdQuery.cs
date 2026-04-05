@@ -1,10 +1,8 @@
 using CVision.BLL.DTOs.Publications;
+using CVision.BLL.Helpers;
 using MediatR;
-using FluentResults;
 
 namespace CVision.BLL.Queries.Publications.GetByUserId;
 
 public record GetByUserIdQuery(int UserId)
-    : IRequest<Result<IEnumerable<PublicationResponseShortDto>>>
-{
-}
+    : IRequest<Result<IEnumerable<PublicationResponseShortDto>>>;

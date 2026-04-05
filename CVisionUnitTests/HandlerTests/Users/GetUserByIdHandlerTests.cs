@@ -59,8 +59,8 @@ public class GetUserByIdHandlerTests
         var result = await _handler.Handle(query, CancellationToken.None);
 
         // Assert
-        Assert.True(result.IsFailed);
-        Assert.Equal(UserConstants.UserNotFound, result.Errors.First().Message);
+        Assert.False(result.IsSuccess);
+        Assert.Equal(UserConstants.UserNotFound, result.Error);
         _mapperMock.Verify(m => m.Map<GetUserResponseDto>(It.IsAny<ApplicationUser>()), Times.Never);
     }
 
@@ -84,7 +84,7 @@ public class GetUserByIdHandlerTests
 
         // Assert
         Assert.True(result.IsSuccess);
-        Assert.Equal(responseDto.Email, result.Value.Email);
+        Assert.Equal(responseDto.Email, result.Value!.Email);
         _userManagerMock.Verify(u => u.FindByIdAsync(userId.ToString()), Times.Once);
     }
 }

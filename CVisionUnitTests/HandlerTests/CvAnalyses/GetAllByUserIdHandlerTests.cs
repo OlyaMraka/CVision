@@ -56,7 +56,7 @@ public class GetAllByUserIdHandlerTests
 
         // Assert
         Assert.True(result.IsSuccess);
-        Assert.Equal(2, result.Value.Count());
+        Assert.Equal(2, result.Value!.Count());
         _mapperMock.Verify(m => m.Map<IEnumerable<CvAnalysisResponseShortDto>>(entities), Times.Once);
     }
 
@@ -83,6 +83,6 @@ public class GetAllByUserIdHandlerTests
 
         // Assert
         Assert.True(result.IsSuccess);
-        Assert.Empty(result.Value);
+        Assert.Empty(result.Value!);
     }
 }

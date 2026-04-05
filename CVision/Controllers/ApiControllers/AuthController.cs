@@ -10,7 +10,6 @@ using CVision.DAL.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using FluentResults;
 using System.Security.Claims;
 
 namespace CVision.Controllers.ApiControllers;
@@ -36,14 +35,14 @@ public class AuthController(
     {
         var result = await Mediator.Send(new LoginUserCommand(requestDto));
 
-        if (result.IsFailed)
+        if (!result.IsSuccess)
         {
             return HandleResult(result);
         }
 
-        await signInManager.SignInAsync(result.Value, isPersistent: false);
+        await signInManager.SignInAsync(result.Value!, isPersistent: false);
 
-        var responseDto = mapper.Map<LoginUserResponseDto>(result.Value);
+        var responseDto = mapper.Map<LoginUserResponseDto>(result.Value!);
         return Ok(responseDto);
     }
 

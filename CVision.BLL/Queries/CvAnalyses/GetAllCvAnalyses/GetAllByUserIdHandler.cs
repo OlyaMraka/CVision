@@ -1,7 +1,7 @@
 using AutoMapper;
 using CVision.BLL.DTOs.CvAnalyses;
+using CVision.BLL.Helpers;
 using CVision.DAL.Entities;
-using FluentResults;
 using CVision.DAL.Repositories.Interfaces.Base;
 using CVision.DAL.Repositories.Options;
 using MediatR;
@@ -25,6 +25,6 @@ public class GetAllByUserIdHandler(IMapper mapper, IRepositoryWrapper repository
 
         var result = mapper.Map<IEnumerable<CvAnalysisResponseShortDto>>(cvAnalyses);
 
-        return Result.Ok(result);
+        return Result<IEnumerable<CvAnalysisResponseShortDto>>.Ok(result);
     }
 }

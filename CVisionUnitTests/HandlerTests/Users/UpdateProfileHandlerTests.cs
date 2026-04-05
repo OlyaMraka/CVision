@@ -66,8 +66,8 @@ public class UpdateProfileHandlerTests
         var result = await _handler.Handle(command, CancellationToken.None);
 
         // Assert
-        Assert.True(result.IsFailed);
-        Assert.Equal(UserConstants.UserNotFound, result.Errors.First().Message);
+        Assert.False(result.IsSuccess);
+        Assert.Equal(UserConstants.UserNotFound, result.Error);
     }
 
     [Fact]
@@ -105,7 +105,7 @@ public class UpdateProfileHandlerTests
 
         // Assert
         Assert.True(result.IsSuccess);
-        Assert.Equal("newname", result.Value.UserName);
+        Assert.Equal("newname", result.Value!.UserName);
         Assert.Equal("123456", result.Value.PhoneNumber);
         _userManagerMock.Verify(u => u.FindByEmailAsync(It.IsAny<string>()), Times.Never);
         _emailServiceMock.Verify(e => e.SendEmailChangeConfirmationAsync(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
@@ -184,8 +184,8 @@ public class UpdateProfileHandlerTests
         var result = await _handler.Handle(command, CancellationToken.None);
 
         // Assert
-        Assert.True(result.IsFailed);
-        Assert.Equal(UserConstants.EmailAlreadyInUse, result.Errors.First().Message);
+        Assert.False(result.IsSuccess);
+        Assert.Equal(UserConstants.EmailAlreadyInUse, result.Error);
         _userManagerMock.Verify(u => u.UpdateAsync(It.IsAny<ApplicationUser>()), Times.Never);
     }
 
@@ -214,7 +214,7 @@ public class UpdateProfileHandlerTests
         var result = await _handler.Handle(command, CancellationToken.None);
 
         // Assert
-        Assert.True(result.IsFailed);
-        Assert.Equal("Update failed", result.Errors.First().Message);
+        Assert.False(result.IsSuccess);
+        Assert.Equal("Update failed", result.Error);
     }
 }

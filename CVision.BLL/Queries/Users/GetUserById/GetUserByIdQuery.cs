@@ -1,6 +1,6 @@
 using CVision.BLL.DTOs.Users;
+using CVision.BLL.Helpers;
 using MediatR;
-using FluentResults;
 
 namespace CVision.BLL.Queries.Users.GetUserById;
 
