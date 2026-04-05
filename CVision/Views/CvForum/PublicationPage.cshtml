@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="~/css/HubUser.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/CvForum/publication-page.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/CvForum/add-comment.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/CvForum/comment-item.css" asp-append-version="true" />
 }
 
 <div class="publication-info-block">
@@ -71,13 +72,28 @@
         <div class="discussion-block">
             <div class="discussion-header">
                 <h2>Коментарі:</h2>
-        
+
                 <button type="button" class="btn-open-comment" id="btnOpenEditor" onclick="showCommentForm()">
                     <i class="fa-solid fa-comment-dots"></i> Додати коментар
                 </button>
             </div>
 
             <div class="comments-list">
+                @{
+                    var comments = ViewBag.Comments as IEnumerable<CVision.Models.ViewModels.CvForum.CommentViewModel>;
+                }
+
+                @if (comments != null && comments.Any())
+                {
+                    @foreach (var comment in comments)
+                    {
+                        <partial name="~/Views/CvForum/components/CommentItem.cshtml" model="comment" />
+                    }
+                }
+                else
+                {
+                    <p class="no-comments">Поки що немає коментарів. Будьте першим!</p>
+                }
             </div>
 
             <partial name="~/Views/CvForum/components/AddComment.cshtml" 

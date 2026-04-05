@@ -8,7 +8,7 @@ public class CommentViewModel
 
     public string Content { get; set; } = string.Empty;
 
-    public DateOnly CreatedOn { get; set; }
+    public DateTime CreatedAt { get; set; }
 
     public int Likes { get; set; }
 

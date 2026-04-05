@@ -19,29 +19,45 @@
         </div>
     </form>
 </div>
-
 <script>
-    // Виносимо функції в глобальну область, щоб кнопка з головного файлу їх бачила
     function showCommentForm() {
         const editor = document.getElementById('commentEditor');
-        const btn = document.getElementById('btnOpenEditor'); // Ця кнопка в основному файлі
+        const btn = document.getElementById('btnOpenEditor');
         
         if (editor && btn) {
-            editor.style.display = 'block';
-            btn.style.display = 'none';
+            const parentInput = document.querySelector('input[name="ParentCommentId"]');
+            if (parentInput) parentInput.value = "";
             
             const textarea = editor.querySelector('textarea');
-            if (textarea) textarea.focus();
+            textarea.placeholder = "Ваш відгук про це CV...";
+            
+            editor.style.display = 'block';
+            btn.style.display = 'none';
+            textarea.focus();
+        }
+    }
+
+    function showReplyForm(commentId, authorName) {
+        const editor = document.getElementById('commentEditor');
+        const btn = document.getElementById('btnOpenEditor');
+        const parentInput = document.querySelector('input[name="ParentCommentId"]');
+        const textarea = editor.querySelector('textarea');
+
+        if (editor && parentInput) {
+            parentInput.value = commentId;
+            textarea.placeholder = `Відповідь для ${authorName}...`;
+
+            editor.style.display = 'block';
+            if (btn) btn.style.display = 'none';
+            textarea.focus();
         }
     }
 
     function hideCommentForm() {
         const editor = document.getElementById('commentEditor');
         const btn = document.getElementById('btnOpenEditor');
-        
-        if (editor && btn) {
-            editor.style.display = 'none';
-            btn.style.display = 'flex';
-        }
+
+        if (editor) editor.style.display = 'none';
+        if (btn) btn.style.display = 'flex';
     }
 </script>

@@ -17,4 +17,6 @@ public class PublicationsViewModel
     public DateTime PublishedAt { get; set; }
 
     public bool IsOwn { get; set; }
+
+    public ICollection<CommentViewModel> Comments { get; set; } = new List<CommentViewModel>();
 }

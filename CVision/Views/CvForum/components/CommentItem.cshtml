@@ -1,0 +1,47 @@
+@model CVision.Models.ViewModels.CvForum.CommentViewModel
+
+<div class="comment-item @(Model.ParentComment != null ? "is-reply" : "")" id="comment-@Model.Id">
+    <div class="comment-header">
+        <span class="comment-author">@Model.UserName</span>
+        <span class="comment-date">@Model.CreatedAt.ToString("dd.MM.yyyy")</span>
+    </div>
+    
+    <div class="comment-content">
+        @if (Model.ParentComment != null)
+        {
+            <a href="#comment-@Model.ParentComment.Id" class="reply-to-link">
+                <div class="reply-to">
+                    <div class="reply-header">
+                        <i class="fa-solid fa-reply"></i> Відповідь для <strong>@Model.ParentComment.UserName</strong>
+                    </div>
+                    
+                    
+                        <div class="reply-preview">
+                            @{
+                                var content = Model.ParentComment.Content ?? string.Empty;
+                                var preview = content.Length > 80
+                                    ? content.Substring(0, 80) + "..."
+                                    : content;
+                            }
+                            @preview
+                        </div>
+                    
+                </div>
+            </a>
+        }
+        <p class="comment-main-text">@Model.Content</p>
+    </div>
+
+    <div class="comment-footer">
+        <div class="comment-likes">
+            <button type="button" class="btn-like" onclick="likeComment(@Model.Id)">
+                <i class="fa-regular fa-heart"></i>
+                <span id="likes-count-@Model.Id">@Model.Likes</span>
+            </button>
+        </div>
+        
+        <button type="button" class="btn-reply" onclick="showReplyForm(@Model.Id, '@Model.UserName')">
+            Відповісти
+        </button>
+    </div>
+</div>
