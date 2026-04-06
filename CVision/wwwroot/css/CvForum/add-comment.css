@@ -1,0 +1,49 @@
+.comment-editor-box {
+    background: #fff;
+    border: 1px solid #f5ddd4;
+    border-radius: 12px;
+    padding: 1.25rem;
+    animation: fadeIn 0.3s ease;
+}
+
+.comment-input {
+    width: 100%;
+    min-height: 100px;
+    border: 1px solid #faeae4;
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 13.5px;
+    outline: none;
+    resize: vertical;
+}
+
+.editor-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.btn-close-editor {
+    background: none;
+    border: none;
+    color: #7a6560;
+    font-size: 13px;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.btn-send-comment {
+    background: #c47a6a;
+    color: #fff;
+    border: none;
+    padding: 7px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}

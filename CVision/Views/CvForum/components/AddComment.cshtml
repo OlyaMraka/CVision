@@ -1,0 +1,63 @@
+@model CVision.Models.ViewModels.CvForum.CreateCommentViewModel
+
+<div class="comment-editor-box" id="commentEditor" style="display: none; margin-top: 1rem;">
+    <form asp-controller="Publication" asp-action="AddComment" method="post">
+        <input type="hidden" asp-for="PublicationId" />
+        <input type="hidden" asp-for="ParentCommentId" />
+        
+        <div class="textarea-wrapper">
+            <textarea 
+                asp-for="Content" 
+                placeholder="Ваш відгук про це CV..." 
+                class="comment-input" 
+                required></textarea>
+        </div>
+        
+        <div class="editor-actions">
+            <button type="button" class="btn-close-editor" onclick="hideCommentForm()">Скасувати</button>
+            <button type="submit" class="btn-send-comment">Надіслати</button>
+        </div>
+    </form>
+</div>
+<script>
+    function showCommentForm() {
+        const editor = document.getElementById('commentEditor');
+        const btn = document.getElementById('btnOpenEditor');
+        
+        if (editor && btn) {
+            const parentInput = document.querySelector('input[name="ParentCommentId"]');
+            if (parentInput) parentInput.value = "";
+            
+            const textarea = editor.querySelector('textarea');
+            textarea.placeholder = "Ваш відгук про це CV...";
+            
+            editor.style.display = 'block';
+            btn.style.display = 'none';
+            textarea.focus();
+        }
+    }
+
+    function showReplyForm(commentId, authorName) {
+        const editor = document.getElementById('commentEditor');
+        const btn = document.getElementById('btnOpenEditor');
+        const parentInput = document.querySelector('input[name="ParentCommentId"]');
+        const textarea = editor.querySelector('textarea');
+
+        if (editor && parentInput) {
+            parentInput.value = commentId;
+            textarea.placeholder = `Відповідь для ${authorName}...`;
+
+            editor.style.display = 'block';
+            if (btn) btn.style.display = 'none';
+            textarea.focus();
+        }
+    }
+
+    function hideCommentForm() {
+        const editor = document.getElementById('commentEditor');
+        const btn = document.getElementById('btnOpenEditor');
+
+        if (editor) editor.style.display = 'none';
+        if (btn) btn.style.display = 'flex';
+    }
+</script>

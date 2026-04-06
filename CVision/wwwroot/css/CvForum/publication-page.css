@@ -114,7 +114,31 @@
     flex-direction: column;
     gap: 1.25rem;
 }
+.discussion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+.btn-open-comment {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #faeae4;
+    color: #c47a6a;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    transition: 0.2s;
+}
 
+.btn-open-comment:hover {
+    background: #f5ddd4;
+    color: #e8907c;
+}
 .discussion-block h2 {
     font-size: 15px;
     font-weight: 600;

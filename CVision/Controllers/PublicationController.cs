@@ -1,14 +1,17 @@
 using AutoMapper;
 using CVision.BLL.Commands.Publications.Create;
 using CVision.BLL.DTOs.Publications;
+using CVision.BLL.DTOs.Comments;
 using CVision.BLL.Queries.Publications.GetAllPublications;
 using CVision.Models.ViewModels.CvForum;
 using MediatR;
 using System.Security.Claims;
+using CVision.BLL.Commands.Comments.Create;
 using CVision.BLL.Commands.Publications.Delete;
 using CVision.BLL.Commands.Publications.Update;
 using CVision.BLL.Queries.Publications.GetByPublicationId;
 using CVision.BLL.Queries.Publications.GetByUserId;
+using CVision.BLL.Queries.Comments.GetByPublicationId;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CVision.Controllers;
@@ -30,10 +33,24 @@ public class PublicationController(IMediator mediator, IMapper mapper) : BaseCon
     public async Task<IActionResult> GetPublication(int publicationId)
     {
         var userId = GetUserId();
+        var pubResult = await mediator.Send(new GetPublicationByIdQuery(publicationId));
+        if (pubResult.IsFailed)
+        {
+            return RedirectToAction("CvForum");
+        }
 
-        var result = await mediator.Send(new GetPublicationByIdQuery(publicationId));
-        var parameter = mapper.Map<PublicationsViewModel>(result.Value);
+        var parameter = mapper.Map<PublicationsViewModel>(pubResult.Value);
         parameter.IsOwn = userId == parameter.UserId;
+        var commentsResult = await mediator.Send(new GetByPublicationIdQuery(publicationId));
+        if (commentsResult.IsSuccess)
+        {
+            ViewBag.Comments = mapper.Map<IEnumerable<CommentViewModel>>(commentsResult.Value);
+        }
+        else
+        {
+            ViewBag.Comments = new List<CommentViewModel>();
+        }
+
         return View("~/Views/CvForum/PublicationPage.cshtml", parameter);
     }
 
@@ -166,5 +183,25 @@ public class PublicationController(IMediator mediator, IMapper mapper) : BaseCon
         }
 
         return RedirectToAction("CvForum");
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> AddComment(CreateCommentViewModel model)
+    {
+        var userId = GetUserId();
+
+        var requestDto = new CreateCommentRequestDto
+        {
+            PublicationId = model.PublicationId,
+            UserId = userId,
+            ParentCommentId = model.ParentCommentId,
+            Content = model.Content,
+        };
+
+
+        var result = await mediator.Send(new CreateCommentCommand(requestDto));
+
+        return RedirectToAction("GetPublication", new { publicationId = model.PublicationId });
     }
 }
