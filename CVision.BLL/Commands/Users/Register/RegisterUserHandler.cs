@@ -2,7 +2,7 @@ using AutoMapper;
 using CVision.BLL.DTOs.Users;
 using CVision.BLL.Interfaces;
 using CVision.DAL.Entities;
-using FluentResults;
+using CVision.BLL.Helpers;
 using MediatR;
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;
@@ -37,7 +37,7 @@ public class RegisterUserHandler : IRequestHandler<RegisterUserCommand, Result<R
 
         if (!validationResult.IsValid)
         {
-            return Result.Fail<RegisterUserResponseDto>(validationResult.Errors.First().ErrorMessage);
+            return validationResult.Errors.First().ErrorMessage;
         }
 
         ApplicationUser newUser = _mapper.Map<ApplicationUser>(request.RequestDto);
@@ -46,7 +46,7 @@ public class RegisterUserHandler : IRequestHandler<RegisterUserCommand, Result<R
 
         if (!identityResult.Succeeded)
         {
-            return Result.Fail<RegisterUserResponseDto>(identityResult.Errors.Select(e => e.Description));
+            return string.Join("; ", identityResult.Errors.Select(e => e.Description));
         }
 
         var emailToken = await _userManager.GenerateEmailConfirmationTokenAsync(newUser);
@@ -56,6 +56,6 @@ public class RegisterUserHandler : IRequestHandler<RegisterUserCommand, Result<R
         await _emailService.SendConfirmationEmailAsync(newUser.Email!, confirmationLink);
 
         var responseDto = _mapper.Map<RegisterUserResponseDto>(newUser);
-        return Result.Ok(responseDto);
+        return responseDto;
     }
 }

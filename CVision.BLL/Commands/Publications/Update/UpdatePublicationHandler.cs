@@ -1,7 +1,7 @@
 using CVision.BLL.Constans;
+using CVision.BLL.Helpers;
 using CVision.DAL.Repositories.Interfaces.Base;
 using CVision.DAL.Repositories.Options;
-using FluentResults;
 using FluentValidation;
 using MediatR;
 
@@ -9,9 +9,9 @@ namespace CVision.BLL.Commands.Publications.Update;
 
 public class UpdatePublicationHandler(
     IRepositoryWrapper repositoryWrapper,
-    IValidator<UpdatePublicationCommand> validator) : IRequestHandler<UpdatePublicationCommand, Result>
+    IValidator<UpdatePublicationCommand> validator) : IRequestHandler<UpdatePublicationCommand, Result<bool>>
 {
-    public async Task<Result> Handle(
+    public async Task<Result<bool>> Handle(
         UpdatePublicationCommand request,
         CancellationToken cancellationToken)
     {
@@ -19,7 +19,7 @@ public class UpdatePublicationHandler(
 
         if (!validationResult.IsValid)
         {
-            return Result.Fail(validationResult.Errors.First().ErrorMessage);
+            return validationResult.Errors.First().ErrorMessage;
         }
 
         var publication = await repositoryWrapper.PublicationRepository.GetFirstOrDefaultAsync(
@@ -31,12 +31,12 @@ public class UpdatePublicationHandler(
 
         if (publication is null)
         {
-            return Result.Fail(PublicationsConstants.PublicationNotFound);
+            return PublicationsConstants.PublicationNotFound;
         }
 
         if (publication.UserId != request.UserId)
         {
-            return Result.Fail("Unauthorized");
+            return "Unauthorized";
         }
 
         publication.Title = request.RequestDto.Title;
@@ -46,9 +46,9 @@ public class UpdatePublicationHandler(
 
         if (await repositoryWrapper.SaveChangesAsync() <= 0)
         {
-            return Result.Fail(PublicationsConstants.PublicationUpdateError);
+            return PublicationsConstants.PublicationUpdateError;
         }
 
-        return Result.Ok();
+        return true;
     }
 }

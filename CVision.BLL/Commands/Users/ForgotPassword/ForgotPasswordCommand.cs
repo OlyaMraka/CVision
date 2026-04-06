@@ -1,8 +1,8 @@
 using CVision.BLL.DTOs.Users;
-using FluentResults;
+using CVision.BLL.Helpers;
 using MediatR;
 
 namespace CVision.BLL.Commands.Users.ForgotPassword;
 
 public record ForgotPasswordCommand(ForgotPasswordRequestDto RequestDto)
-    : IRequest<Result>;
+    : IRequest<Result<bool>>;

@@ -56,8 +56,8 @@ public class ResetPasswordHandlerTests
         var result = await _handler.Handle(command, CancellationToken.None);
 
         // Assert
-        result.IsFailed.Should().BeTrue();
-        result.Errors.First().Message.Should().Be(UserConstants.PasswordResetError);
+        result.IsSuccess.Should().BeFalse();
+        result.Error.Should().Be(UserConstants.PasswordResetError);
 
         _userManagerMock.Verify(u => u.ResetPasswordAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
     }
@@ -86,8 +86,8 @@ public class ResetPasswordHandlerTests
         var result = await _handler.Handle(command, CancellationToken.None);
 
         // Assert
-        result.IsFailed.Should().BeTrue();
-        result.Errors.Select(e => e.Message).Should().Contain("Invalid token.");
+        result.IsSuccess.Should().BeFalse();
+        result.Error.Should().Be("Invalid token.");
     }
 
     [Fact]

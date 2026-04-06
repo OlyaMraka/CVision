@@ -1,9 +1,9 @@
 using AutoMapper;
 using CVision.BLL.Constans;
-using MediatR;
-using FluentResults;
 using CVision.BLL.DTOs.Users;
+using CVision.BLL.Helpers;
 using CVision.DAL.Entities;
+using MediatR;
 using Microsoft.AspNetCore.Identity;
 
 namespace CVision.BLL.Queries.Users.GetUserById;
@@ -25,11 +25,11 @@ public class GetUserByIdHandler : IRequestHandler<GetUserByIdQuery, Result<GetUs
 
         if (user == null)
         {
-            return Result.Fail<GetUserResponseDto>(UserConstants.UserNotFound);
+            return UserConstants.UserNotFound;
         }
 
         var response = _mapper.Map<GetUserResponseDto>(user);
 
-        return Result.Ok(response);
+        return response;
     }
 }

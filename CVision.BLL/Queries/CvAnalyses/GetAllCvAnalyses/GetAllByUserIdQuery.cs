@@ -1,5 +1,5 @@
 using CVision.BLL.DTOs.CvAnalyses;
-using FluentResults;
+using CVision.BLL.Helpers;
 using MediatR;
 
 namespace CVision.BLL.Queries.CvAnalyses.GetAllCvAnalyses;

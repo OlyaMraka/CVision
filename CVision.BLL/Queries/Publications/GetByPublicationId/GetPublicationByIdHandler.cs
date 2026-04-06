@@ -1,10 +1,10 @@
-using MediatR;
 using AutoMapper;
-using FluentResults;
 using CVision.BLL.DTOs.Publications;
+using CVision.BLL.Helpers;
 using CVision.DAL.Entities;
 using CVision.DAL.Repositories.Interfaces.Base;
 using CVision.DAL.Repositories.Options;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace CVision.BLL.Queries.Publications.GetByPublicationId;
@@ -27,6 +27,6 @@ public class GetPublicationByIdHandler(IRepositoryWrapper repositoryWrapper, IMa
 
         var response = mapper.Map<PublicationResponseShortDto>(publications);
 
-        return Result.Ok(response);
+        return response;
     }
 }

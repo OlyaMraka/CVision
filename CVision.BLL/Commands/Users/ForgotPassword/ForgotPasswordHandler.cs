@@ -1,13 +1,13 @@
+using CVision.BLL.Helpers;
 using CVision.BLL.Interfaces;
 using CVision.DAL.Entities;
-using FluentResults;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 
 namespace CVision.BLL.Commands.Users.ForgotPassword;
 
-public class ForgotPasswordHandler : IRequestHandler<ForgotPasswordCommand, Result>
+public class ForgotPasswordHandler : IRequestHandler<ForgotPasswordCommand, Result<bool>>
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IEmailService _emailService;
@@ -23,13 +23,13 @@ public class ForgotPasswordHandler : IRequestHandler<ForgotPasswordCommand, Resu
         _configuration = configuration;
     }
 
-    public async Task<Result> Handle(ForgotPasswordCommand request, CancellationToken cancellationToken)
+    public async Task<Result<bool>> Handle(ForgotPasswordCommand request, CancellationToken cancellationToken)
     {
         var user = await _userManager.FindByEmailAsync(request.RequestDto.Email);
 
         if (user == null)
         {
-            return Result.Ok();
+            return true;
         }
 
         var token = await _userManager.GeneratePasswordResetTokenAsync(user);
@@ -39,6 +39,6 @@ public class ForgotPasswordHandler : IRequestHandler<ForgotPasswordCommand, Resu
 
         await _emailService.SendPasswordResetEmailAsync(user.Email!, resetLink);
 
-        return Result.Ok();
+        return true;
     }
 }

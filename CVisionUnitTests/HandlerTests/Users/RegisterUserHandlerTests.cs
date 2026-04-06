@@ -82,8 +82,8 @@ public class RegisterUserHandlerTests
         var result = await _handler.Handle(command, CancellationToken.None);
 
         // Assert
-        Assert.True(result.IsFailed);
-        Assert.Equal(UserConstants.UserNameRequiredErrorMessage, result.Errors.First().Message);
+        Assert.False(result.IsSuccess);
+        Assert.Equal(UserConstants.UserNameRequiredErrorMessage, result.Error);
 
         _userManagerMock.Verify(u => u.CreateAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>()), Times.Never);
     }
@@ -109,8 +109,8 @@ public class RegisterUserHandlerTests
         var result = await _handler.Handle(command, CancellationToken.None);
 
         // Assert
-        Assert.True(result.IsFailed);
-        Assert.Contains(identityError, result.Errors.First().Message);
+        Assert.False(result.IsSuccess);
+        Assert.Contains(identityError, result.Error);
         _emailServiceMock.Verify(e => e.SendConfirmationEmailAsync(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
     }
 
@@ -146,7 +146,7 @@ public class RegisterUserHandlerTests
 
         // Assert
         Assert.True(result.IsSuccess);
-        Assert.Equal(requestDto.Email, result.Value.Email);
+        Assert.Equal(requestDto.Email, result.Value!.Email);
 
         _emailServiceMock.Verify(
             e => e.SendConfirmationEmailAsync(userEntity.Email, It.IsAny<string>()),

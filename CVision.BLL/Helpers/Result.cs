@@ -23,4 +23,6 @@ public class Result<T>
     public static implicit operator Result<T>(T value) => new(value);
 
     public static implicit operator Result<T>(string error) => new(error);
+
+    public static Result<T> Ok(T value) => new(value);
 }

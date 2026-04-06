@@ -56,7 +56,7 @@ public class GetByUserIdHandlerTests
 
         // Assert
         Assert.True(result.IsSuccess);
-        Assert.Equal(2, result.Value.Count());
+        Assert.Equal(2, result.Value!.Count());
         _repositoryWrapperMock.Verify(r => r.PublicationRepository.GetAllAsync(It.IsAny<QueryOptions<Publication>>()), Times.Once);
         _mapperMock.Verify(m => m.Map<IEnumerable<PublicationResponseShortDto>>(publications), Times.Once);
     }
@@ -83,7 +83,7 @@ public class GetByUserIdHandlerTests
 
         // Assert
         Assert.True(result.IsSuccess);
-        Assert.Empty(result.Value);
+        Assert.Empty(result.Value!);
     }
 
     [Fact]

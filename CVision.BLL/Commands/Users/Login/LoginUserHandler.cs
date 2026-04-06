@@ -1,6 +1,6 @@
 using CVision.BLL.Constans;
+using CVision.BLL.Helpers;
 using CVision.DAL.Entities;
-using FluentResults;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -20,28 +20,28 @@ public class LoginUserHandler(
 
         if (!validationResult.IsValid)
         {
-            return Result.Fail<ApplicationUser>(validationResult.Errors.First().ErrorMessage);
+            return validationResult.Errors.First().ErrorMessage;
         }
 
         var user = await userManager.FindByEmailAsync(request.RequestDto.Email);
 
         if (user is null)
         {
-            return Result.Fail<ApplicationUser>(UserConstants.UserLogInError);
+            return UserConstants.UserLogInError;
         }
 
         var passwordValid = await userManager.CheckPasswordAsync(user, request.RequestDto.Password);
 
         if (!passwordValid)
         {
-            return Result.Fail<ApplicationUser>(UserConstants.UserLogInError);
+            return UserConstants.UserLogInError;
         }
 
         if (!user.EmailConfirmed)
         {
-            return Result.Fail<ApplicationUser>(UserConstants.UserLogInError);
+            return UserConstants.UserLogInError;
         }
 
-        return Result.Ok(user);
+        return user;
     }
 }

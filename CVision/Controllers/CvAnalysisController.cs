@@ -61,7 +61,7 @@ public class CvAnalysisController(IMediator mediator, IMapper mapper) : BaseCont
 
         var result = await mediator.Send(new GetAllByUserIdQuery(userId));
 
-        if (result.IsFailed)
+        if (!result.IsSuccess)
         {
             return View("~/Views/CvAnalysis/CVGallery.cshtml", new CVGalleryPageViewModel
             {

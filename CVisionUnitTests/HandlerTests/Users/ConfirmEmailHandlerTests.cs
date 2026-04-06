@@ -55,8 +55,8 @@ public class ConfirmEmailHandlerTests
         var result = await _handler.Handle(command, CancellationToken.None);
 
         // Assert
-        Assert.True(result.IsFailed);
-        Assert.Equal(UserConstants.UserNotFound, result.Errors.First().Message);
+        Assert.False(result.IsSuccess);
+        Assert.Equal(UserConstants.UserNotFound, result.Error);
 
         _userManagerMock.Verify(u => u.ConfirmEmailAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>()), Times.Never);
     }
@@ -79,8 +79,8 @@ public class ConfirmEmailHandlerTests
         var result = await _handler.Handle(command, CancellationToken.None);
 
         // Assert
-        Assert.True(result.IsFailed);
-        Assert.Equal(UserConstants.EmailConfirmationError, result.Errors.First().Message);
+        Assert.False(result.IsSuccess);
+        Assert.Equal(UserConstants.EmailConfirmationError, result.Error);
     }
 
     [Fact]

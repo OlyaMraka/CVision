@@ -1,10 +1,8 @@
 using CVision.BLL.DTOs.Publications;
+using CVision.BLL.Helpers;
 using MediatR;
-using FluentResults;
 
 namespace CVision.BLL.Queries.Publications.GetAllPublications;
 
 public record GetAllPublicationsQuery()
-    : IRequest<Result<IEnumerable<PublicationResponseShortDto>>>
-{
-}
+    : IRequest<Result<IEnumerable<PublicationResponseShortDto>>>;
