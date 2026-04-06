@@ -1,3 +1,4 @@
+@using CVision.Helpers.Constants
 @model CVision.Models.ViewModels.CvForum.CreateCommentViewModel
 
 <div class="comment-editor-box" id="commentEditor" style="display: none; margin-top: 1rem;">
@@ -20,7 +21,28 @@
     </form>
 </div>
 <script>
+    const commentUiConfig = {
+        updateUrl: '@Url.Content("~/api/Comments/update")',
+        deleteUrlBase: '@Url.Content("~/api/Comments/delete")',
+        errorUrl: '@Url.Action("ShowError", "Publication")',
+        deleteConfirmMessage: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(PublicationConstants.DeleteCommentConfirmation)),
+        emptyCommentMessage: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(PublicationConstants.EmptyCommentValidationMessage)),
+        commentActionError: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(PublicationConstants.CommentActionError))
+    };
+
+    function hideAllInlineCommentEditors() {
+        document.querySelectorAll('[id^="commentEditBox-"]').forEach(box => {
+            box.style.display = 'none';
+        });
+
+        document.querySelectorAll('[id^="commentContent-"]').forEach(content => {
+            content.style.display = 'block';
+        });
+    }
+
     function showCommentForm() {
+        hideAllInlineCommentEditors();
+
         const editor = document.getElementById('commentEditor');
         const btn = document.getElementById('btnOpenEditor');
         
@@ -38,6 +60,8 @@
     }
 
     function showReplyForm(commentId, authorName) {
+        hideAllInlineCommentEditors();
+
         const editor = document.getElementById('commentEditor');
         const btn = document.getElementById('btnOpenEditor');
         const parentInput = document.querySelector('input[name="ParentCommentId"]');
@@ -59,5 +83,113 @@
 
         if (editor) editor.style.display = 'none';
         if (btn) btn.style.display = 'flex';
+    }
+
+    function startCommentEdit(commentId) {
+        hideCommentForm();
+        hideAllInlineCommentEditors();
+
+        const contentBlock = document.getElementById(`commentContent-${commentId}`);
+        const editBox = document.getElementById(`commentEditBox-${commentId}`);
+        const input = document.getElementById(`commentEditInput-${commentId}`);
+
+        if (contentBlock && editBox && input) {
+            contentBlock.style.display = 'none';
+            editBox.style.display = 'block';
+            input.focus();
+            input.setSelectionRange(input.value.length, input.value.length);
+        }
+    }
+
+    function cancelCommentEdit(commentId) {
+        const contentBlock = document.getElementById(`commentContent-${commentId}`);
+        const editBox = document.getElementById(`commentEditBox-${commentId}`);
+        const input = document.getElementById(`commentEditInput-${commentId}`);
+        const text = document.getElementById(`commentText-${commentId}`);
+
+        if (input && text) {
+            input.value = text.textContent.trim();
+        }
+
+        if (contentBlock) contentBlock.style.display = 'block';
+        if (editBox) editBox.style.display = 'none';
+    }
+
+    function redirectToCommentError(message) {
+        const errorMessage = message || commentUiConfig.commentActionError;
+        const returnUrl = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+
+        window.location.href = `${commentUiConfig.errorUrl}?message=${encodeURIComponent(errorMessage)}&returnUrl=${encodeURIComponent(returnUrl)}`;
+    }
+
+    function getCommentActionError(result) {
+        if (result?.error) {
+            return result.error;
+        }
+
+        if (result?.detail) {
+            return result.detail;
+        }
+
+        return commentUiConfig.commentActionError;
+    }
+
+    async function submitCommentEdit(commentId) {
+        const input = document.getElementById(`commentEditInput-${commentId}`);
+        const content = input?.value?.trim();
+
+        if (!content) {
+            redirectToCommentError(commentUiConfig.emptyCommentMessage);
+            return;
+        }
+
+        try {
+            const response = await fetch(commentUiConfig.updateUrl, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    id: commentId,
+                    content
+                })
+            });
+
+            const result = await response.json().catch(() => null);
+
+            if (!response.ok || result?.isSuccess === false || result?.error) {
+                redirectToCommentError(getCommentActionError(result));
+                return;
+            }
+
+            window.location.reload();
+        } catch {
+            redirectToCommentError();
+        }
+    }
+
+    async function deleteComment(commentId) {
+        const isConfirmed = window.confirm(commentUiConfig.deleteConfirmMessage);
+
+        if (!isConfirmed) {
+            return;
+        }
+
+        try {
+            const response = await fetch(`${commentUiConfig.deleteUrlBase}/${commentId}`, {
+                method: 'DELETE'
+            });
+
+            const result = await response.json().catch(() => null);
+
+            if (!response.ok || result?.isSuccess === false || result?.error) {
+                redirectToCommentError(getCommentActionError(result));
+                return;
+            }
+
+            window.location.reload();
+        } catch {
+            redirectToCommentError();
+        }
     }
 </script>

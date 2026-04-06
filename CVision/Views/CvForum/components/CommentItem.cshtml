@@ -1,12 +1,43 @@
+@using CVision.Helpers.Constants
 @model CVision.Models.ViewModels.CvForum.CommentViewModel
+
+@{
+    var currentUserName = User.Identity?.Name ?? string.Empty;
+    var isCommentOwner = Model.IsOwn ||
+        (User.Identity?.IsAuthenticated == true &&
+         string.Equals(Model.UserName, currentUserName, System.StringComparison.OrdinalIgnoreCase));
+}
 
 <div class="comment-item @(Model.ParentComment != null ? "is-reply" : "")" id="comment-@Model.Id">
     <div class="comment-header">
-        <span class="comment-author">@Model.UserName</span>
-        <span class="comment-date">@Model.CreatedAt.ToString("dd.MM.yyyy")</span>
+        <div class="comment-meta">
+            <span class="comment-author">@Model.UserName</span>
+            <span class="comment-date">@Model.CreatedAt.ToString("dd.MM.yyyy")</span>
+        </div>
+
+        @if (isCommentOwner)
+        {
+            <div class="comment-actions">
+                <button type="button"
+                        class="btn-comment-action"
+                        title="@PublicationConstants.EditComment"
+                        aria-label="@PublicationConstants.EditComment"
+                        onclick="startCommentEdit(@Model.Id)">
+                    <img src="~/images/compose.png" alt="@PublicationConstants.EditComment" class="comment-action-icon" />
+                </button>
+
+                <button type="button"
+                        class="btn-comment-action delete"
+                        title="@PublicationConstants.DeleteComment"
+                        aria-label="@PublicationConstants.DeleteComment"
+                        onclick="deleteComment(@Model.Id)">
+                    <img src="~/images/delete.png" alt="@PublicationConstants.DeleteComment" class="comment-action-icon" />
+                </button>
+            </div>
+        }
     </div>
     
-    <div class="comment-content">
+    <div class="comment-content" id="commentContent-@Model.Id">
         @if (Model.ParentComment != null)
         {
             <a href="#comment-@Model.ParentComment.Id" class="reply-to-link">
@@ -14,23 +45,44 @@
                     <div class="reply-header">
                         <i class="fa-solid fa-reply"></i> Відповідь для <strong>@Model.ParentComment.UserName</strong>
                     </div>
-                    
-                    
-                        <div class="reply-preview">
-                            @{
-                                var content = Model.ParentComment.Content ?? string.Empty;
-                                var preview = content.Length > 80
-                                    ? content.Substring(0, 80) + "..."
-                                    : content;
-                            }
-                            @preview
-                        </div>
-                    
+
+                    <div class="reply-preview">
+                        @{
+                            var content = Model.ParentComment.Content ?? string.Empty;
+                            var preview = content.Length > 80
+                                ? content.Substring(0, 80) + "..."
+                                : content;
+                        }
+                        @preview
+                    </div>
                 </div>
             </a>
         }
-        <p class="comment-main-text">@Model.Content</p>
+        <p class="comment-main-text" id="commentText-@Model.Id">@Model.Content</p>
     </div>
+
+    @if (isCommentOwner)
+    {
+        <div class="comment-edit-box" id="commentEditBox-@Model.Id" style="display: none;">
+            <textarea id="commentEditInput-@Model.Id"
+                      class="comment-edit-input"
+                      rows="4"
+                      placeholder="@PublicationConstants.EditCommentPlaceholder">@Model.Content</textarea>
+
+            <div class="comment-edit-actions">
+                <button type="button"
+                        class="btn-cancel-edit"
+                        onclick="cancelCommentEdit(@Model.Id)">
+                    @PublicationConstants.CancelComment
+                </button>
+                <button type="button"
+                        class="btn-save-edit"
+                        onclick="submitCommentEdit(@Model.Id)">
+                    @PublicationConstants.SaveComment
+                </button>
+            </div>
+        </div>
+    }
 
     <div class="comment-footer">
         <div class="comment-likes">
@@ -40,7 +92,9 @@
             </button>
         </div>
         
-        <button type="button" class="btn-reply" onclick="showReplyForm(@Model.Id, '@Model.UserName')">
+        <button type="button"
+                class="btn-reply"
+                onclick='showReplyForm(@Model.Id, @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.UserName)))'>
             Відповісти
         </button>
     </div>

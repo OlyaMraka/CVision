@@ -22,7 +22,15 @@
 .comment-header {
     display: flex;
     justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
     margin-bottom: 0.5rem;
+}
+
+.comment-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
 
 .comment-author {
@@ -36,11 +44,49 @@
     color: #bfa8a3;
 }
 
+.comment-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.btn-comment-action {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid #f0d8d1;
+    background: #fff7f4;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.btn-comment-action:hover {
+    background-color: #faede9;
+    box-shadow: 0 4px 10px rgba(196, 122, 106, 0.18);
+    transform: translateY(-1px);
+}
+
+.btn-comment-action.delete:hover {
+    background-color: #fff1ee;
+}
+
+.comment-action-icon {
+    width: 15px;
+    height: 15px;
+    object-fit: contain;
+}
+
 .comment-main-text {
     font-size: 13.5px;
     color: #7a6560;
     line-height: 1.5;
     margin: 0;
+    white-space: pre-wrap;
+    word-break: break-word;
 }
 
 .reply-to-link {
@@ -81,10 +127,73 @@
     text-overflow: ellipsis;
 }
 
+.comment-edit-box {
+    margin-top: 12px;
+    padding: 12px;
+    background: #fdf5f2;
+    border: 1px solid #f0d8d1;
+    border-radius: 10px;
+}
+
+.comment-edit-input {
+    width: 100%;
+    min-height: 88px;
+    resize: vertical;
+    border: 1px solid #e8cfc7;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 13.5px;
+    line-height: 1.5;
+    color: #5c4742;
+    background: #fff;
+}
+
+.comment-edit-input:focus {
+    outline: none;
+    border-color: #c47a6a;
+    box-shadow: 0 0 0 3px rgba(196, 122, 106, 0.15);
+}
+
+.comment-edit-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.btn-save-edit,
+.btn-cancel-edit {
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    padding: 7px 12px;
+    font-size: 12.5px;
+    transition: all 0.2s ease;
+}
+
+.btn-save-edit {
+    background: #c47a6a;
+    color: #fff;
+}
+
+.btn-save-edit:hover {
+    background: #b56b5b;
+}
+
+.btn-cancel-edit {
+    background: #f4e6e1;
+    color: #7a6560;
+}
+
+.btn-cancel-edit:hover {
+    background: #ecd8d2;
+}
+
 .comment-footer {
     display: flex;
     gap: 15px;
     margin-top: 10px;
+    flex-wrap: wrap;
 }
 
 .btn-like, .btn-reply {
@@ -114,7 +223,6 @@
     transform: scale(1.2);
 }
 
-
 html {
     scroll-behavior: smooth;
 }
@@ -132,4 +240,8 @@ html {
     .comment-item.is-reply {
         margin-left: 1rem;
     }
-} 
+
+    .comment-header {
+        align-items: stretch;
+    }
+}

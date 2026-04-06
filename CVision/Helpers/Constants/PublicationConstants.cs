@@ -24,4 +24,20 @@ public static class PublicationConstants
     public static readonly string Title = "Заголовок: ";
 
     public static readonly string Description = "Опис: ";
+
+    public static readonly string EditComment = "Редагувати коментар";
+
+    public static readonly string DeleteComment = "Видалити коментар";
+
+    public static readonly string SaveComment = "Зберегти";
+
+    public static readonly string CancelComment = "Скасувати";
+
+    public static readonly string EditCommentPlaceholder = "Оновіть текст коментаря...";
+
+    public static readonly string DeleteCommentConfirmation = "Ви точно хочете видалити цей коментар?";
+
+    public static readonly string EmptyCommentValidationMessage = "Коментар не може бути порожнім.";
+
+    public static readonly string CommentActionError = "Не вдалося виконати дію з коментарем.";
 }
