@@ -34,7 +34,7 @@ public class PublicationController(IMediator mediator, IMapper mapper) : BaseCon
     {
         var userId = GetUserId();
         var pubResult = await mediator.Send(new GetPublicationByIdQuery(publicationId));
-        if (pubResult.IsFailed)
+        if (!pubResult.IsSuccess)
         {
             return RedirectToAction("CvForum");
         }
@@ -65,14 +65,10 @@ public class PublicationController(IMediator mediator, IMapper mapper) : BaseCon
         if (!result.IsSuccess)
         {
             var errorMessage = result.Error ?? "Не вдалося видалити публікацію";
+            var backUrl = Url.Action("GetPublication", "Publication", new { publicationId })
+                ?? Url.Action("CvForum", "Publication")!;
 
-            var backUrl = Url.Action("GetPublication", "Publication", new { publicationId });
-
-            return RedirectToAction("ShowError", "Publication", new
-            {
-                message = errorMessage,
-                returnUrl = backUrl,
-            });
+            return ShowError(errorMessage, backUrl);
         }
 
         return RedirectToAction("CvForum");
@@ -133,13 +129,10 @@ public class PublicationController(IMediator mediator, IMapper mapper) : BaseCon
         if (!result.IsSuccess)
         {
             var errorMessage = result.Error ?? "Невідома помилка при оновленні";
-            var backUrl = Url.Action("GetPublication", "Publication", new { publicationId = model.Id });
+            var backUrl = Url.Action("GetPublication", "Publication", new { publicationId = model.Id })
+                ?? Url.Action("CvForum", "Publication")!;
 
-            return RedirectToAction("ShowError", "Publication", new
-            {
-                message = errorMessage,
-                returnUrl = backUrl,
-            });
+            return ShowError(errorMessage, backUrl);
         }
 
         return RedirectToAction("GetPublication", new { publicationId = model.Id });
@@ -172,14 +165,11 @@ public class PublicationController(IMediator mediator, IMapper mapper) : BaseCon
 
         if (!result.IsSuccess)
         {
-            var errorMessage = result.Error;
-            var backUrl = Url.Action("CreateForm");
+            var errorMessage = result.Error ?? "Не вдалося створити публікацію";
+            var backUrl = Url.Action("CreateForm", "Publication")
+                ?? Url.Action("CvForum", "Publication")!;
 
-            return RedirectToAction("ShowError", "Publication", new
-            {
-                message = errorMessage,
-                returnUrl = backUrl,
-            });
+            return ShowError(errorMessage, backUrl);
         }
 
         return RedirectToAction("CvForum");
