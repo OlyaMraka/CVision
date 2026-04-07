@@ -7,6 +7,7 @@
         (User.Identity?.IsAuthenticated == true &&
          string.Equals(Model.UserName, currentUserName, System.StringComparison.OrdinalIgnoreCase));
     var canManageComment = isCommentOwner && !Model.IsDeleted;
+    var publicationId = ViewContext.HttpContext.Request.Query["publicationId"].ToString();
 }
 
 <div class="comment-item @(Model.ParentComment != null ? "is-reply" : "")" id="comment-@Model.Id">
@@ -24,10 +25,20 @@
                     <img src="~/images/compose.png" alt="@PublicationConstants.EditComment" class="comment-action-icon" />
                 </button>
 
-                <button type="button" class="btn-comment-action delete" title="@PublicationConstants.DeleteComment"
-                        aria-label="@PublicationConstants.DeleteComment" onclick="deleteComment(@Model.Id)">
-                    <img src="~/images/delete.png" alt="@PublicationConstants.DeleteComment" class="comment-action-icon" />
-                </button>
+                <form asp-controller="Publication"
+                      asp-action="DeleteComment"
+                      method="post"
+                      class="comment-delete-form"
+                      onsubmit="return confirm('@PublicationConstants.DeleteCommentConfirmation')">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="commentId" value="@Model.Id" />
+                    <input type="hidden" name="publicationId" value="@publicationId" />
+
+                    <button type="submit" class="btn-comment-action delete" title="@PublicationConstants.DeleteComment"
+                            aria-label="@PublicationConstants.DeleteComment">
+                        <img src="~/images/delete.png" alt="@PublicationConstants.DeleteComment" class="comment-action-icon" />
+                    </button>
+                </form>
             </div>
         }
     </div>
@@ -71,17 +82,25 @@
     @if (canManageComment)
     {
         <div class="comment-edit-box" id="commentEditBox-@Model.Id" style="display: none;">
-            <textarea id="commentEditInput-@Model.Id" class="comment-edit-input" rows="4"
-                      placeholder="@PublicationConstants.EditCommentPlaceholder">@Model.Content</textarea>
+            <form asp-controller="Publication" asp-action="EditComment" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="commentId" value="@Model.Id" />
+                <input type="hidden" name="publicationId" value="@publicationId" />
 
-            <div class="comment-edit-actions">
-                <button type="button" class="btn-cancel-edit" onclick="cancelCommentEdit(@Model.Id)">
-                    @PublicationConstants.CancelComment
-                </button>
-                <button type="button" class="btn-save-edit" onclick="submitCommentEdit(@Model.Id)">
-                    @PublicationConstants.SaveComment
-                </button>
-            </div>
+                <textarea id="commentEditInput-@Model.Id" name="content" class="comment-edit-input" rows="4"
+                          required minlength="@PublicationConstants.CommentMinLength"
+                          maxlength="@PublicationConstants.CommentMaxLength"
+                          placeholder="@PublicationConstants.EditCommentPlaceholder">@Model.Content</textarea>
+
+                <div class="comment-edit-actions">
+                    <button type="button" class="btn-cancel-edit" onclick="cancelCommentEdit(@Model.Id)">
+                        @PublicationConstants.CancelComment
+                    </button>
+                    <button type="submit" class="btn-save-edit">
+                        @PublicationConstants.SaveComment
+                    </button>
+                </div>
+            </form>
         </div>
     }
 

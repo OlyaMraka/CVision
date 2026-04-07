@@ -7,6 +7,8 @@ using CVision.Models.ViewModels.CvForum;
 using MediatR;
 using System.Security.Claims;
 using CVision.BLL.Commands.Comments.Create;
+using CVision.BLL.Commands.Comments.Delete;
+using CVision.BLL.Commands.Comments.Update;
 using CVision.BLL.Commands.Publications.Delete;
 using CVision.BLL.Commands.Publications.Update;
 using CVision.BLL.Queries.Publications.GetByPublicationId;
@@ -189,9 +191,59 @@ public class PublicationController(IMediator mediator, IMapper mapper) : BaseCon
             Content = model.Content,
         };
 
-
         var result = await mediator.Send(new CreateCommentCommand(requestDto));
 
+        if (!result.IsSuccess)
+        {
+            var errorMessage = result.Error ?? "Не вдалося додати коментар";
+            var backUrl = Url.Action("GetPublication", "Publication", new { publicationId = model.PublicationId })
+                ?? Url.Action("CvForum", "Publication")!;
+
+            return ShowError(errorMessage, backUrl);
+        }
+
         return RedirectToAction("GetPublication", new { publicationId = model.PublicationId });
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> EditComment(int commentId, int publicationId, string content)
+    {
+        var requestDto = new UpdateCommentRequestDto
+        {
+            Id = commentId,
+            Content = content,
+        };
+
+        var result = await mediator.Send(new UpdateCommentCommand(requestDto));
+
+        if (!result.IsSuccess)
+        {
+            var errorMessage = result.Error ?? "Не вдалося оновити коментар";
+            var backUrl = Url.Action("GetPublication", "Publication", new { publicationId })
+                ?? Url.Action("CvForum", "Publication")!;
+
+            return ShowError(errorMessage, backUrl);
+        }
+
+        return RedirectToAction("GetPublication", new { publicationId });
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteComment(int commentId, int publicationId)
+    {
+        var result = await mediator.Send(new DeleteCommentCommand(commentId));
+
+        if (!result.IsSuccess)
+        {
+            var errorMessage = result.Error ?? "Не вдалося видалити коментар";
+            var backUrl = Url.Action("GetPublication", "Publication", new { publicationId })
+                ?? Url.Action("CvForum", "Publication")!;
+
+            return ShowError(errorMessage, backUrl);
+        }
+
+        return RedirectToAction("GetPublication", new { publicationId });
     }
 }

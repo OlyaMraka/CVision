@@ -7,7 +7,12 @@
         <input type="hidden" asp-for="ParentCommentId" />
         
         <div class="textarea-wrapper">
-            <textarea asp-for="Content" placeholder="Ваш відгук про це CV..." class="comment-input" required></textarea>
+            <textarea asp-for="Content"
+                      placeholder="Ваш відгук про це CV..."
+                      class="comment-input"
+                      required
+                      minlength="@PublicationConstants.CommentMinLength"
+                      maxlength="@PublicationConstants.CommentMaxLength"></textarea>
         </div>
         
         <div class="editor-actions">
@@ -17,52 +22,6 @@
     </form>
 </div>
 <script>
-    const commentUiConfig = {
-        updateUrl: '@Url.Content("~/api/Comments/update")',
-        deleteUrlBase: '@Url.Content("~/api/Comments/delete")',
-        errorUrl: '@Url.Action("ShowError", "Publication")',
-        deleteConfirmMessage: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(PublicationConstants.DeleteCommentConfirmation)),
-        emptyCommentMessage: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(PublicationConstants.CommentContentRequiredMessage)),
-        minLengthMessage: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(PublicationConstants.CommentMinLengthErrorMessage)),
-        maxLengthMessage: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(PublicationConstants.CommentMaxLengthErrorMessage)),
-        commentNotFoundMessage: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(PublicationConstants.CommentNotFoundMessage)),
-        saveCommentErrorMessage: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(PublicationConstants.SaveCommentErrorMessage)),
-        deleteCommentErrorMessage: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(PublicationConstants.DeleteCommentErrorMessage)),
-        commentActionError: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(PublicationConstants.CommentActionError)),
-        minCommentLength: @PublicationConstants.CommentMinLength,
-        maxCommentLength: @PublicationConstants.CommentMaxLength
-    };
-
-    function getCommentResultValue(result, camelCaseKey, pascalCaseKey) {
-        if (!result || typeof result !== 'object') {
-            return undefined;
-        }
-
-        if (camelCaseKey in result) {
-            return result[camelCaseKey];
-        }
-
-        if (pascalCaseKey in result) {
-            return result[pascalCaseKey];
-        }
-
-        return undefined;
-    }
-
-    function isCommentActionFailed(result) {
-        const isSuccess = getCommentResultValue(result, 'isSuccess', 'IsSuccess');
-
-        if (typeof isSuccess === 'boolean') {
-            return !isSuccess;
-        }
-
-        return Boolean(
-            getCommentResultValue(result, 'error', 'Error') ||
-            getCommentResultValue(result, 'detail', 'Detail') ||
-            getCommentResultValue(result, 'title', 'Title')
-        );
-    }
-
     function hideAllInlineCommentEditors() {
         document.querySelectorAll('[id^="commentEditBox-"]').forEach(box => {
             box.style.display = 'none';
@@ -78,14 +37,14 @@
 
         const editor = document.getElementById('commentEditor');
         const btn = document.getElementById('btnOpenEditor');
-        
+
         if (editor && btn) {
             const parentInput = document.querySelector('input[name="ParentCommentId"]');
             if (parentInput) parentInput.value = "";
-            
+
             const textarea = editor.querySelector('textarea');
             textarea.placeholder = "Ваш відгук про це CV...";
-            
+
             editor.style.display = 'block';
             btn.style.display = 'none';
             textarea.focus();
@@ -127,7 +86,6 @@
         const input = document.getElementById(`commentEditInput-${commentId}`);
 
         if (!contentBlock || !editBox || !input) {
-            redirectToCommentError(commentUiConfig.commentNotFoundMessage);
             return;
         }
 
@@ -149,107 +107,5 @@
 
         if (contentBlock) contentBlock.style.display = 'block';
         if (editBox) editBox.style.display = 'none';
-    }
-
-    function redirectToCommentError(message) {
-        const errorMessage = message || commentUiConfig.commentActionError;
-        const returnUrl = `${window.location.pathname}${window.location.search}${window.location.hash}`;
-
-        window.location.href = `${commentUiConfig.errorUrl}?message=${encodeURIComponent(errorMessage)}&returnUrl=${encodeURIComponent(returnUrl)}`;
-    }
-
-    function getCommentActionError(result, fallbackMessage) {
-        const errorMessage =
-            getCommentResultValue(result, 'error', 'Error') ??
-            getCommentResultValue(result, 'detail', 'Detail') ??
-            getCommentResultValue(result, 'title', 'Title');
-
-        if (typeof errorMessage === 'string' && errorMessage.trim().length > 0) {
-            return errorMessage;
-        }
-
-        return fallbackMessage || commentUiConfig.commentActionError;
-    }
-
-    async function submitCommentEdit(commentId) {
-        const input = document.getElementById(`commentEditInput-${commentId}`);
-
-        if (!input) {
-            redirectToCommentError(commentUiConfig.commentNotFoundMessage);
-            return;
-        }
-
-        const content = input.value.trim();
-
-        if (!content) {
-            redirectToCommentError(commentUiConfig.emptyCommentMessage);
-            return;
-        }
-
-        if (content.length < commentUiConfig.minCommentLength) {
-            redirectToCommentError(commentUiConfig.minLengthMessage);
-            return;
-        }
-
-        if (content.length > commentUiConfig.maxCommentLength) {
-            redirectToCommentError(commentUiConfig.maxLengthMessage);
-            return;
-        }
-
-        try {
-            const response = await fetch(commentUiConfig.updateUrl, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    id: commentId,
-                    content
-                })
-            });
-
-            const result = await response.json().catch(() => null);
-
-            if (!response.ok || isCommentActionFailed(result)) {
-                redirectToCommentError(getCommentActionError(result, commentUiConfig.saveCommentErrorMessage));
-                return;
-            }
-
-            window.location.reload();
-        } catch {
-            redirectToCommentError(commentUiConfig.saveCommentErrorMessage);
-        }
-    }
-
-    async function deleteComment(commentId) {
-        const normalizedCommentId = Number(commentId);
-
-        if (!Number.isInteger(normalizedCommentId) || normalizedCommentId <= 0) {
-            redirectToCommentError(commentUiConfig.commentNotFoundMessage);
-            return;
-        }
-
-        const isConfirmed = window.confirm(commentUiConfig.deleteConfirmMessage);
-
-        if (!isConfirmed) {
-            return;
-        }
-
-        try {
-            const response = await fetch(`${commentUiConfig.deleteUrlBase}/${normalizedCommentId}`, {
-                method: 'DELETE'
-            });
-
-            const result = await response.json().catch(() => null);
-
-            if (!response.ok || isCommentActionFailed(result)) {
-                redirectToCommentError(getCommentActionError(result, commentUiConfig.deleteCommentErrorMessage));
-                return;
-            }
-
-            window.location.reload();
-        } catch {
-            redirectToCommentError(commentUiConfig.deleteCommentErrorMessage);
-        }
     }
 </script>

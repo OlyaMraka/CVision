@@ -51,6 +51,11 @@
     flex-shrink: 0;
 }
 
+.comment-delete-form {
+    display: inline-flex;
+    margin: 0;
+}
+
 .btn-comment-action {
     width: 32px;
     height: 32px;

@@ -1,0 +1,21 @@
+@model CVision.Models.ViewModels.CvForum.ErrorWindowViewModal
+
+@{
+    ViewData["Title"] = "Помилка";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/HubUser.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/CvForum/error-page.css" asp-append-version="true" />
+}
+
+<div class="error-info-block">
+    <partial name="~/Views/Shared/_DashboardHeader.cshtml" />
+
+    <div class="info-block">
+        <h1>Виникла помилка</h1>
+        <p>@Model.Message</p>
+        <a href="@Model.ReturnUrl">Зрозуміло</a>
+    </div>
+</div>

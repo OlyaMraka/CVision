@@ -20,6 +20,6 @@ public class BaseController : Controller
             ReturnUrl = returnUrl ?? Url.Action("Index", "Home"),
         };
 
-        return View("~/Views/CvForum/CustomErrorModal.cshtml", model);
+        return View("~/Views/Shared/GeneralError.cshtml", model);
     }
 }
