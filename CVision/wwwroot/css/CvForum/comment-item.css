@@ -31,12 +31,16 @@
     display: flex;
     flex-direction: column;
     gap: 4px;
+    min-width: 0;
 }
 
 .comment-author {
     font-weight: 700;
     color: #2c1f1b;
     font-size: 14px;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    word-break: break-word;
 }
 
 .comment-date {
@@ -85,12 +89,19 @@
     object-fit: contain;
 }
 
+.comment-content {
+    min-width: 0;
+    max-width: 100%;
+}
+
 .comment-main-text {
     font-size: 13.5px;
     color: #7a6560;
     line-height: 1.5;
     margin: 0;
+    max-width: 100%;
     white-space: pre-wrap;
+    overflow-wrap: anywhere;
     word-break: break-word;
 }
 
