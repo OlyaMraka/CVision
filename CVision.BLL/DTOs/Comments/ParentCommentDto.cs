@@ -7,4 +7,6 @@ public class ParentCommentDto
     public string UserName { get; set; } = string.Empty;
 
     public string? Content { get; set; }
+
+    public bool IsDeleted { get; set; }
 }

@@ -12,5 +12,7 @@ public class CommentResponseDto
 
     public int Likes { get; set; }
 
+    public bool IsDeleted { get; set; }
+
     public ParentCommentDto? ParentComment { get; set; }
 }
