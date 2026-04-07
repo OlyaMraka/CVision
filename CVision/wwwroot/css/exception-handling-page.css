@@ -1,0 +1,82 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #fffaf9;
+    font-family: 'DM Sans', sans-serif;
+}
+
+/* 3. Стилі самої картки */
+.exception-block {
+    background: #ffffff;
+    border: 1px solid #f2dcd3;
+    border-radius: 32px;
+    padding: 3.5rem 2.5rem;
+    max-width: 440px;
+    width: 90%; /* Щоб на мобільних було адекватно */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(232, 144, 124, 0.15);
+    box-sizing: border-box;
+}
+
+/* Коло з номером помилки */
+.status-block {
+    width: 110px;
+    height: 110px;
+    background: #faeae4;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+
+.status-block span {
+    font-size: 38px;
+    font-weight: 900;
+    color: #e8907c;
+}
+
+/* Тексти */
+.additional-message-block::before {
+    content: 'Виникла помилка';
+    display: block;
+    font-size: 22px;
+    font-weight: 800;
+    color: #2c1f1b;
+    margin-bottom: 0.8rem;
+}
+
+.additional-message-block span {
+    font-size: 15px;
+    color: #7a6560;
+    line-height: 1.6;
+}
+
+/* Кнопка */
+.exception-block a {
+    margin-top: 2.5rem;
+    display: block;
+    width: 100%;
+    background: #e8907c;
+    color: #fff;
+    text-decoration: none;
+    padding: 1rem;
+    border-radius: 14px;
+    font-weight: 700;
+    transition: 0.2s;
+}
+
+.exception-block a:hover {
+    background: #de7d68;
+    transform: translateY(-2px);
+}

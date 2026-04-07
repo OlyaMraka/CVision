@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using CVision.Models.ViewModels;
 using CVision.Models.ViewModels.CvForum;
 
 namespace CVision.Controllers;
