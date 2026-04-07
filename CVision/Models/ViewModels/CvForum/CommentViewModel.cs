@@ -12,6 +12,7 @@ public class CommentViewModel
 
     public int Likes { get; set; }
 
+    public bool IsDeleted { get; set; }
 
     public ParentCommentViewModel? ParentComment { get; set; }
 

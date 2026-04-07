@@ -127,6 +127,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
             entity.Property(e => e.Content).IsRequired();
             entity.Property(e => e.Likes).HasDefaultValue(0);
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
+            entity.Property(e => e.IsDeleted).HasDefaultValue(false);
+            entity.Property(e => e.DeletedAt).IsRequired(false);
 
             entity.HasOne(e => e.Publication)
                 .WithMany(p => p.Comments)

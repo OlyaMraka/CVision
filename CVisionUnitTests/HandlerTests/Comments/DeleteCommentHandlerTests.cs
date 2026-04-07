@@ -81,7 +81,7 @@ public class DeleteCommentHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ShouldCallDeleteAndSaveChanges()
+    public async Task Handle_ShouldSetIsDeletedAndDeletedAt_WhenSuccessful()
     {
         var command = new DeleteCommentCommand(Id: 1);
 
@@ -89,6 +89,8 @@ public class DeleteCommentHandlerTests
         {
             Id = 1,
             Content = "Test content",
+            IsDeleted = false,
+            DeletedAt = null,
         };
 
         _commentRepoMock.Setup(r => r.GetFirstOrDefaultAsync(It.IsAny<QueryOptions<Comment>>()))
@@ -98,12 +100,13 @@ public class DeleteCommentHandlerTests
 
         await _handler.Handle(command, CancellationToken.None);
 
-        _commentRepoMock.Verify(r => r.Delete(existingComment), Times.Once);
+        Assert.True(existingComment.IsDeleted);
+        Assert.NotNull(existingComment.DeletedAt);
         _repoMock.Verify(r => r.SaveChangesAsync(), Times.Once);
     }
 
     [Fact]
-    public async Task Handle_ShouldNotCallDelete_WhenCommentNotFound()
+    public async Task Handle_ShouldNotModifyComment_WhenCommentNotFound()
     {
         var command = new DeleteCommentCommand(Id: 999);
 
@@ -112,7 +115,6 @@ public class DeleteCommentHandlerTests
 
         await _handler.Handle(command, CancellationToken.None);
 
-        _commentRepoMock.Verify(r => r.Delete(It.IsAny<Comment>()), Times.Never);
         _repoMock.Verify(r => r.SaveChangesAsync(), Times.Never);
     }
 }

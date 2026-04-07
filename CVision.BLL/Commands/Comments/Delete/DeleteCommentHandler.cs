@@ -17,7 +17,8 @@ public class DeleteCommentHandler(
         var comment = await repositoryWrapper.CommentRepository.GetFirstOrDefaultAsync(
             new QueryOptions<Comment>
             {
-                Filter = x => x.Id == request.Id,
+                Filter = x => x.Id == request.Id && !x.IsDeleted,
+                AsNoTracking = false,
             });
 
         if (comment is null)
@@ -25,7 +26,8 @@ public class DeleteCommentHandler(
             return CommentsConstants.CommentNotFound;
         }
 
-        repositoryWrapper.CommentRepository.Delete(comment);
+        comment.IsDeleted = true;
+        comment.DeletedAt = DateTime.UtcNow;
 
         if (await repositoryWrapper.SaveChangesAsync() <= 0)
         {

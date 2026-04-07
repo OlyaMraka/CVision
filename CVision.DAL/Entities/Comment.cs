@@ -16,6 +16,10 @@ public class Comment
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
+    public bool IsDeleted { get; set; } = false;
+
+    public DateTime? DeletedAt { get; set; }
+
     public virtual Publication Publication { get; set; } = null!;
 
     public virtual ApplicationUser User { get; set; } = null!;
