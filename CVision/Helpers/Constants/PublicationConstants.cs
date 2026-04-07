@@ -37,7 +37,23 @@ public static class PublicationConstants
 
     public static readonly string DeleteCommentConfirmation = "Ви точно хочете видалити цей коментар?";
 
+    public static readonly int CommentMinLength = 3;
+
+    public static readonly int CommentMaxLength = 1000;
+
     public static readonly string EmptyCommentValidationMessage = "Коментар не може бути порожнім.";
+
+    public static readonly string CommentContentRequiredMessage = "Коментар не можу бути порожнім!";
+
+    public static readonly string CommentMinLengthErrorMessage = "Довжина коментаря не повинна перевищувати 3 символів!";
+
+    public static readonly string CommentMaxLengthErrorMessage = "Довжина коментаря не повинна перевищувати 1000 символів!";
+
+    public static readonly string CommentNotFoundMessage = "Коментар не знайдено!";
+
+    public static readonly string SaveCommentErrorMessage = "Помилка збереження коментаря! Спробуйте ще раз!";
+
+    public static readonly string DeleteCommentErrorMessage = "Помилка видалення коментаря! Спробуйте ще раз!";
 
     public static readonly string CommentActionError = "Не вдалося виконати дію з коментарем.";
 

@@ -7,11 +7,7 @@
         <input type="hidden" asp-for="ParentCommentId" />
         
         <div class="textarea-wrapper">
-            <textarea 
-                asp-for="Content" 
-                placeholder="Ваш відгук про це CV..." 
-                class="comment-input" 
-                required></textarea>
+            <textarea asp-for="Content" placeholder="Ваш відгук про це CV..." class="comment-input" required></textarea>
         </div>
         
         <div class="editor-actions">
@@ -26,9 +22,46 @@
         deleteUrlBase: '@Url.Content("~/api/Comments/delete")',
         errorUrl: '@Url.Action("ShowError", "Publication")',
         deleteConfirmMessage: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(PublicationConstants.DeleteCommentConfirmation)),
-        emptyCommentMessage: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(PublicationConstants.EmptyCommentValidationMessage)),
-        commentActionError: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(PublicationConstants.CommentActionError))
+        emptyCommentMessage: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(PublicationConstants.CommentContentRequiredMessage)),
+        minLengthMessage: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(PublicationConstants.CommentMinLengthErrorMessage)),
+        maxLengthMessage: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(PublicationConstants.CommentMaxLengthErrorMessage)),
+        commentNotFoundMessage: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(PublicationConstants.CommentNotFoundMessage)),
+        saveCommentErrorMessage: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(PublicationConstants.SaveCommentErrorMessage)),
+        deleteCommentErrorMessage: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(PublicationConstants.DeleteCommentErrorMessage)),
+        commentActionError: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(PublicationConstants.CommentActionError)),
+        minCommentLength: @PublicationConstants.CommentMinLength,
+        maxCommentLength: @PublicationConstants.CommentMaxLength
     };
+
+    function getCommentResultValue(result, camelCaseKey, pascalCaseKey) {
+        if (!result || typeof result !== 'object') {
+            return undefined;
+        }
+
+        if (camelCaseKey in result) {
+            return result[camelCaseKey];
+        }
+
+        if (pascalCaseKey in result) {
+            return result[pascalCaseKey];
+        }
+
+        return undefined;
+    }
+
+    function isCommentActionFailed(result) {
+        const isSuccess = getCommentResultValue(result, 'isSuccess', 'IsSuccess');
+
+        if (typeof isSuccess === 'boolean') {
+            return !isSuccess;
+        }
+
+        return Boolean(
+            getCommentResultValue(result, 'error', 'Error') ||
+            getCommentResultValue(result, 'detail', 'Detail') ||
+            getCommentResultValue(result, 'title', 'Title')
+        );
+    }
 
     function hideAllInlineCommentEditors() {
         document.querySelectorAll('[id^="commentEditBox-"]').forEach(box => {
@@ -93,12 +126,15 @@
         const editBox = document.getElementById(`commentEditBox-${commentId}`);
         const input = document.getElementById(`commentEditInput-${commentId}`);
 
-        if (contentBlock && editBox && input) {
-            contentBlock.style.display = 'none';
-            editBox.style.display = 'block';
-            input.focus();
-            input.setSelectionRange(input.value.length, input.value.length);
+        if (!contentBlock || !editBox || !input) {
+            redirectToCommentError(commentUiConfig.commentNotFoundMessage);
+            return;
         }
+
+        contentBlock.style.display = 'none';
+        editBox.style.display = 'block';
+        input.focus();
+        input.setSelectionRange(input.value.length, input.value.length);
     }
 
     function cancelCommentEdit(commentId) {
@@ -122,24 +158,41 @@
         window.location.href = `${commentUiConfig.errorUrl}?message=${encodeURIComponent(errorMessage)}&returnUrl=${encodeURIComponent(returnUrl)}`;
     }
 
-    function getCommentActionError(result) {
-        if (result?.error) {
-            return result.error;
+    function getCommentActionError(result, fallbackMessage) {
+        const errorMessage =
+            getCommentResultValue(result, 'error', 'Error') ??
+            getCommentResultValue(result, 'detail', 'Detail') ??
+            getCommentResultValue(result, 'title', 'Title');
+
+        if (typeof errorMessage === 'string' && errorMessage.trim().length > 0) {
+            return errorMessage;
         }
 
-        if (result?.detail) {
-            return result.detail;
-        }
-
-        return commentUiConfig.commentActionError;
+        return fallbackMessage || commentUiConfig.commentActionError;
     }
 
     async function submitCommentEdit(commentId) {
         const input = document.getElementById(`commentEditInput-${commentId}`);
-        const content = input?.value?.trim();
+
+        if (!input) {
+            redirectToCommentError(commentUiConfig.commentNotFoundMessage);
+            return;
+        }
+
+        const content = input.value.trim();
 
         if (!content) {
             redirectToCommentError(commentUiConfig.emptyCommentMessage);
+            return;
+        }
+
+        if (content.length < commentUiConfig.minCommentLength) {
+            redirectToCommentError(commentUiConfig.minLengthMessage);
+            return;
+        }
+
+        if (content.length > commentUiConfig.maxCommentLength) {
+            redirectToCommentError(commentUiConfig.maxLengthMessage);
             return;
         }
 
@@ -157,18 +210,25 @@
 
             const result = await response.json().catch(() => null);
 
-            if (!response.ok || result?.isSuccess === false || result?.error) {
-                redirectToCommentError(getCommentActionError(result));
+            if (!response.ok || isCommentActionFailed(result)) {
+                redirectToCommentError(getCommentActionError(result, commentUiConfig.saveCommentErrorMessage));
                 return;
             }
 
             window.location.reload();
         } catch {
-            redirectToCommentError();
+            redirectToCommentError(commentUiConfig.saveCommentErrorMessage);
         }
     }
 
     async function deleteComment(commentId) {
+        const normalizedCommentId = Number(commentId);
+
+        if (!Number.isInteger(normalizedCommentId) || normalizedCommentId <= 0) {
+            redirectToCommentError(commentUiConfig.commentNotFoundMessage);
+            return;
+        }
+
         const isConfirmed = window.confirm(commentUiConfig.deleteConfirmMessage);
 
         if (!isConfirmed) {
@@ -176,20 +236,20 @@
         }
 
         try {
-            const response = await fetch(`${commentUiConfig.deleteUrlBase}/${commentId}`, {
+            const response = await fetch(`${commentUiConfig.deleteUrlBase}/${normalizedCommentId}`, {
                 method: 'DELETE'
             });
 
             const result = await response.json().catch(() => null);
 
-            if (!response.ok || result?.isSuccess === false || result?.error) {
-                redirectToCommentError(getCommentActionError(result));
+            if (!response.ok || isCommentActionFailed(result)) {
+                redirectToCommentError(getCommentActionError(result, commentUiConfig.deleteCommentErrorMessage));
                 return;
             }
 
             window.location.reload();
         } catch {
-            redirectToCommentError();
+            redirectToCommentError(commentUiConfig.deleteCommentErrorMessage);
         }
     }
 </script>
