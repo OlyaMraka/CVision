@@ -6,6 +6,7 @@
     var isCommentOwner = Model.IsOwn ||
         (User.Identity?.IsAuthenticated == true &&
          string.Equals(Model.UserName, currentUserName, System.StringComparison.OrdinalIgnoreCase));
+    var canManageComment = isCommentOwner && !Model.IsDeleted;
 }
 
 <div class="comment-item @(Model.ParentComment != null ? "is-reply" : "")" id="comment-@Model.Id">
@@ -15,22 +16,16 @@
             <span class="comment-date">@Model.CreatedAt.ToString("dd.MM.yyyy")</span>
         </div>
 
-        @if (isCommentOwner)
+        @if (canManageComment)
         {
             <div class="comment-actions">
-                <button type="button"
-                        class="btn-comment-action"
-                        title="@PublicationConstants.EditComment"
-                        aria-label="@PublicationConstants.EditComment"
-                        onclick="startCommentEdit(@Model.Id)">
+                <button type="button" class="btn-comment-action" title="@PublicationConstants.EditComment"
+                        aria-label="@PublicationConstants.EditComment" onclick="startCommentEdit(@Model.Id)">
                     <img src="~/images/compose.png" alt="@PublicationConstants.EditComment" class="comment-action-icon" />
                 </button>
 
-                <button type="button"
-                        class="btn-comment-action delete"
-                        title="@PublicationConstants.DeleteComment"
-                        aria-label="@PublicationConstants.DeleteComment"
-                        onclick="deleteComment(@Model.Id)">
+                <button type="button" class="btn-comment-action delete" title="@PublicationConstants.DeleteComment"
+                        aria-label="@PublicationConstants.DeleteComment" onclick="deleteComment(@Model.Id)">
                     <img src="~/images/delete.png" alt="@PublicationConstants.DeleteComment" class="comment-action-icon" />
                 </button>
             </div>
@@ -40,44 +35,50 @@
     <div class="comment-content" id="commentContent-@Model.Id">
         @if (Model.ParentComment != null)
         {
-            <a href="#comment-@Model.ParentComment.Id" class="reply-to-link">
-                <div class="reply-to">
+            var parentContent = Model.ParentComment.IsDeleted
+                ? PublicationConstants.DeletedCommentText
+                : Model.ParentComment.Content ?? string.Empty;
+            var parentPreview = parentContent.Length > 80
+                ? parentContent.Substring(0, 80) + "..."
+                : parentContent;
+
+            if (Model.ParentComment.IsDeleted)
+            {
+                <div class="reply-to is-deleted">
                     <div class="reply-header">
                         <i class="fa-solid fa-reply"></i> Відповідь для <strong>@Model.ParentComment.UserName</strong>
                     </div>
 
-                    <div class="reply-preview">
-                        @{
-                            var content = Model.ParentComment.Content ?? string.Empty;
-                            var preview = content.Length > 80
-                                ? content.Substring(0, 80) + "..."
-                                : content;
-                        }
-                        @preview
-                    </div>
+                    <div class="reply-preview">@parentPreview</div>
                 </div>
-            </a>
+            }
+            else
+            {
+                <a href="#comment-@Model.ParentComment.Id" class="reply-to-link">
+                    <div class="reply-to">
+                        <div class="reply-header">
+                            <i class="fa-solid fa-reply"></i> Відповідь для <strong>@Model.ParentComment.UserName</strong>
+                        </div>
+
+                        <div class="reply-preview">@parentPreview</div>
+                    </div>
+                </a>
+            }
         }
         <p class="comment-main-text" id="commentText-@Model.Id">@Model.Content</p>
     </div>
 
-    @if (isCommentOwner)
+    @if (canManageComment)
     {
         <div class="comment-edit-box" id="commentEditBox-@Model.Id" style="display: none;">
-            <textarea id="commentEditInput-@Model.Id"
-                      class="comment-edit-input"
-                      rows="4"
+            <textarea id="commentEditInput-@Model.Id" class="comment-edit-input" rows="4"
                       placeholder="@PublicationConstants.EditCommentPlaceholder">@Model.Content</textarea>
 
             <div class="comment-edit-actions">
-                <button type="button"
-                        class="btn-cancel-edit"
-                        onclick="cancelCommentEdit(@Model.Id)">
+                <button type="button" class="btn-cancel-edit" onclick="cancelCommentEdit(@Model.Id)">
                     @PublicationConstants.CancelComment
                 </button>
-                <button type="button"
-                        class="btn-save-edit"
-                        onclick="submitCommentEdit(@Model.Id)">
+                <button type="button" class="btn-save-edit" onclick="submitCommentEdit(@Model.Id)">
                     @PublicationConstants.SaveComment
                 </button>
             </div>
@@ -92,8 +93,7 @@
             </button>
         </div>
         
-        <button type="button"
-                class="btn-reply"
+        <button type="button" class="btn-reply"
                 onclick='showReplyForm(@Model.Id, @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.UserName)))'>
             Відповісти
         </button>

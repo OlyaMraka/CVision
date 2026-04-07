@@ -110,6 +110,17 @@
     background: #faede9;
 }
 
+.reply-to.is-deleted {
+    color: #9a8882;
+    background: #f7f1ef;
+    border-left-color: #d8c1bb;
+    cursor: default;
+}
+
+.reply-to.is-deleted .reply-preview {
+    font-style: normal;
+}
+
 .reply-header {
     font-weight: 700;
     margin-bottom: 4px;

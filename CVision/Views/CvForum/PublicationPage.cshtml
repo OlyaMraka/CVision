@@ -81,11 +81,13 @@
             <div class="comments-list">
                 @{
                     var comments = ViewBag.Comments as IEnumerable<CVision.Models.ViewModels.CvForum.CommentViewModel>;
+                    var visibleComments = comments?.Where(comment => !comment.IsDeleted).ToList()
+                        ?? new List<CVision.Models.ViewModels.CvForum.CommentViewModel>();
                 }
 
-                @if (comments != null && comments.Any())
+                @if (visibleComments.Any())
                 {
-                    @foreach (var comment in comments)
+                    @foreach (var comment in visibleComments)
                     {
                         <partial name="~/Views/CvForum/components/CommentItem.cshtml" model="comment" />
                     }

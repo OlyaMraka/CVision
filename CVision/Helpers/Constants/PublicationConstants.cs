@@ -40,4 +40,6 @@ public static class PublicationConstants
     public static readonly string EmptyCommentValidationMessage = "Коментар не може бути порожнім.";
 
     public static readonly string CommentActionError = "Не вдалося виконати дію з коментарем.";
+
+    public static readonly string DeletedCommentText = "коментар видалено";
 }
