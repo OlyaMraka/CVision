@@ -2,6 +2,8 @@ namespace CVision.BLL.Constans;
 
 public static class CvAnalysisConstants
 {
+    public static readonly int DaysAlive = 30;
+
     public static readonly string CvFileEmptyError
         = "Файл не може бути порожнім!";
 
@@ -22,6 +24,9 @@ public static class CvAnalysisConstants
 
     public static readonly string InvalidUserData
         = "Некоректний користувач!";
+
+    public static readonly string DbDeleteError
+        = "Помилка при видаленні аналізу";
 
     public static string CvSizeError(int size)
     {

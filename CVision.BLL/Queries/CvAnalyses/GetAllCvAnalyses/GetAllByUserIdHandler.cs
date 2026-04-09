@@ -17,7 +17,7 @@ public class GetAllByUserIdHandler(IMapper mapper, IRepositoryWrapper repository
     {
         var queryOptions = new QueryOptions<CVAnalysis>
         {
-            Filter = cv => cv.CV.UserId == request.UserId,
+            Filter = cv => cv.CV.UserId == request.UserId && !cv.IsDeleted,
             Include = cv => cv.Include(x => x.CV),
         };
 

@@ -19,7 +19,7 @@ public class GetByPublicationIdHandler(
     {
         var queryOptions = new QueryOptions<Comment>
         {
-            Filter = x => x.PublicationId == request.PublicationId,
+            Filter = x => x.PublicationId == request.PublicationId && !x.IsDeleted,
             Include = x =>
                 x.Include(x => x.User)
                     .Include(x => x.ParentComment)

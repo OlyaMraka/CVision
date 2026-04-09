@@ -63,7 +63,6 @@ public class CreatePublicationHandlerTests
         var command = CreateCommand();
         SetupValidFlow();
 
-        // Імітуємо неуспішне збереження (0 змінених рядків)
         _repoMock.Setup(r => r.SaveChangesAsync()).ReturnsAsync(0);
 
         // Act
@@ -81,7 +80,6 @@ public class CreatePublicationHandlerTests
         var command = CreateCommand();
         SetupValidFlow();
 
-        // Sequence: CV зберігається (1), а сама публікація — ні (0)
         _repoMock.SetupSequence(r => r.SaveChangesAsync())
             .ReturnsAsync(1)
             .ReturnsAsync(0);
@@ -129,7 +127,6 @@ public class CreatePublicationHandlerTests
         _cvRepoMock.Verify(r => r.CreateAsync(It.IsAny<CV>()), Times.Once);
         _publicationRepoMock.Verify(r => r.CreateAsync(It.IsAny<Publication>()), Times.Once);
 
-        // Перевіряємо, що SaveChangesAsync викликався двічі (для CV і для Publication)
         _repoMock.Verify(r => r.SaveChangesAsync(), Times.Exactly(2));
     }
 
@@ -160,7 +157,6 @@ public class CreatePublicationHandlerTests
         {
             UserId = 1,
             FileName = "test.pdf",
-            // Створюємо стрім, який можна читати
             FileStream = new MemoryStream(new byte[] { 0x1, 0x2 }),
             ContentType = "application/pdf",
             Title = "Test Title",
