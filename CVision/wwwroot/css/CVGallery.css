@@ -19,6 +19,56 @@
     box-shadow: 0 4px 20px rgba(0,0,0,.07);
     transition: transform .25s ease, box-shadow .25s ease;
     cursor: pointer;
+    position: relative;
+}
+.cv-card-actions {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 5;
+    opacity: 0; 
+    transition: opacity 0.3s ease;
+}
+
+.cv-card-item:hover .cv-card-actions {
+    opacity: 1; 
+}
+
+
+.btn-comment-action {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid #f0d8d1;
+    background: #fff7f4;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.btn-comment-action:hover {
+    background-color: #faede9;
+    box-shadow: 0 4px 10px rgba(196, 122, 106, 0.18);
+    transform: translateY(-1px);
+}
+
+.btn-comment-action.delete:hover {
+    background-color: #fff1ee;
+}
+
+.comment-action-icon {
+    width: 15px;
+    height: 15px;
+    object-fit: contain;
+}
+
+
+@media (max-width: 768px) {
+    .cv-card-actions {
+        opacity: 1;
+    }
 }
 
 .cv-card-item:hover {

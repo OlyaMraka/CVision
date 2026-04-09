@@ -1,5 +1,6 @@
 using MediatR;
 using CVision.BLL.Commands.CvAnalyses.Create;
+using CVision.BLL.Commands.CvAnalyses.Delete;
 using CVision.BLL.DTOs.CvAnalyses;
 using CVision.Models.ViewModels.CVAnalysisViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -76,5 +77,19 @@ public class CvAnalysisController(IMediator mediator, IMapper mapper) : BaseCont
         };
 
         return View("~/Views/CvAnalysis/CVGallery.cshtml", vm);
+    }
+
+    [HttpPost] // Використовуємо Post, бо форма в Razor відправляє POST
+    [Authorize]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var result = await mediator.Send(new DeleteCvAnalysisCommand(id));
+
+        if (!result.IsSuccess)
+        {
+        }
+
+        return RedirectToAction(nameof(CVGallery));
     }
 }

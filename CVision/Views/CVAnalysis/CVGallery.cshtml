@@ -55,7 +55,18 @@
                     {
                         <div class="cv-card-item">
 
-                            
+                            <div class="cv-card-actions">
+                                <form asp-controller="CvAnalysis" 
+                                      asp-action="Delete" 
+                                      asp-route-id="@item.Id" 
+                                      method="post"
+                                      onsubmit="return confirm('Ви впевнені, що хочете видалити це резюме?')">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn-comment-action delete" title="Видалити CV">
+                                        <img src="~/images/delete.png" alt="Видалити" class="comment-action-icon" />
+                                    </button>
+                                </form>
+                            </div>
                             <div class="cv-card-item__preview">
 
                                 @{
