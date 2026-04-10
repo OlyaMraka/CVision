@@ -1,4 +1,5 @@
 using AutoMapper;
+using CVision.BLL.Constans;
 using CVision.DAL.Entities;
 using CVision.BLL.DTOs.CvAnalyses;
 
@@ -15,5 +16,11 @@ public class CvAnalysisProfile : Profile
 
         CreateMap<CVAnalysis, CvAnalysisResponseShortDto>()
             .ForMember(dest => dest.FileUrl, opt => opt.MapFrom(x => x.CV.FilePath));
+
+        CreateMap<CVAnalysis, DeletedCvAnalysisResponseDto>()
+            .ForMember(dest => dest.FilePath, opt => opt.MapFrom(x => x.CV.FilePath))
+            .ForMember(dest => dest.Days,
+                opt => opt.MapFrom(x =>
+                   CvAnalysisConstants.DaysAlive - (DateTime.UtcNow - x.DeletedAt!.Value).TotalDays));
     }
 }

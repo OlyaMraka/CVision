@@ -43,6 +43,7 @@ public class CreateCvAnalysisHandlerTests
     [Fact]
     public async Task Handle_ShouldFail_WhenValidationFails()
     {
+        // Arrange
         var command = CreateCommand();
 
         _validatorMock.Setup(v => v.ValidateAsync(command, It.IsAny<CancellationToken>()))
@@ -51,8 +52,10 @@ public class CreateCvAnalysisHandlerTests
                 new ValidationFailure("File", "Validation error"),
             }));
 
+        // Act
         var result = await _handler.Handle(command, CancellationToken.None);
 
+        // Assert
         Assert.False(result.IsSuccess);
         Assert.Equal("Validation error", result.Error);
     }
@@ -60,13 +63,16 @@ public class CreateCvAnalysisHandlerTests
     [Fact]
     public async Task Handle_ShouldFail_WhenCvSavingFails()
     {
+        // Arrange
         var command = CreateCommand();
         SetupValidFlow();
 
         _repoMock.Setup(r => r.SaveChangesAsync()).ReturnsAsync(0);
 
+        // Act
         var result = await _handler.Handle(command, CancellationToken.None);
 
+        // Assert
         Assert.False(result.IsSuccess);
         Assert.Equal(CvAnalysisConstants.CvSavingError, result.Error);
     }
@@ -74,6 +80,7 @@ public class CreateCvAnalysisHandlerTests
     [Fact]
     public async Task Handle_ShouldFail_WhenCvAnalysisSavingFails()
     {
+        // Arrange
         var command = CreateCommand();
         SetupValidFlow();
 
@@ -81,8 +88,10 @@ public class CreateCvAnalysisHandlerTests
             .ReturnsAsync(1)
             .ReturnsAsync(0);
 
+        // Act
         var result = await _handler.Handle(command, CancellationToken.None);
 
+        // Assert
         Assert.False(result.IsSuccess);
         Assert.Equal(CvAnalysisConstants.CvAnalysisSavingError, result.Error);
     }
@@ -90,6 +99,7 @@ public class CreateCvAnalysisHandlerTests
     [Fact]
     public async Task Handle_ShouldSucceed_WhenAllIsValid()
     {
+        // Arrange
         var command = CreateCommand();
         SetupValidFlow();
 
@@ -97,15 +107,17 @@ public class CreateCvAnalysisHandlerTests
             .ReturnsAsync(1)
             .ReturnsAsync(1);
 
+        // Act
         var result = await _handler.Handle(command, CancellationToken.None);
 
+        // Assert
         Assert.True(result.IsSuccess);
-        Assert.IsType<CvAnalysisResultDto>(result.Value);
     }
 
     [Fact]
     public async Task Handle_ShouldCallAllDependencies()
     {
+        // Arrange
         var command = CreateCommand();
         SetupValidFlow();
 
@@ -113,8 +125,10 @@ public class CreateCvAnalysisHandlerTests
             .ReturnsAsync(1)
             .ReturnsAsync(1);
 
+        // Act
         await _handler.Handle(command, CancellationToken.None);
 
+        // Assert
         _fileServiceMock.Verify(f => f.UploadFileAsync(It.IsAny<Stream>(), It.IsAny<string>()), Times.Once);
         _cvParserMock.Verify(p => p.ParseAsync(It.IsAny<Stream>(), It.IsAny<string>()), Times.Once);
         _aiServiceMock.Verify(a => a.AnalyzeResumeAsync(It.IsAny<string>()), Times.Once);

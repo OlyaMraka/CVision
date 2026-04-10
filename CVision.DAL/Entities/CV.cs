@@ -14,6 +14,10 @@ public class CV
 
     public DateTime UploadedAt { get; set; } = DateTime.UtcNow;
 
+    public bool IsDeleted { get; set; }
+
+    public DateTime? DeletedAt { get; set; }
+
     public virtual ApplicationUser User { get; set; } = null!;
 
     public virtual ICollection<CVAnalysis> Analyses { get; set; } = new List<CVAnalysis>();

@@ -12,6 +12,10 @@ public class CVAnalysis
 
     public DateTime AnalyzedAt { get; set; } = DateTime.UtcNow;
 
+    public bool IsDeleted { get; set; }
+
+    public DateTime? DeletedAt { get; set; }
+
     public virtual CV CV { get; set; } = null!;
 
     public virtual ICollection<CVAnalysisRecommendation> Recommendations { get; set; } = new List<CVAnalysisRecommendation>();
