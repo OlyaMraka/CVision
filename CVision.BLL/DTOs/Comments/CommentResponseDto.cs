@@ -1,3 +1,5 @@
+using CVision.DAL.Entities;
+
 namespace CVision.BLL.DTOs.Comments;
 
 public class CommentResponseDto
@@ -11,6 +13,10 @@ public class CommentResponseDto
     public DateTime CreatedAt { get; set; }
 
     public int Likes { get; set; }
+
+    public int Dislikes { get; set; }
+
+    public ReactionType? CurrentUserReaction { get; set; }
 
     public bool IsDeleted { get; set; }
 
