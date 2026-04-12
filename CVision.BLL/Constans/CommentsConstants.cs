@@ -23,4 +23,7 @@ public static class CommentsConstants
 
     public static readonly string DeleteCommentError
         = "Помилка видалення коментаря! Спробуйте ще раз!";
+
+    public static readonly string ReactionError
+        = "Помилка при реакції на коментар! Спробуйте ще раз!";
 }

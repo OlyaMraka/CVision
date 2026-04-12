@@ -14,6 +14,8 @@ public class Comment
 
     public int Likes { get; set; } = 0;
 
+    public int Dislikes { get; set; } = 0;
+
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     public bool IsDeleted { get; set; } = false;
@@ -27,4 +29,6 @@ public class Comment
     public virtual Comment? ParentComment { get; set; }
 
     public virtual ICollection<Comment> Replies { get; set; } = new List<Comment>();
+
+    public virtual ICollection<CommentReaction> Reactions { get; set; } = new List<CommentReaction>();
 }
