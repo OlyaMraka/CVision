@@ -8,12 +8,14 @@ using MediatR;
 using System.Security.Claims;
 using CVision.BLL.Commands.Comments.Create;
 using CVision.BLL.Commands.Comments.Delete;
+using CVision.BLL.Commands.Comments.ToggleReaction;
 using CVision.BLL.Commands.Comments.Update;
 using CVision.BLL.Commands.Publications.Delete;
 using CVision.BLL.Commands.Publications.Update;
 using CVision.BLL.Queries.Publications.GetByPublicationId;
 using CVision.BLL.Queries.Publications.GetByUserId;
 using CVision.BLL.Queries.Comments.GetByPublicationId;
+using CVision.DAL.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CVision.Controllers;
@@ -43,7 +45,7 @@ public class PublicationController(IMediator mediator, IMapper mapper) : BaseCon
 
         var parameter = mapper.Map<PublicationsViewModel>(pubResult.Value);
         parameter.IsOwn = userId == parameter.UserId;
-        var commentsResult = await mediator.Send(new GetByPublicationIdQuery(publicationId));
+        var commentsResult = await mediator.Send(new GetByPublicationIdQuery(publicationId, userId));
         if (commentsResult.IsSuccess)
         {
             ViewBag.Comments = mapper.Map<IEnumerable<CommentViewModel>>(commentsResult.Value);
@@ -238,6 +240,26 @@ public class PublicationController(IMediator mediator, IMapper mapper) : BaseCon
         if (!result.IsSuccess)
         {
             var errorMessage = result.Error ?? "Не вдалося видалити коментар";
+            var backUrl = Url.Action("GetPublication", "Publication", new { publicationId })
+                ?? Url.Action("CvForum", "Publication")!;
+
+            return ShowError(errorMessage, backUrl);
+        }
+
+        return RedirectToAction("GetPublication", new { publicationId });
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ToggleCommentReaction(int commentId, int publicationId, ReactionType reactionType)
+    {
+        var userId = GetUserId();
+
+        var result = await mediator.Send(new ToggleReactionCommand(commentId, userId, reactionType));
+
+        if (!result.IsSuccess)
+        {
+            var errorMessage = result.Error ?? "Не вдалося оновити реакцію";
             var backUrl = Url.Action("GetPublication", "Publication", new { publicationId })
                 ?? Url.Action("CvForum", "Publication")!;
 
