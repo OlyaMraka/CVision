@@ -22,6 +22,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
 
     public DbSet<Comment> Comments { get; set; }
 
+    public DbSet<CommentReaction> CommentReactions { get; set; }
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
@@ -126,6 +128,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Content).IsRequired();
             entity.Property(e => e.Likes).HasDefaultValue(0);
+            entity.Property(e => e.Dislikes).HasDefaultValue(0);
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
             entity.Property(e => e.IsDeleted).HasDefaultValue(false);
             entity.Property(e => e.DeletedAt).IsRequired(false);
@@ -143,6 +146,25 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
             entity.HasOne(e => e.ParentComment)
                 .WithMany(c => c.Replies)
                 .HasForeignKey(e => e.ParentCommentId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        builder.Entity<CommentReaction>(entity =>
+        {
+            entity.ToTable("CommentReactions");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+            entity.HasIndex(e => new { e.CommentId, e.UserId }).IsUnique();
+
+            entity.HasOne(e => e.Comment)
+                .WithMany(c => c.Reactions)
+                .HasForeignKey(e => e.CommentId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(e => e.User)
+                .WithMany(u => u.CommentReactions)
+                .HasForeignKey(e => e.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
         });
     }

@@ -12,10 +12,13 @@ public class CommentViewModel
 
     public int Likes { get; set; }
 
+    public int Dislikes { get; set; }
+
+    public int? CurrentUserReaction { get; set; } // 0 = Like, 1 = Dislike, null = no reaction
+
     public bool IsDeleted { get; set; }
 
     public ParentCommentViewModel? ParentComment { get; set; }
 
     public bool IsOwn { get; set; }
 }
-

@@ -7,10 +7,16 @@
         (User.Identity?.IsAuthenticated == true &&
          string.Equals(Model.UserName, currentUserName, System.StringComparison.OrdinalIgnoreCase));
     var canManageComment = isCommentOwner && !Model.IsDeleted;
-    var publicationId = ViewContext.HttpContext.Request.Query["publicationId"].ToString();
+    var hasParentComment = Model.ParentComment != null;
+    var showIndentedReply = hasParentComment && !Model.ParentComment!.IsDeleted;
+    var publicationId = ViewContext.RouteData.Values["publicationId"]?.ToString();
+    if (string.IsNullOrWhiteSpace(publicationId))
+    {
+        publicationId = ViewContext.HttpContext.Request.Query["publicationId"].ToString();
+    }
 }
 
-<div class="comment-item @(Model.ParentComment != null ? "is-reply" : "")" id="comment-@Model.Id">
+<div class="comment-item @(showIndentedReply ? "is-reply" : "")" id="comment-@Model.Id">
     <div class="comment-header">
         <div class="comment-meta">
             <span class="comment-author">@Model.UserName</span>
@@ -25,10 +31,7 @@
                     <img src="~/images/compose.png" alt="@PublicationConstants.EditComment" class="comment-action-icon" />
                 </button>
 
-                <form asp-controller="Publication"
-                      asp-action="DeleteComment"
-                      method="post"
-                      class="comment-delete-form"
+                <form asp-controller="Publication" asp-action="DeleteComment" method="post" class="comment-delete-form"
                       onsubmit="return confirm('@PublicationConstants.DeleteCommentConfirmation')">
                     @Html.AntiForgeryToken()
                     <input type="hidden" name="commentId" value="@Model.Id" />
@@ -36,7 +39,8 @@
 
                     <button type="submit" class="btn-comment-action delete" title="@PublicationConstants.DeleteComment"
                             aria-label="@PublicationConstants.DeleteComment">
-                        <img src="~/images/delete.png" alt="@PublicationConstants.DeleteComment" class="comment-action-icon" />
+                        <img src="~/images/delete.png" alt="@PublicationConstants.DeleteComment"
+                             class="comment-action-icon" />
                     </button>
                 </form>
             </div>
@@ -44,9 +48,9 @@
     </div>
     
     <div class="comment-content" id="commentContent-@Model.Id">
-        @if (Model.ParentComment != null)
+        @if (hasParentComment)
         {
-            var parentContent = Model.ParentComment.IsDeleted
+            var parentContent = Model.ParentComment!.IsDeleted
                 ? PublicationConstants.DeletedCommentText
                 : Model.ParentComment.Content ?? string.Empty;
             var parentPreview = parentContent.Length > 80
@@ -87,9 +91,8 @@
                 <input type="hidden" name="commentId" value="@Model.Id" />
                 <input type="hidden" name="publicationId" value="@publicationId" />
 
-                <textarea id="commentEditInput-@Model.Id" name="content" class="comment-edit-input" rows="4"
-                          required minlength="@PublicationConstants.CommentMinLength"
-                          maxlength="@PublicationConstants.CommentMaxLength"
+                <textarea id="commentEditInput-@Model.Id" name="content" class="comment-edit-input" rows="4" required
+                          minlength="@PublicationConstants.CommentMinLength" maxlength="@PublicationConstants.CommentMaxLength"
                           placeholder="@PublicationConstants.EditCommentPlaceholder">@Model.Content</textarea>
 
                 <div class="comment-edit-actions">
@@ -105,11 +108,42 @@
     }
 
     <div class="comment-footer">
-        <div class="comment-likes">
-            <button type="button" class="btn-like" onclick="likeComment(@Model.Id)">
-                <i class="fa-regular fa-heart"></i>
-                <span id="likes-count-@Model.Id">@Model.Likes</span>
-            </button>
+        <div class="comment-reactions">
+            <form asp-controller="Publication" asp-action="ToggleCommentReaction" method="post"
+                  class="comment-reaction-form">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="commentId" value="@Model.Id" />
+                <input type="hidden" name="publicationId" value="@publicationId" />
+                <input type="hidden" name="reactionType" value="Like" />
+
+                <button type="submit" class="btn-like @(Model.CurrentUserReaction == 0 ? "active" : "")" title="Лайк">
+                    <i class="fa-@(Model.CurrentUserReaction == 0 ? "solid" : "regular") fa-heart"></i>
+                    <span id="likes-count-@Model.Id">@Model.Likes</span>
+                </button>
+            </form>
+
+            <form asp-controller="Publication" asp-action="ToggleCommentReaction" method="post"
+                  class="comment-reaction-form">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="commentId" value="@Model.Id" />
+                <input type="hidden" name="publicationId" value="@publicationId" />
+                <input type="hidden" name="reactionType" value="Dislike" />
+
+                <button type="submit" class="btn-dislike @(Model.CurrentUserReaction == 1 ? "active" : "")"
+                        title="Дизлайк">
+                    @if (Model.CurrentUserReaction == 1)
+                    {
+                        <img src="~/images/dislike_on.png" alt="Дизлайк" class="comment-reaction-icon" />
+                    }
+                    else
+                    {
+                        <img src="~/images/dislike_off.png" alt="Дизлайк" class="comment-reaction-icon dislike-icon-off" />
+                        <img src="~/images/dislike_off_hover.png" alt="Дизлайк"
+                             class="comment-reaction-icon dislike-icon-off-hover" />
+                    }
+                    <span id="dislikes-count-@Model.Id">@Model.Dislikes</span>
+                </button>
+            </form>
         </div>
         
         <button type="button" class="btn-reply"

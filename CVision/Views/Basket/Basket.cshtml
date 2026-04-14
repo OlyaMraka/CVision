@@ -1,3 +1,4 @@
+@using CVision.Helpers
 @model CVision.Models.ViewModels.CVBasketViewModels.CVBasketViewModel
 
 @{
@@ -43,32 +44,21 @@
                             
                             <div class="cv-card-item__preview cv-card-item__preview--trash">
                                 @{
-                                    var url = item.FilePath ?? "";
-                                    var isImage = url.EndsWith(".png", StringComparison.OrdinalIgnoreCase)
-                                                  || url.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase)
-                                                  || url.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase);
-                                    var isPdf = url.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase);
-                                    var isDoc = url.EndsWith(".doc", StringComparison.OrdinalIgnoreCase)
-                                                || url.EndsWith(".docx", StringComparison.OrdinalIgnoreCase);
+                                    var fileUrl = item.FilePath;
                                 }
 
-                                @if (isImage)
+                                @if (FileUtils.IsImage(fileUrl))
                                 {
-                                    <img src="@url" alt="CV #@item.Id" class="cv-card-item__img"/>
+                                    <img src="@fileUrl" class="img-fluid"/>
                                 }
-                                else if (isPdf)
+                                else if (FileUtils.IsDocx(fileUrl))
                                 {
-                                    <iframe src="@Url.Content(url)" class="cv-card-item__pdf"></iframe>
+                                    var encodedUrl = System.Net.WebUtility.UrlEncode(fileUrl);
+                                    <iframe src="https://view.officeapps.live.com/op/embed.aspx?src=@encodedUrl"></iframe>
                                 }
-                                else if (isDoc)
+                                else if (FileUtils.IsPdf(fileUrl))
                                 {
-                                    <iframe src="https://view.officeapps.live.com/op/embed.aspx?src=@url" class="cv-card-item__doc"></iframe>
-                                }
-                                else
-                                {
-                                    <div class="cv-card-item__placeholder">
-                                        <span>Невідомий формат</span>
-                                    </div>
+                                    <iframe src="@fileUrl#toolbar=0"></iframe>
                                 }
                             </div>
 

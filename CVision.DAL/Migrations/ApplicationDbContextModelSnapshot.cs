@@ -231,6 +231,11 @@ namespace CVision.DAL.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<int>("Dislikes")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0);
+
                     b.Property<bool>("IsDeleted")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("boolean")
@@ -259,6 +264,38 @@ namespace CVision.DAL.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Comments", (string)null);
+                });
+
+            modelBuilder.Entity("CVision.DAL.Entities.CommentReaction", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CommentId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<int>("ReactionType")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("CommentId", "UserId")
+                        .IsUnique();
+
+                    b.ToTable("CommentReactions", (string)null);
                 });
 
             modelBuilder.Entity("CVision.DAL.Entities.Publication", b =>
@@ -488,6 +525,25 @@ namespace CVision.DAL.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("CVision.DAL.Entities.CommentReaction", b =>
+                {
+                    b.HasOne("CVision.DAL.Entities.Comment", "Comment")
+                        .WithMany("Reactions")
+                        .HasForeignKey("CommentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CVision.DAL.Entities.ApplicationUser", "User")
+                        .WithMany("CommentReactions")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Comment");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("CVision.DAL.Entities.Publication", b =>
                 {
                     b.HasOne("CVision.DAL.Entities.CV", "CV")
@@ -561,6 +617,8 @@ namespace CVision.DAL.Migrations
                 {
                     b.Navigation("CVs");
 
+                    b.Navigation("CommentReactions");
+
                     b.Navigation("Comments");
 
                     b.Navigation("Publications");
@@ -580,6 +638,8 @@ namespace CVision.DAL.Migrations
 
             modelBuilder.Entity("CVision.DAL.Entities.Comment", b =>
                 {
+                    b.Navigation("Reactions");
+
                     b.Navigation("Replies");
                 });
 

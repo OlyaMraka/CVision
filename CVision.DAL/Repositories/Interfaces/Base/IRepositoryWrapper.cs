@@ -1,3 +1,4 @@
+using CVision.DAL.Repositories.Interfaces.CommentReactions;
 using CVision.DAL.Repositories.Interfaces.Comments;
 using CVision.DAL.Repositories.Interfaces.CvAnalyses;
 using CVision.DAL.Repositories.Interfaces.CvAnalysisRecommendations;
@@ -17,6 +18,8 @@ public interface IRepositoryWrapper
     public IPublicationRepository PublicationRepository { get; }
 
     public ICommentRepository CommentRepository { get; }
+
+    public ICommentReactionRepository CommentReactionRepository { get; }
 
     int SaveChanges();
 

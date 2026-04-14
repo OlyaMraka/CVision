@@ -1,3 +1,4 @@
+using CVision.Helpers.Constants;
 using CVision.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,13 +13,13 @@ public class ErrorsController : Controller
     {
         string userFriendlyMessage = statusCode switch
         {
-            400 => "Здається, ви ввели щось не те. Перевірте дані та спробуйте ще раз.",
-            401 => "Ой! Схоже, термін вашої сесії вичерпано. Будь ласка, увійдіть знову.",
-            403 => "Вибачте, але у вас немає прав для перегляду цієї сторінки.",
-            404 => "Ми шукали всюди, але не змогли знайти таку сторінку в системі CVision.",
-            408 => "Сервер занадто довго чекав на відповідь. Перевірте з'єднання.",
-            500 => "На сервері щось зламалося. Наші розробники вже отримали сповіщення.",
-            _ => "Сталася непередбачувана помилка. Спробуйте оновити сторінку.",
+            400 => ErorrWindowConstants.Error400,
+            401 => ErorrWindowConstants.Error401,
+            403 => ErorrWindowConstants.Error403,
+            404 => ErorrWindowConstants.Error404,
+            408 => ErorrWindowConstants.Error408,
+            500 => ErorrWindowConstants.Error500,
+            _ => ErorrWindowConstants.UnknownError,
         };
 
         var viewModel = new ExceptionHandlingViewModel()

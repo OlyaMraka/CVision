@@ -1,9 +1,9 @@
-using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using CVision.BLL.Queries.CvAnalyses.GetDeletedCvAnalyses;
 using CVision.Models.ViewModels.CVBasketViewModels;
+using CVision.BLL.Queries.CvAnalyses.GetDeletedCvAnalyses;
 
 namespace CVision.Controllers;
 
@@ -19,11 +19,8 @@ public class BasketController(IMediator mediator, IMapper mapper) : BaseControll
 
         var model = new CVBasketViewModel
         {
-            // Мапимо результат у колекцію елементів кошика
             Items = mapper.Map<IEnumerable<CVBasketItemViewModel>>(result.Value),
         };
-
-        // Використовуємо прямий шлях до View, як ти зробив у форумі
         return View("~/Views/Basket/Basket.cshtml", model);
     }
 }
