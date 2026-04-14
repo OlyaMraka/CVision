@@ -1,3 +1,4 @@
+@using CVision.Helpers
 @model CVision.Models.ViewModels.CVBasketViewModels.CVBasketViewModel
 
 @{
@@ -39,43 +40,29 @@
                     @foreach (var item in Model.Items)
                     {
                         <div class="cv-card-item" style="opacity: 0.85; border: 1px dashed #f0d8d1;">
-                            
-                            @* Контейнер прев'ю з твоєю логікою форматів *@
                             <div class="cv-card-item__preview" style="filter: grayscale(0.5);">
                                 @{
-                                    var url = item.FilePath ?? "";
-                                    var isImage = url.EndsWith(".png", StringComparison.OrdinalIgnoreCase)
-                                                  || url.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase)
-                                                  || url.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase);
-                                    var isPdf = url.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase);
-                                    var isDoc = url.EndsWith(".doc", StringComparison.OrdinalIgnoreCase)
-                                                || url.EndsWith(".docx", StringComparison.OrdinalIgnoreCase);
+                                    var fileUrl = item.FilePath;
                                 }
 
-                                @if (isImage)
+                                @if (FileUtils.IsImage(fileUrl))
                                 {
-                                    <img src="@url" alt="CV #@item.Id" class="cv-card-item__img"/>
+                                    <img src="@fileUrl" class="img-fluid"/>
                                 }
-                                else if (isPdf)
+                                else if (FileUtils.IsDocx(fileUrl))
                                 {
-                                    <iframe src="@Url.Content(url)" class="cv-card-item__pdf"></iframe>
+                                    var encodedUrl = System.Net.WebUtility.UrlEncode(fileUrl);
+                                    <iframe src="https://view.officeapps.live.com/op/embed.aspx?src=@encodedUrl"></iframe>
                                 }
-                                else if (isDoc)
+                                else if (FileUtils.IsPdf(fileUrl))
                                 {
-                                    <iframe src="https://view.officeapps.live.com/op/embed.aspx?src=@url" class="cv-card-item__doc"></iframe>
-                                }
-                                else
-                                {
-                                    <div class="cv-card-item__placeholder">
-                                        <span>Невідомий формат</span>
-                                    </div>
+                                    <iframe src="@fileUrl#toolbar=0"></iframe>
                                 }
                             </div>
 
                             <div class="cv-card-item__body">
                                 <h3 class="cv-card-item__title">Резюме #@item.Id</h3>
                                 
-                                @* Відображення днів *@
                                 <div class="cv-trash-timer" style="display: flex; align-items: center; gap: 5px; margin-top: 8px;">
                                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#c47a6a" stroke-width="2">
                                         <circle cx="12" cy="12" r="10"></circle>

@@ -14,6 +14,7 @@ using CVision.BLL.Commands.Publications.Update;
 using CVision.BLL.Queries.Publications.GetByPublicationId;
 using CVision.BLL.Queries.Publications.GetByUserId;
 using CVision.BLL.Queries.Comments.GetByPublicationId;
+using CVision.Helpers.Constants;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CVision.Controllers;
@@ -66,7 +67,7 @@ public class PublicationController(IMediator mediator, IMapper mapper) : BaseCon
 
         if (!result.IsSuccess)
         {
-            var errorMessage = result.Error ?? "Не вдалося видалити публікацію";
+            var errorMessage = result.Error ?? PublicationConstants.DeletePublicationError;
             var backUrl = Url.Action("GetPublication", "Publication", new { publicationId })
                 ?? Url.Action("CvForum", "Publication")!;
 
@@ -130,7 +131,7 @@ public class PublicationController(IMediator mediator, IMapper mapper) : BaseCon
 
         if (!result.IsSuccess)
         {
-            var errorMessage = result.Error ?? "Невідома помилка при оновленні";
+            var errorMessage = result.Error ?? PublicationConstants.UpdatePublicationError;
             var backUrl = Url.Action("GetPublication", "Publication", new { publicationId = model.Id })
                 ?? Url.Action("CvForum", "Publication")!;
 
@@ -144,11 +145,6 @@ public class PublicationController(IMediator mediator, IMapper mapper) : BaseCon
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> CreatePublication(IFormFile file, string title, string description)
     {
-        if (file == null || file.Length == 0)
-        {
-            ModelState.AddModelError("file", "Будь ласка, завантажте файл");
-        }
-
         var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
         using var stream = file!.OpenReadStream();
@@ -167,7 +163,7 @@ public class PublicationController(IMediator mediator, IMapper mapper) : BaseCon
 
         if (!result.IsSuccess)
         {
-            var errorMessage = result.Error ?? "Не вдалося створити публікацію";
+            var errorMessage = result.Error ?? PublicationConstants.CreatePublicationError;
             var backUrl = Url.Action("CreateForm", "Publication")
                 ?? Url.Action("CvForum", "Publication")!;
 
@@ -195,7 +191,7 @@ public class PublicationController(IMediator mediator, IMapper mapper) : BaseCon
 
         if (!result.IsSuccess)
         {
-            var errorMessage = result.Error ?? "Не вдалося додати коментар";
+            var errorMessage = result.Error ?? CommentConstants.AddCommentError;
             var backUrl = Url.Action("GetPublication", "Publication", new { publicationId = model.PublicationId })
                 ?? Url.Action("CvForum", "Publication")!;
 
@@ -219,7 +215,7 @@ public class PublicationController(IMediator mediator, IMapper mapper) : BaseCon
 
         if (!result.IsSuccess)
         {
-            var errorMessage = result.Error ?? "Не вдалося оновити коментар";
+            var errorMessage = result.Error ?? CommentConstants.UpdateCommentError;
             var backUrl = Url.Action("GetPublication", "Publication", new { publicationId })
                 ?? Url.Action("CvForum", "Publication")!;
 
@@ -237,7 +233,7 @@ public class PublicationController(IMediator mediator, IMapper mapper) : BaseCon
 
         if (!result.IsSuccess)
         {
-            var errorMessage = result.Error ?? "Не вдалося видалити коментар";
+            var errorMessage = result.Error ?? CommentConstants.DeleteCommentError;
             var backUrl = Url.Action("GetPublication", "Publication", new { publicationId })
                 ?? Url.Action("CvForum", "Publication")!;
 

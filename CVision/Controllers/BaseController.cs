@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using CVision.Models.ViewModels;
 using CVision.Models.ViewModels.CvForum;
 
 namespace CVision.Controllers;
@@ -18,7 +17,7 @@ public class BaseController : Controller
         var model = new ErrorWindowViewModal
         {
             Message = message,
-            ReturnUrl = returnUrl ?? Url.Action("Index", "Home"),
+            ReturnUrl = returnUrl,
         };
 
         return View("~/Views/Shared/GeneralError.cshtml", model);
