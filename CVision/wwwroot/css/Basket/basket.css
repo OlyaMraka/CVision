@@ -1,0 +1,42 @@
+.cv-gallery__header {
+    margin-bottom: 2rem;
+}
+
+.cv-gallery__header h2 {
+    font-weight: 700;
+    color: #2c1f1b;
+}
+
+.cv-gallery__header p {
+    color: #7a6560;
+    font-size: 0.9rem;
+}
+
+/* Картка в кошику */
+.cv-card-item--trash {
+    opacity: 0.85;
+    border: 1px dashed #f0d8d1;
+}
+
+/* Прев'ю файлу */
+.cv-card-item__preview--trash {
+    filter: grayscale(0.5);
+}
+
+/* Таймер видалення */
+.cv-trash-timer {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 8px;
+}
+
+.cv-trash-timer svg {
+    stroke: #c47a6a;
+}
+
+.cv-trash-timer__text {
+    color: #c47a6a;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
