@@ -13,6 +13,7 @@ namespace CVision.Mappers
             CreateMap<CvAnalysisResponseShortDto, CVGalleryViewModel>();
             CreateMap<CvAnalysisResultDto, CVAnalysisResultViewModel>();
             CreateMap<CvAnalysisResponseDto, CVAnalysisViewModel>();
+            CreateMap<CvAnalysisResponseShortDto, CVAnalysisConfirmationViewModel>();
         }
     }
 }

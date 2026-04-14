@@ -6,6 +6,7 @@ using CVision.Models.ViewModels.CVAnalysisViewModels;
 using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
 using CVision.BLL.Queries.CvAnalyses.GetAllCvAnalyses;
+using CVision.BLL.Queries.CvAnalyses.GetDeletedCvAnalyses;
 using Microsoft.AspNetCore.Authorization;
 
 namespace CVision.Controllers;
@@ -79,7 +80,26 @@ public class CvAnalysisController(IMediator mediator, IMapper mapper) : BaseCont
         return View("~/Views/CvAnalysis/CVGallery.cshtml", vm);
     }
 
-    [HttpPost] // Використовуємо Post, бо форма в Razor відправляє POST
+    [HttpGet]
+    [Authorize]
+    public async Task<IActionResult> ConfirmDelete(int id)
+    {
+        // ВАЖЛИВО: Використовуй запит для отримання ОДНОГО CV за його ID
+        // Припустимо, він називається GetCvAnalysisByIdQuery
+        var result = await mediator.Send(new GetAllByUserIdQuery(id));
+
+        if (!result.IsSuccess)
+        {
+            return RedirectToAction("CVGallery");
+        }
+
+        // Мапимо на спеціальну модель для підтвердження
+        var model = mapper.Map<CVAnalysisConfirmationViewModel>(result.Value);
+
+        return View("~/Views/CvAnalysis/CVAnalysisConfirmationPopap.cshtml", model);
+    }
+
+    [HttpPost]
     [Authorize]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Delete(int id)
@@ -88,8 +108,12 @@ public class CvAnalysisController(IMediator mediator, IMapper mapper) : BaseCont
 
         if (!result.IsSuccess)
         {
+            var errorMessage = result.Error ?? "Не вдалося видалити резюме";
+            // Повертаємо на Gallery у разі помилки
+            var backUrl = Url.Action("CVGallery", "CvAnalysis")!;
+            return ShowError(errorMessage, backUrl);
         }
 
-        return RedirectToAction(nameof(CVGallery));
+        return RedirectToAction("CVGallery");
     }
 }
