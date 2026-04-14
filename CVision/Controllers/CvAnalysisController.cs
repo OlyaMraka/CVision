@@ -84,18 +84,23 @@ public class CvAnalysisController(IMediator mediator, IMapper mapper) : BaseCont
     [Authorize]
     public async Task<IActionResult> ConfirmDelete(int id)
     {
-        // ВАЖЛИВО: Використовуй запит для отримання ОДНОГО CV за його ID
-        // Припустимо, він називається GetCvAnalysisByIdQuery
-        var result = await mediator.Send(new GetAllByUserIdQuery(id));
+        var userId = GetUserId();
+        var result = await mediator.Send(new GetAllByUserIdQuery(userId));
 
-        if (!result.IsSuccess)
+
+        if (!result.IsSuccess || result.Value == null)
         {
             return RedirectToAction("CVGallery");
         }
 
-        // Мапимо на спеціальну модель для підтвердження
-        var model = mapper.Map<CVAnalysisConfirmationViewModel>(result.Value);
+        var cvItem = result.Value.FirstOrDefault(x => x.Id == id);
 
+        if (cvItem == null)
+        {
+            return RedirectToAction("CVGallery");
+        }
+
+        var model = mapper.Map<CVAnalysisConfirmationViewModel>(cvItem);
         return View("~/Views/CvAnalysis/CVAnalysisConfirmationPopap.cshtml", model);
     }
 
@@ -109,7 +114,6 @@ public class CvAnalysisController(IMediator mediator, IMapper mapper) : BaseCont
         if (!result.IsSuccess)
         {
             var errorMessage = result.Error ?? "Не вдалося видалити резюме";
-            // Повертаємо на Gallery у разі помилки
             var backUrl = Url.Action("CVGallery", "CvAnalysis")!;
             return ShowError(errorMessage, backUrl);
         }
