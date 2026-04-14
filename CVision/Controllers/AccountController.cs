@@ -9,7 +9,6 @@ using CVision.Models.ViewModels.AuthViewModels;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using CVision.DAL.Entities;
-using System.Net.Http;
 using System.Net.Mail;
 
 

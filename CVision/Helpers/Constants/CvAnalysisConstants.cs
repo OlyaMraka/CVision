@@ -37,4 +37,10 @@ public static class CvAnalysisConstants
 
     public static readonly string UnavailablePreview
         = "Попередній перегляд недоступний";
+
+    public static readonly string DeleteError
+        = "При видаленні аналізу виникла помилка!";
+
+    public static readonly string AnalyseError
+        = "Помилка аналізу CV";
 }
