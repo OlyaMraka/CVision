@@ -23,7 +23,8 @@ public class GetByPublicationIdHandler(
             Include = x =>
                 x.Include(x => x.User)
                     .Include(x => x.ParentComment)
-                    .ThenInclude(x => x!.User),
+                    .ThenInclude(x => x!.User)
+                    .Include(x => x.Reactions),
         };
 
         var comments = await repositoryWrapper.CommentRepository.GetAllAsync(queryOptions);
@@ -31,6 +32,18 @@ public class GetByPublicationIdHandler(
         var response = mapper.Map<IEnumerable<CommentResponseDto>>(comments)
             .OrderBy(x => x.CreatedAt)
             .ToList();
+
+        if (request.CurrentUserId.HasValue)
+        {
+            var commentsList = comments.ToList();
+            foreach (var dto in response)
+            {
+                var comment = commentsList.FirstOrDefault(c => c.Id == dto.Id);
+                var userReaction = comment?.Reactions
+                    .FirstOrDefault(r => r.UserId == request.CurrentUserId.Value);
+                dto.CurrentUserReaction = userReaction?.ReactionType;
+            }
+        }
 
         return response;
     }

@@ -11,4 +11,6 @@ public class ApplicationUser : IdentityUser<int>
     public virtual ICollection<Publication> Publications { get; set; } = new List<Publication>();
 
     public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
+
+    public virtual ICollection<CommentReaction> CommentReactions { get; set; } = new List<CommentReaction>();
 }
