@@ -7,6 +7,8 @@
         (User.Identity?.IsAuthenticated == true &&
          string.Equals(Model.UserName, currentUserName, System.StringComparison.OrdinalIgnoreCase));
     var canManageComment = isCommentOwner && !Model.IsDeleted;
+    var hasParentComment = Model.ParentComment != null;
+    var showIndentedReply = hasParentComment && !Model.ParentComment!.IsDeleted;
     var publicationId = ViewContext.RouteData.Values["publicationId"]?.ToString();
     if (string.IsNullOrWhiteSpace(publicationId))
     {
@@ -14,7 +16,7 @@
     }
 }
 
-<div class="comment-item @(Model.ParentComment != null ? "is-reply" : "")" id="comment-@Model.Id">
+<div class="comment-item @(showIndentedReply ? "is-reply" : "")" id="comment-@Model.Id">
     <div class="comment-header">
         <div class="comment-meta">
             <span class="comment-author">@Model.UserName</span>
@@ -46,9 +48,9 @@
     </div>
     
     <div class="comment-content" id="commentContent-@Model.Id">
-        @if (Model.ParentComment != null)
+        @if (hasParentComment)
         {
-            var parentContent = Model.ParentComment.IsDeleted
+            var parentContent = Model.ParentComment!.IsDeleted
                 ? PublicationConstants.DeletedCommentText
                 : Model.ParentComment.Content ?? string.Empty;
             var parentPreview = parentContent.Length > 80
