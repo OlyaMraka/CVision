@@ -221,9 +221,20 @@
     gap: 15px;
     margin-top: 10px;
     flex-wrap: wrap;
+    align-items: center;
 }
 
-.btn-like, .btn-reply {
+.comment-reactions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.comment-reaction-form {
+    margin: 0;
+}
+
+.btn-like, .btn-dislike, .btn-reply {
     background: none;
     border: none;
     cursor: pointer;
@@ -237,16 +248,45 @@
     transition: all 0.2s ease;
 }
 
-.btn-like:hover, .btn-reply:hover {
+.btn-like:hover, .btn-dislike:hover, .btn-reply:hover {
     background-color: #fdf5f2;
     color: #e8907c;
 }
 
-.btn-like i, .btn-reply i {
+.btn-like.active, .btn-dislike.active {
+    color: #e8907c;
+    background-color: #faede9;
+    font-weight: 600;
+}
+
+.btn-like i, .btn-dislike i, .btn-reply i {
     transition: transform 0.2s ease;
 }
 
-.btn-like:hover i {
+.comment-reaction-icon {
+    width: 15px;
+    height: 15px;
+    object-fit: contain;
+    transition: transform 0.2s ease;
+}
+
+.dislike-icon-off-hover {
+    display: none;
+}
+
+.btn-dislike:not(.active):hover .dislike-icon-off {
+    display: none;
+}
+
+.btn-dislike:not(.active):hover .dislike-icon-off-hover {
+    display: block;
+}
+
+.btn-like:hover i, .btn-dislike:hover i {
+    transform: scale(1.2);
+}
+
+.btn-dislike:hover .comment-reaction-icon {
     transform: scale(1.2);
 }
 
