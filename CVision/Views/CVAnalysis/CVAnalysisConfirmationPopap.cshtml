@@ -1,3 +1,4 @@
+@using CVision.Helpers.Constants
 @model CVision.Models.ViewModels.CVAnalysisViewModels.CVAnalysisConfirmationViewModel
 
 @{
@@ -15,7 +16,7 @@
     <partial name="~/Views/Shared/_DashboardHeader.cshtml" />
     
     <div class="confirm-block">
-        <h2>Підтвердження видалення</h2>
+        <h2>@CvGalleryConstants.Delete</h2>
         <p>Ви дійсно хочете видалити резюме #@Model.Id?</p>
         
         <div class="operations-block">
@@ -23,10 +24,10 @@
                 @Html.AntiForgeryToken()
                 <input type="hidden" name="id" value="@Model.Id" />
                 <button type="submit" class="btn-danger-custom">
-                    Так, видалити
+                    @CvGalleryConstants.Ok
                 </button>
             </form>
-            <a asp-controller="CvAnalysis" asp-action="CVGallery">Скасувати</a>
+            <a asp-controller="CvAnalysis" asp-action="CVGallery">@CvGalleryConstants.No</a>
         </div>
     </div>
 </div>

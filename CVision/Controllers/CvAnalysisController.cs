@@ -86,8 +86,6 @@ public class CvAnalysisController(IMediator mediator, IMapper mapper) : BaseCont
     {
         var userId = GetUserId();
         var result = await mediator.Send(new GetAllByUserIdQuery(userId));
-
-
         if (!result.IsSuccess || result.Value == null)
         {
             return RedirectToAction("CVGallery");
@@ -110,7 +108,6 @@ public class CvAnalysisController(IMediator mediator, IMapper mapper) : BaseCont
     public async Task<IActionResult> Delete(int id)
     {
         var result = await mediator.Send(new DeleteCvAnalysisCommand(id));
-
         if (!result.IsSuccess)
         {
             var errorMessage = result.Error ?? "Не вдалося видалити резюме";
