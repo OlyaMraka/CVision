@@ -74,6 +74,28 @@ public class CvAnalysisController(IMediator mediator, IMapper mapper) : BaseCont
         return View("~/Views/CvAnalysis/CVGallery.cshtml", vm);
     }
 
+    [HttpGet]
+    [Authorize]
+    public async Task<IActionResult> ConfirmDelete(int id)
+    {
+        var userId = GetUserId();
+        var result = await mediator.Send(new GetAllByUserIdQuery(userId));
+        if (!result.IsSuccess || result.Value == null)
+        {
+            return RedirectToAction("CVGallery");
+        }
+
+        var cvItem = result.Value.FirstOrDefault(x => x.Id == id);
+
+        if (cvItem == null)
+        {
+            return RedirectToAction("CVGallery");
+        }
+
+        var model = mapper.Map<CVAnalysisConfirmationViewModel>(cvItem);
+        return View("~/Views/CvAnalysis/CVAnalysisConfirmationPopap.cshtml", model);
+    }
+
     [HttpPost]
     [Authorize]
     [ValidateAntiForgeryToken]
@@ -89,6 +111,6 @@ public class CvAnalysisController(IMediator mediator, IMapper mapper) : BaseCont
             return ShowError(errorMessage, backUrl!);
         }
 
-        return RedirectToAction(nameof(CVGallery));
+        return RedirectToAction("CVGallery");
     }
 }
