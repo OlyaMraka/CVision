@@ -12,9 +12,7 @@ public class CvForumProfile : Profile
         CreateMap<PublicationResponseShortDto, PublicationViewModelShort>();
         CreateMap<PublicationResponseShortDto, PublicationsViewModel>();
         CreateMap<PublicationResponseShortDto, ConfirmationViewModal>();
-
         CreateMap<CommentResponseDto, CommentViewModel>();
-
         CreateMap<ParentCommentDto, ParentCommentViewModel>();
     }
 }

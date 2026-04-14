@@ -1,11 +1,13 @@
 using MediatR;
-using CVision.BLL.Commands.CvAnalyses.Create;
-using CVision.BLL.DTOs.CvAnalyses;
-using CVision.Models.ViewModels.CVAnalysisViewModels;
-using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
-using CVision.BLL.Queries.CvAnalyses.GetAllCvAnalyses;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using CVision.Helpers.Constants;
+using CVision.Models.ViewModels.CVAnalysisViewModels;
+using CVision.BLL.Commands.CvAnalyses.Create;
+using CVision.BLL.Commands.CvAnalyses.Delete;
+using CVision.BLL.DTOs.CvAnalyses;
+using CVision.BLL.Queries.CvAnalyses.GetAllCvAnalyses;
 
 namespace CVision.Controllers;
 
@@ -23,12 +25,6 @@ public class CvAnalysisController(IMediator mediator, IMapper mapper) : BaseCont
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Analyze(IFormFile file)
     {
-        if (file == null || file.Length == 0)
-        {
-            ModelState.AddModelError("file", "Будь ласка, завантажте файл");
-            return View("CvAnalysisUpload");
-        }
-
         var userId = GetUserId();
 
         using var stream = file.OpenReadStream();
@@ -45,7 +41,7 @@ public class CvAnalysisController(IMediator mediator, IMapper mapper) : BaseCont
 
         if (!result.IsSuccess)
         {
-            return ShowError(result.Error ?? "Помилка аналізу CV", Url.Action("Analyze")!);
+            return ShowError(result.Error ?? CvAnalysisConstants.AnalyseError, Url.Action("Analyze")!);
         }
 
         var viewModel = mapper.Map<CVAnalysisViewModel>(result.Value);
@@ -76,5 +72,23 @@ public class CvAnalysisController(IMediator mediator, IMapper mapper) : BaseCont
         };
 
         return View("~/Views/CvAnalysis/CVGallery.cshtml", vm);
+    }
+
+    [HttpPost]
+    [Authorize]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var result = await mediator.Send(new DeleteCvAnalysisCommand(id));
+
+        if (!result.IsSuccess)
+        {
+            var errorMessage = result.Error ?? CvAnalysisConstants.DeleteError;
+            var backUrl = Url.Action("CVGallery");
+
+            return ShowError(errorMessage, backUrl!);
+        }
+
+        return RedirectToAction(nameof(CVGallery));
     }
 }
