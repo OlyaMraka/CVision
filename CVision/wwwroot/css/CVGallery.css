@@ -166,8 +166,6 @@
     opacity: .8;
 }
 
-
-
 .cv-gallery__empty {
     display: flex;
     flex-direction: column;
@@ -208,8 +206,6 @@
     
 }
 
-
-/* ── Адаптивність ── */
 @media (max-width: 1100px) {
     .cv-gallery__grid { grid-template-columns: repeat(3, 1fr); }
 }

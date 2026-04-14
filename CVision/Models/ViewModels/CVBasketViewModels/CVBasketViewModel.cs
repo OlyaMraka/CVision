@@ -4,4 +4,3 @@ public class CVBasketViewModel
 {
     public IEnumerable<CVBasketItemViewModel> Items { get; init; } = Enumerable.Empty<CVBasketItemViewModel>();
 }
-
