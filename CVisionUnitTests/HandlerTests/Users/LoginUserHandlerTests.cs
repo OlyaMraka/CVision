@@ -127,6 +127,36 @@ public class LoginUserHandlerTests
     }
 
     [Fact]
+    public async Task Handle_ShouldReturnFail_WhenEmailIsNotConfirmed()
+    {
+        // Arrange
+        var requestDto = new LoginUserRequestDto { Email = "ihor@test.com", Password = "SecurePassword123!" };
+        var command = new LoginUserCommand(requestDto);
+        var user = new ApplicationUser
+        {
+            Email = requestDto.Email,
+            UserName = "ihor_prots",
+            EmailConfirmed = false,
+        };
+
+        _validatorMock.Setup(v => v.ValidateAsync(command, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new ValidationResult());
+
+        _userManagerMock.Setup(u => u.FindByEmailAsync(requestDto.Email))
+            .ReturnsAsync(user);
+
+        _userManagerMock.Setup(u => u.CheckPasswordAsync(user, requestDto.Password))
+            .ReturnsAsync(true);
+
+        // Act
+        var result = await _handler.Handle(command, CancellationToken.None);
+
+        // Assert
+        Assert.False(result.IsSuccess);
+        Assert.Equal(UserConstants.EmailNotConfirmedError, result.Error);
+    }
+
+    [Fact]
     public async Task Handle_ShouldReturnUser_WhenCredentialsAreValid()
     {
         // Arrange

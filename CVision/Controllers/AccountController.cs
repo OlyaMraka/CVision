@@ -329,6 +329,11 @@ namespace CVision.Controllers
                 return "Невірний email або пароль.";
             }
 
+            if (string.Equals(message, "Email is not confirmed!", StringComparison.Ordinal))
+            {
+                return "Електронну пошту ще не підтверджено. Підтвердіть email перед входом.";
+            }
+
             if (string.Equals(message, "Email is required!", StringComparison.Ordinal))
             {
                 return "Введіть електронну пошту.";

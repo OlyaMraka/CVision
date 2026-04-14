@@ -39,7 +39,7 @@ public class LoginUserHandler(
 
         if (!user.EmailConfirmed)
         {
-            return UserConstants.UserLogInError;
+            return UserConstants.EmailNotConfirmedError;
         }
 
         return user;
