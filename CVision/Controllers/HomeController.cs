@@ -16,8 +16,8 @@ public class HomeController(IMediator mediator, ILogger<HomeController> logger) 
     public IActionResult Index() => View();
 
     [Authorize]
-    [ActionName("hub")]
-    public IActionResult Hub() => View("hub");
+    [ActionName("tips")]
+    public IActionResult Tips() => View("tips");
 
     [HttpGet]
     [Authorize]

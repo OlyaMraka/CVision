@@ -4,7 +4,7 @@
 
 @{
     ViewData["Title"] = "CV Аналіз";
-    ViewData["DashboardCurrentPage"] = "hub";
+    ViewData["DashboardCurrentPage"] = "tips";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -25,7 +25,7 @@
 
             @if (FileUtils.IsImage(fileUrl))
             {
-                <img src="@fileUrl" class="img-fluid"/>
+                <img src="@fileUrl" class="img-fluid" />
             }
             else if (FileUtils.IsDocx(fileUrl))
             {
@@ -59,13 +59,11 @@
     <div class="additional-analysis-block">
         @foreach (var section in Model.AnalysisResult.SectionsResults)
         {
-            <partial name="~/Views/CvAnalysis/components/SectionCard.cshtml" model="section"/>
+            <partial name="~/Views/CvAnalysis/components/SectionCard.cshtml" model="section" />
         }
     </div>
     <div class="footer-block">
-        <a class="back-to-review-button"
-           asp-controller="CvAnalysis"
-           asp-action="Analyze">
+        <a class="back-to-review-button" asp-controller="CvAnalysis" asp-action="Analyze">
             Повернутися назад
         </a>
     </div>

@@ -84,7 +84,7 @@ namespace CVision.Controllers
                 if (response.IsSuccess)
                 {
                     await signInManager.SignInAsync(response.Value!, isPersistent: false);
-                    return RedirectToAction("hub", "Home");
+                    return RedirectToAction("tips", "Home");
                 }
 
                 if (response.Error == null)
@@ -266,7 +266,7 @@ namespace CVision.Controllers
         [HttpGet]
         public IActionResult Guest()
         {
-            return RedirectToAction("hub", "Home");
+            return RedirectToAction("tips", "Home");
         }
 
         private static bool IsEmailSendingNetworkOrTimeoutError(Exception exception)
