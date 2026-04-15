@@ -1,0 +1,33 @@
+@using CVision.Helpers.Constants
+@model CVision.Models.ViewModels.CVAnalysisViewModels.CVAnalysisConfirmationViewModel
+
+@{
+    ViewData["Title"] = "Видалити CV";
+    ViewData["DashboardCurrentPage"] = "gallery";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/HubUser.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/CvAnalysis/confirm-delete-cv.css" asp-append-version="true" />
+}
+
+<div class="confirmation-pop-up-block">
+    <partial name="~/Views/Shared/_DashboardHeader.cshtml" />
+    
+    <div class="confirm-block">
+        <h2>@CvGalleryConstants.Delete</h2>
+        <p>Ви дійсно хочете видалити резюме #@Model.Id?</p>
+        
+        <div class="operations-block">
+            <form asp-controller="CvAnalysis" asp-action="Delete" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="id" value="@Model.Id" />
+                <button type="submit" class="btn-danger-custom">
+                    @CvGalleryConstants.Ok
+                </button>
+            </form>
+            <a asp-controller="CvAnalysis" asp-action="CVGallery">@CvGalleryConstants.No</a>
+        </div>
+    </div>
+</div>

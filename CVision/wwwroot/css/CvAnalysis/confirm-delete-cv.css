@@ -1,0 +1,107 @@
+.confirmation-pop-up-block {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: calc(64px + 2rem) 1.5rem 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+.confirm-block {
+    background: #fff;
+    border: 1px solid #f5ddd4;
+    border-radius: 20px;
+    padding: 2.5rem 2.5rem 2rem;
+    max-width: 440px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    text-align: center;
+    box-shadow: 0 8px 40px rgba(230, 150, 120, 0.1);
+}
+
+.confirm-block::before {
+    content: '!';
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: #faeae4;
+    color: #e8907c;
+    font-size: 22px;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.confirm-block h2 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #2c1f1b;
+    letter-spacing: -0.01em;
+    margin: 0;
+}
+
+.confirm-block p {
+    font-size: 13.5px;
+    color: #7a6560;
+    line-height: 1.7;
+    margin: 0;
+    padding-bottom: 0.5rem;
+}
+
+.confirm-block .operations-block {
+    display: flex;
+    gap: 0.75rem;
+    width: 100%;
+    padding-top: 0.5rem;
+    border-top: 1px solid #faeae4;
+}
+
+.confirm-block .operations-block form {
+    flex: 1;
+}
+
+.btn-danger-custom {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 12px;
+    font-size: 13.5px;
+    font-weight: 600;
+    text-align: center;
+    cursor: pointer;
+    border: 1.5px solid #e8907c;
+    background: #e8907c;
+    color: #fff;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.btn-danger-custom:hover {
+    background: #de7d68;
+    border-color: #de7d68;
+}
+
+.confirm-block .operations-block > a {
+    flex: 1;
+    padding: 0.75rem;
+    border-radius: 12px;
+    font-size: 13.5px;
+    font-weight: 600;
+    text-decoration: none;
+    text-align: center;
+    background: transparent;
+    color: #c47a6a;
+    border: 1.5px solid #f0b8a4;
+    transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.confirm-block .operations-block > a:hover {
+    background: #faeae4;
+    border-color: #e8907c;
+    color: #e8907c;
+}
