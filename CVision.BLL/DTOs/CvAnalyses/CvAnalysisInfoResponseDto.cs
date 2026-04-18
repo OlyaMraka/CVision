@@ -4,6 +4,8 @@ public class CvAnalysisInfoResponseDto
 {
     public int Id { get; set; }
 
+    public int CVId { get; set; }
+
     public string FileUrl { get; set; } = string.Empty;
 
     public string FeedBack { get; set; } = string.Empty;

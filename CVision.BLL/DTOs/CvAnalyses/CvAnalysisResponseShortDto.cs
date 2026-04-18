@@ -4,6 +4,8 @@ public class CvAnalysisResponseShortDto
 {
     public int Id { get; set; }
 
+    public int CVId { get; set; }
+
     public string FeedBack { get; set; } = string.Empty;
 
     public string FileUrl { get; set; } = string.Empty;
