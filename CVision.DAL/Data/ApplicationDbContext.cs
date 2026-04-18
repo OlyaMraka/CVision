@@ -24,6 +24,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
 
     public DbSet<CommentReaction> CommentReactions { get; set; }
 
+    public DbSet<CvLookup> CvLookups { get; set; }
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
@@ -166,6 +168,22 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
                 .WithMany(u => u.CommentReactions)
                 .HasForeignKey(e => e.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        builder.Entity<CvLookup>(entity =>
+        {
+            entity.ToTable("CvLookups");
+
+            entity.HasKey(e => e.Id);
+
+            entity.Property(e => e.LookupWord)
+                .IsRequired()
+                .HasMaxLength(255);
+
+            entity.HasOne(e => e.CV)
+                .WithMany(e => e.CvLookups)
+                .HasForeignKey(e => e.CvId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
     }
 }

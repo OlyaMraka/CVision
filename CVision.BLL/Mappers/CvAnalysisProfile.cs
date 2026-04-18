@@ -14,6 +14,11 @@ public class CvAnalysisProfile : Profile
 
         CreateMap<CvSectionAnalisysResultDto, CVAnalysisRecommendation>();
 
+        CreateMap<CVAnalysisRecommendation, CvSectionAnalisysResultDto>();
+
+        CreateMap<CVAnalysis, CvAnalysisInfoResponseDto>()
+            .ForMember(dest => dest.FileUrl, opt => opt.MapFrom(x => x.CV.FilePath));
+
         CreateMap<CVAnalysis, CvAnalysisResponseShortDto>()
             .ForMember(dest => dest.FileUrl, opt => opt.MapFrom(x => x.CV.FilePath));
 
