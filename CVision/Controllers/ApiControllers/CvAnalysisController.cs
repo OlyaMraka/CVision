@@ -3,6 +3,7 @@ using CVision.BLL.Commands.CvAnalyses.Create;
 using CVision.BLL.Commands.CvAnalyses.Delete;
 using CVision.BLL.Queries.CvAnalyses.GetAllCvAnalyses;
 using CVision.BLL.Queries.CvAnalyses.GetDeletedCvAnalyses;
+using CVision.BLL.Queries.Vacancies;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CVision.Controllers.ApiControllers;
@@ -59,5 +60,14 @@ public class CvAnalysisController : BaseApiController
     public async Task<IActionResult> GetDeleted([FromRoute] int id)
     {
         return Ok(await Mediator.Send(new GetDeletedByUserIdQuery(id)));
+    }
+
+    [HttpGet("vacancies/{id:int}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetCvVacancies([FromRoute] int id)
+    {
+        return Ok(await Mediator.Send(new GetByCvIdQuery(id)));
     }
 }
