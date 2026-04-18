@@ -14,6 +14,7 @@
                 CreateMap<CvAnalysisResultDto, CVAnalysisResultViewModel>();
                 CreateMap<CvAnalysisResponseDto, CVAnalysisViewModel>();
                 CreateMap<CvAnalysisResponseShortDto, CVAnalysisConfirmationViewModel>();
+                CreateMap<CvAnalysisInfoResponseDto, CVAnalysisInfoViewModel>();
             }
         }
     }

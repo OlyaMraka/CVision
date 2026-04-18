@@ -8,6 +8,8 @@ using CVision.BLL.Commands.CvAnalyses.Create;
 using CVision.BLL.Commands.CvAnalyses.Delete;
 using CVision.BLL.DTOs.CvAnalyses;
 using CVision.BLL.Queries.CvAnalyses.GetAllCvAnalyses;
+using CVision.BLL.Queries.CvAnalyses.GetByCvAnalysisId;
+using CVision.BLL.Queries.Vacancies;
 
 namespace CVision.Controllers;
 
@@ -112,5 +114,21 @@ public class CvAnalysisController(IMediator mediator, IMapper mapper) : BaseCont
         }
 
         return RedirectToAction("CVGallery");
+    }
+
+    [HttpGet]
+    [Authorize]
+    public async Task<IActionResult> Details(int id)
+    {
+        var result = await mediator.Send(new GetCvAnalysisByIdQuery(id));
+
+        if (!result.IsSuccess || result.Value == null)
+        {
+            return RedirectToAction("CVGallery");
+        }
+
+        var viewModel = mapper.Map<CVAnalysisInfoViewModel>(result.Value);
+
+        return View("CvAnalysisDetails", viewModel);
     }
 }

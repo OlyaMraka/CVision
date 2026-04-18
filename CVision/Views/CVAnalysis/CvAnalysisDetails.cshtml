@@ -1,0 +1,79 @@
+@using CVision.Helpers.Constants
+@model CVision.Models.ViewModels.CVAnalysisViewModels.CVAnalysisInfoViewModel
+
+@{
+    ViewData["Title"] = "Деталі CV #" + Model.Id;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/HubUser.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/CvAnalysis/section-card.css" asp-append-version="true">
+    <link rel="stylesheet" href="~/css/CvAnalysis/cv-details.css" asp-append-version="true" />
+}
+
+<div class="cv-details-container">
+    <partial name="~/Views/Shared/_DashboardHeader.cshtml" />
+
+    <div class="cv-details__header">
+        <a asp-action="CVGallery" class="btn-back-gallery">
+            Назад до галереї
+        </a>
+        <h2>Резюме #@Model.Id</h2>
+    </div>
+
+    <div class="details-main-grid">
+        <div class="file-preview-container">
+            @if (Model.FileUrl.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase))
+            {
+                <iframe src="@Url.Content(Model.FileUrl)#toolbar=0"></iframe>
+            }
+            else if (Model.FileUrl.Contains(".doc"))
+            {
+                <iframe src="https://view.officeapps.live.com/op/embed.aspx?src=@System.Net.WebUtility.UrlEncode(Model.FileUrl)"></iframe>
+            }
+            else
+            {
+                <img src="@Model.FileUrl" alt="CV Preview" />
+            }
+        </div>
+
+        <div class="details-info-card">
+            <div class="details-score-badge">
+                <span class="label">Загальний бал</span>
+                <span class="value">@Model.Score</span>
+            </div>
+
+            <span class="details-section-label">Загальний аналіз ШІ:</span>
+            <div class="details-feedback-text">
+                @Html.Raw(Model.FeedBack.Replace("\n", "<br/>"))
+            </div>
+        </div>
+    </div>
+
+    <div class="details-sections-grid">
+        @foreach (var result in Model.Recommendations)
+        {
+            <div class="section-card-block">
+                <div class="section-header">
+                    <h3>@result.Title</h3>
+                    <h4>@result.SectionScore</h4>
+                </div>
+                
+                <div class="cv-progress-container">
+                    <div class="cv-progress-bar"
+                         role="progressbar"
+                         style="width: @result.SectionScore%;"
+                         aria-valuenow="@result.SectionScore"
+                         aria-valuemin="0"
+                         aria-valuemax="100"></div>
+                </div>
+                
+                <div class="card-main-content">
+                    <h3 class="section-content-title">Аналіз секції:</h3>
+                    <p class="section-content">@result.Content</p>
+                </div>
+            </div>
+        }
+    </div>
+</div>

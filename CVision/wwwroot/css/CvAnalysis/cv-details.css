@@ -1,0 +1,108 @@
+/* Основний контейнер сторінки */
+.cv-details-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    /* Відступ зверху, щоб хедер не налізав на контент */
+    padding: 120px 20px 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+/* Навігація над головним блоком */
+.cv-details__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.cv-details__header h2 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #e8907c; /* Твій фірмовий колір */
+    margin: 0;
+}
+
+/* Головна сітка (Прев'ю + Фідбек) */
+.details-main-grid {
+    display: grid;
+    grid-template-columns: 420px 1fr; /* Трохи ширше для прев'ю */
+    gap: 2rem;
+    align-items: start;
+}
+
+/* Картка з загальним балом та текстом */
+.details-info-card {
+    background: #fff;
+    border: 1px solid #f5ddd4;
+    border-radius: 20px;
+    padding: 2.5rem;
+    box-shadow: 0 10px 30px rgba(230, 150, 120, 0.05);
+}
+
+.details-score-badge {
+    text-align: center;
+    background: #faeae4;
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.details-score-badge .label {
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #d4957f;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.details-score-badge .value {
+    font-size: 48px;
+    font-weight: 800;
+    color: #e8907c;
+    line-height: 1;
+}
+
+/* Стилізація тексту фідбеку */
+.details-feedback-text {
+    font-size: 15px;
+    color: #7a6560;
+    line-height: 1.8;
+}
+
+.details-feedback-text p {
+    margin-bottom: 1rem;
+}
+
+/* Контейнер для прев'ю (щоб картинка не "пливла") */
+.file-preview-container {
+    position: sticky;
+    top: 100px;
+    background: #fff;
+    border: 1px solid #f5ddd4;
+    border-radius: 20px;
+    overflow: hidden;
+    height: 600px;
+    display: flex;
+    justify-content: center;
+}
+
+.file-preview-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Або contain, якщо хочеш бачити все резюме повністю */
+}
+
+/* Адаптивність для мобілок */
+@media (max-width: 992px) {
+    .details-main-grid {
+        grid-template-columns: 1fr;
+    }
+    .file-preview-container {
+        position: static;
+        height: 400px;
+    }
+}
