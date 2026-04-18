@@ -1,0 +1,84 @@
+
+.vacancies-section {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid #f5ddd4;
+}
+
+.vacancies-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.vacancy-card {
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 1.75rem;
+    border: 1px solid #f5ddd4;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 12px rgba(230, 150, 120, 0.04);
+}
+
+.vacancy-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 24px rgba(232, 144, 124, 0.12);
+    border-color: #e8907c;
+}
+
+.vacancy-source {
+    font-size: 10px;
+    font-weight: 700;
+    color: #d4957f;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    background: #faeae4;
+    padding: 4px 10px;
+    border-radius: 6px;
+    align-self: flex-start;
+    margin-bottom: 1rem;
+}
+
+.vacancy-title {
+    font-size: 17px;
+    font-weight: 600;
+    color: #c47a6a;
+    margin: 0 0 0.5rem 0;
+    line-height: 1.4;
+}
+
+.vacancy-company {
+    font-size: 14px;
+    color: #7a6560;
+    margin-bottom: 1.5rem;
+}
+
+.btn-vacancy-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    padding: 0.8rem;
+    background: #e8907c;
+    color: #ffffff;
+    text-decoration: none !important;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+
+.btn-vacancy-link:hover {
+    background: #d47d6a;
+}
+
+.loader-placeholder {
+    text-align: center;
+    padding: 4rem;
+    color: #d4957f;
+    font-style: italic;
+}

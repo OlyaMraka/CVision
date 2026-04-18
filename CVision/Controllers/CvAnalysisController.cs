@@ -120,15 +120,31 @@ public class CvAnalysisController(IMediator mediator, IMapper mapper) : BaseCont
     [Authorize]
     public async Task<IActionResult> Details(int id)
     {
-        var result = await mediator.Send(new GetCvAnalysisByIdQuery(id));
+        var analysisResult =
+            await mediator.Send(new GetCvAnalysisByIdQuery(id));
 
-        if (!result.IsSuccess || result.Value == null)
+        if (!analysisResult.IsSuccess || analysisResult.Value == null)
         {
-            return RedirectToAction("CVGallery");
+            var errorMessage = analysisResult.Error ?? CvAnalysisConstants.DeleteError;
+            var backUrl = Url.Action("CVGallery");
+
+            return ShowError(errorMessage, backUrl!);
         }
 
-        var viewModel = mapper.Map<CVAnalysisInfoViewModel>(result.Value);
+        var model = mapper.Map<CVAnalysisInfoViewModel>(analysisResult.Value);
 
-        return View("CvAnalysisDetails", viewModel);
+
+        var fileIdForVacancies = analysisResult.Value.CVId;
+
+        var vacanciesResult =
+            await mediator.Send(new GetByCvIdQuery(fileIdForVacancies));
+
+        if (vacanciesResult.IsSuccess && vacanciesResult.Value != null)
+        {
+            model.Vacancies =
+                mapper.Map<List<VacancyViewModel>>(vacanciesResult.Value);
+        }
+
+        return View("~/Views/CvAnalysis/CvAnalysisDetails.cshtml", model);
     }
 }

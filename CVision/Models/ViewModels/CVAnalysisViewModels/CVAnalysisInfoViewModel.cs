@@ -12,4 +12,6 @@ public class CVAnalysisInfoViewModel
 
     public ICollection<CVSectionResultViewModel> Recommendations { get; set; }
         = new List<CVSectionResultViewModel>();
+
+    public IEnumerable<VacancyViewModel> Vacancies { get; set; } = new List<VacancyViewModel>();
 }

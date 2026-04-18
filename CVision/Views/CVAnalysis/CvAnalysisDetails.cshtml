@@ -1,6 +1,7 @@
 @using CVision.Helpers.Constants
 @model CVision.Models.ViewModels.CVAnalysisViewModels.CVAnalysisInfoViewModel
 
+
 @{
     ViewData["Title"] = "Деталі CV #" + Model.Id;
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -10,6 +11,7 @@
     <link rel="stylesheet" href="~/css/HubUser.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/CvAnalysis/section-card.css" asp-append-version="true">
     <link rel="stylesheet" href="~/css/CvAnalysis/cv-details.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/CvAnalysis/cv-vacancies.css" asp-append-version="true" />
 }
 
 <div class="cv-details-container">
@@ -75,5 +77,10 @@
                 </div>
             </div>
         }
+    </div>
+    <div class="vacancies-section">
+        <h3 class="details-section-title">Схожі вакансії для вас</h3>
+        <partial name="~/Views/CvAnalysis/components/_Vacancy.cshtml"
+                 model="Model.Vacancies" />
     </div>
 </div>
