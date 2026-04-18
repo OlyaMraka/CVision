@@ -20,12 +20,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSerilog((context, loggerConfig) =>
     loggerConfig.ReadFrom.Configuration(context.Configuration));
 
-builder.Services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
 builder.Services.AddHttpClient();
+builder.Services.AddMemoryCache();
+builder.Services.AddProblemDetails();
+
+builder.Services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
 
 builder.Services.AddRepositoriesFromAssembly(typeof(RepositoryWrapper).Assembly);
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
-builder.Services.AddProblemDetails();
 
 builder.Services.AddScoped<ITextExtractor, PdfTextExtractor>();
 builder.Services.AddScoped<ITextExtractor, DocxTextExtractor>();
@@ -42,6 +44,8 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Regis
 var cloudinaryOptions = builder.Configuration
     .GetSection("CloudinarySettings")
     .Get<CloudinaryOptions>();
+
+builder.Services.Configure<CacheOptions>(builder.Configuration.GetSection("Caching"));
 
 builder.Services.AddScoped<IFileService>(sp => new CloudinaryFileService(cloudinaryOptions!));
 

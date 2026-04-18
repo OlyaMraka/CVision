@@ -1,13 +1,26 @@
 using CVision.BLL.DTOs.Vacancies;
 using CVision.BLL.Interfaces;
+using CVision.BLL.Options;
 using HtmlAgilityPack;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Options;
 
 namespace CVision.BLL.Services;
 
-public class VacancyProvider(IHttpClientService httpClientService) : IVacancyProvider
+public class VacancyProvider(
+    IHttpClientService httpClientService,
+    IMemoryCache cache,
+    IOptions<CacheOptions> cacheOptions) : IVacancyProvider
 {
     public async Task<ICollection<VacancyDto>> SearchJobs(string query)
     {
+        var cacheKey = $"dou:{query.ToLower()}";
+
+        if (cache.TryGetValue(cacheKey, out List<VacancyDto>? cached))
+        {
+            return cached!;
+        }
+
         var url = BuildUrl(query);
 
         var html = await httpClientService.GetStringAsync(url);
@@ -28,12 +41,17 @@ public class VacancyProvider(IHttpClientService httpClientService) : IVacancyPro
 
             result.Add(new VacancyDto
             {
-                Title = titleNode?.InnerText.Trim() ?? string.Empty,
-                Company = companyNode?.InnerText.Trim() ?? string.Empty,
+                Title = HtmlEntity.DeEntitize(titleNode?.InnerText.Trim() ?? string.Empty),
+                Company = HtmlEntity.DeEntitize(companyNode?.InnerText.Trim() ?? string.Empty),
                 Url = urlPath,
                 Source = "DOU",
             });
         }
+
+        cache.Set(cacheKey, result, new MemoryCacheEntryOptions
+        {
+            AbsoluteExpirationRelativeToNow = cacheOptions.Value.VacanciesCacheMinutes,
+        });
 
         return result;
     }
