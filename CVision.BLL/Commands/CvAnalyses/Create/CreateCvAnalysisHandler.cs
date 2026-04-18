@@ -68,6 +68,16 @@ public class CreateCvAnalysisHandler(
         cvAnalysis.CVId = cv.Id;
 
         await repositoryWrapper.CvAnalysisRepository.CreateAsync(cvAnalysis);
+        foreach (var lookup in aiResult.CvLookups)
+        {
+            var cvLookup = new CvLookup
+            {
+                CvId = cv.Id,
+                LookupWord = lookup,
+            };
+
+            await repositoryWrapper.CvLookupRepository.CreateAsync(cvLookup);
+        }
 
         if (await repositoryWrapper.SaveChangesAsync() <= 0)
         {

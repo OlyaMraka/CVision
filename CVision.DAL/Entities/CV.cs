@@ -23,4 +23,6 @@ public class CV
     public virtual ICollection<CVAnalysis> Analyses { get; set; } = new List<CVAnalysis>();
 
     public virtual ICollection<Publication> Publications { get; set; } = new List<Publication>();
+
+    public virtual ICollection<CvLookup> CvLookups { get; set; } = new List<CvLookup>();
 }

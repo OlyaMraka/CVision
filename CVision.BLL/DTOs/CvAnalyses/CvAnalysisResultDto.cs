@@ -8,4 +8,6 @@ public class CvAnalysisResultDto
 
     public ICollection<CvSectionAnalisysResultDto> SectionsResults { get; set; }
         = new List<CvSectionAnalisysResultDto>();
+
+    public ICollection<string> CvLookups { get; set; } = new List<string>();
 }
