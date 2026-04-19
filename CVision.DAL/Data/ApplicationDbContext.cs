@@ -26,6 +26,10 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
 
     public DbSet<CvLookup> CvLookups { get; set; }
 
+    public DbSet<Contact> Contacts { get; set; }
+
+    public DbSet<ChatMessage> ChatMessages { get; set; }
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
@@ -184,6 +188,46 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
                 .WithMany(e => e.CvLookups)
                 .HasForeignKey(e => e.CvId)
                 .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        builder.Entity<Contact>(entity =>
+        {
+            entity.ToTable("Contacts");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+            entity.HasIndex(e => new { e.OwnerId, e.ContactUserId }).IsUnique();
+
+            entity.HasOne(e => e.Owner)
+                .WithMany(u => u.Contacts)
+                .HasForeignKey(e => e.OwnerId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(e => e.ContactUser)
+                .WithMany(u => u.ContactOf)
+                .HasForeignKey(e => e.ContactUserId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        builder.Entity<ChatMessage>(entity =>
+        {
+            entity.ToTable("ChatMessages");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Content).IsRequired();
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
+            entity.Property(e => e.IsRead).HasDefaultValue(false);
+
+            entity.HasIndex(e => new { e.SenderId, e.ReceiverId, e.CreatedAt });
+
+            entity.HasOne(e => e.Sender)
+                .WithMany(u => u.SentMessages)
+                .HasForeignKey(e => e.SenderId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(e => e.Receiver)
+                .WithMany(u => u.ReceivedMessages)
+                .HasForeignKey(e => e.ReceiverId)
+                .OnDelete(DeleteBehavior.Restrict);
         });
     }
 }

@@ -1,14 +1,18 @@
 using CVision.DAL.Data;
 using CVision.DAL.Repositories.Interfaces.Base;
+using CVision.DAL.Repositories.Interfaces.ChatMessages;
 using CVision.DAL.Repositories.Interfaces.CommentReactions;
 using CVision.DAL.Repositories.Interfaces.Comments;
+using CVision.DAL.Repositories.Interfaces.Contacts;
 using CVision.DAL.Repositories.Interfaces.CvAnalyses;
 using CVision.DAL.Repositories.Interfaces.CvAnalysisRecommendations;
 using CVision.DAL.Repositories.Interfaces.CvLookups;
 using CVision.DAL.Repositories.Interfaces.CVs;
 using CVision.DAL.Repositories.Interfaces.Publications;
+using CVision.DAL.Repositories.Realizations.ChatMessages;
 using CVision.DAL.Repositories.Realizations.CommentReactions;
 using CVision.DAL.Repositories.Realizations.Comments;
+using CVision.DAL.Repositories.Realizations.Contacts;
 using CVision.DAL.Repositories.Realizations.CvAnalyses;
 using CVision.DAL.Repositories.Realizations.CvAnalysisRecommendations;
 using CVision.DAL.Repositories.Realizations.CvLookups;
@@ -35,6 +39,10 @@ public class RepositoryWrapper : IRepositoryWrapper
 
     private ICvLookupRepository? _cvLookupRepository;
 
+    private IContactRepository? _contactRepository;
+
+    private IChatMessageRepository? _chatMessageRepository;
+
     public RepositoryWrapper(ApplicationDbContext dbContext)
     {
         context = dbContext;
@@ -60,6 +68,12 @@ public class RepositoryWrapper : IRepositoryWrapper
 
     public ICvLookupRepository CvLookupRepository
         => _cvLookupRepository ??= new CvLookupRepository(context);
+
+    public IContactRepository ContactRepository
+        => _contactRepository ??= new ContactRepository(context);
+
+    public IChatMessageRepository ChatMessageRepository
+        => _chatMessageRepository ??= new ChatMessageRepository(context);
 
     public int SaveChanges()
     {
