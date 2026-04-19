@@ -84,7 +84,7 @@ namespace CVision.Controllers
                 if (response.IsSuccess)
                 {
                     await signInManager.SignInAsync(response.Value!, isPersistent: false);
-                    return RedirectToAction("hub", "Home");
+                    return RedirectToAction("tips", "Home");
                 }
 
                 if (response.Error == null)
@@ -266,7 +266,7 @@ namespace CVision.Controllers
         [HttpGet]
         public IActionResult Guest()
         {
-            return RedirectToAction("hub", "Home");
+            return RedirectToAction("tips", "Home");
         }
 
         private static bool IsEmailSendingNetworkOrTimeoutError(Exception exception)
@@ -327,6 +327,11 @@ namespace CVision.Controllers
             if (string.Equals(message, "Incorrect login or password!", StringComparison.Ordinal))
             {
                 return "Невірний email або пароль.";
+            }
+
+            if (string.Equals(message, "Email is not confirmed!", StringComparison.Ordinal))
+            {
+                return "Електронну пошту ще не підтверджено. Підтвердіть email перед входом.";
             }
 
             if (string.Equals(message, "Email is required!", StringComparison.Ordinal))
