@@ -211,6 +211,46 @@ namespace CVision.DAL.Migrations
                     b.ToTable("CVAnalysesRecommendations", (string)null);
                 });
 
+            modelBuilder.Entity("CVision.DAL.Entities.ChatMessage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<bool>("IsRead")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
+                    b.Property<DateTime?>("ReadAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("ReceiverId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("SenderId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReceiverId");
+
+                    b.HasIndex("SenderId", "ReceiverId", "CreatedAt");
+
+                    b.ToTable("ChatMessages", (string)null);
+                });
+
             modelBuilder.Entity("CVision.DAL.Entities.Comment", b =>
                 {
                     b.Property<int>("Id")
@@ -296,6 +336,58 @@ namespace CVision.DAL.Migrations
                         .IsUnique();
 
                     b.ToTable("CommentReactions", (string)null);
+                });
+
+            modelBuilder.Entity("CVision.DAL.Entities.Contact", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ContactUserId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<int>("OwnerId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ContactUserId");
+
+                    b.HasIndex("OwnerId", "ContactUserId")
+                        .IsUnique();
+
+                    b.ToTable("Contacts", (string)null);
+                });
+
+            modelBuilder.Entity("CVision.DAL.Entities.CvLookup", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CvId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("LookupWord")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CvId");
+
+                    b.ToTable("CvLookups", (string)null);
                 });
 
             modelBuilder.Entity("CVision.DAL.Entities.Publication", b =>
@@ -499,6 +591,25 @@ namespace CVision.DAL.Migrations
                     b.Navigation("CVAnalysis");
                 });
 
+            modelBuilder.Entity("CVision.DAL.Entities.ChatMessage", b =>
+                {
+                    b.HasOne("CVision.DAL.Entities.ApplicationUser", "Receiver")
+                        .WithMany("ReceivedMessages")
+                        .HasForeignKey("ReceiverId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("CVision.DAL.Entities.ApplicationUser", "Sender")
+                        .WithMany("SentMessages")
+                        .HasForeignKey("SenderId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Receiver");
+
+                    b.Navigation("Sender");
+                });
+
             modelBuilder.Entity("CVision.DAL.Entities.Comment", b =>
                 {
                     b.HasOne("CVision.DAL.Entities.Comment", "ParentComment")
@@ -542,6 +653,36 @@ namespace CVision.DAL.Migrations
                     b.Navigation("Comment");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("CVision.DAL.Entities.Contact", b =>
+                {
+                    b.HasOne("CVision.DAL.Entities.ApplicationUser", "ContactUser")
+                        .WithMany("ContactOf")
+                        .HasForeignKey("ContactUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("CVision.DAL.Entities.ApplicationUser", "Owner")
+                        .WithMany("Contacts")
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ContactUser");
+
+                    b.Navigation("Owner");
+                });
+
+            modelBuilder.Entity("CVision.DAL.Entities.CvLookup", b =>
+                {
+                    b.HasOne("CVision.DAL.Entities.CV", "CV")
+                        .WithMany("CvLookups")
+                        .HasForeignKey("CvId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CV");
                 });
 
             modelBuilder.Entity("CVision.DAL.Entities.Publication", b =>
@@ -621,12 +762,22 @@ namespace CVision.DAL.Migrations
 
                     b.Navigation("Comments");
 
+                    b.Navigation("ContactOf");
+
+                    b.Navigation("Contacts");
+
                     b.Navigation("Publications");
+
+                    b.Navigation("ReceivedMessages");
+
+                    b.Navigation("SentMessages");
                 });
 
             modelBuilder.Entity("CVision.DAL.Entities.CV", b =>
                 {
                     b.Navigation("Analyses");
+
+                    b.Navigation("CvLookups");
 
                     b.Navigation("Publications");
                 });

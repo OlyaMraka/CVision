@@ -20,17 +20,22 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSerilog((context, loggerConfig) =>
     loggerConfig.ReadFrom.Configuration(context.Configuration));
 
+builder.Services.AddHttpClient();
+builder.Services.AddMemoryCache();
+builder.Services.AddProblemDetails();
+
 builder.Services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
 
 builder.Services.AddRepositoriesFromAssembly(typeof(RepositoryWrapper).Assembly);
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
-builder.Services.AddProblemDetails();
 
 builder.Services.AddScoped<ITextExtractor, PdfTextExtractor>();
 builder.Services.AddScoped<ITextExtractor, DocxTextExtractor>();
 builder.Services.AddScoped<ITextExtractor, ImageTextExtractor>();
 
 builder.Services.AddScoped<ICvParserService, CvParserService>();
+builder.Services.AddScoped<IHttpClientService, HttpClientService>();
+builder.Services.AddScoped<IVacancyProvider, VacancyProvider>();
 builder.Services.AddScoped<IEmailService, SmtpEmailService>();
 builder.Services.AddAutoMapper(typeof(UsersProfile), typeof(CVAnalysisProfile));
 builder.Services.AddValidatorsFromAssembly(typeof(RegisterUserValidator).Assembly);
@@ -39,6 +44,8 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Regis
 var cloudinaryOptions = builder.Configuration
     .GetSection("CloudinarySettings")
     .Get<CloudinaryOptions>();
+
+builder.Services.Configure<CacheOptions>(builder.Configuration.GetSection("Caching"));
 
 builder.Services.AddScoped<IFileService>(sp => new CloudinaryFileService(cloudinaryOptions!));
 
