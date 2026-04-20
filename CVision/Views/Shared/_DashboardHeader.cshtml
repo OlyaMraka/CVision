@@ -24,12 +24,19 @@
         
     </nav>
 
-    <a asp-controller="Home" asp-action="user"
-           class="dashboard-header__user @(currentPage == "user" ? "is-active" : string.Empty)"
-           aria-label="Профіль користувача">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-            <path
-            d="M12 12a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9Zm0 2.25c-4.14 0-7.5 2.77-7.5 6.19 0 .31.25.56.56.56h13.88c.31 0 .56-.25.56-.56 0-3.42-3.36-6.19-7.5-6.19Z" />
-        </svg>
-    </a>
+    <div class="dashboard-header__actions">
+        <a asp-controller="Home" asp-action="user"
+               class="dashboard-header__user @(currentPage == "user" ? "is-active" : string.Empty)"
+               aria-label="Профіль користувача">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path
+                d="M12 12a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9Zm0 2.25c-4.14 0-7.5 2.77-7.5 6.19 0 .31.25.56.56.56h13.88c.31 0 .56-.25.56-.56 0-3.42-3.36-6.19-7.5-6.19Z" />
+            </svg>
+        </a>
+
+        <button id="chatToggleBtn" class="chat-toggle-btn" onclick="chatSidebar.toggle()" aria-label="Відкрити чат" title="Повідомлення">
+            <i class="fa-regular fa-comment-dots"></i>
+            <span id="chatUnreadBadge" class="chat-badge" style="display:none;"></span>
+        </button>
+    </div>
 </header>

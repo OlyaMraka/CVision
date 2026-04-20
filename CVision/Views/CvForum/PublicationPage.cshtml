@@ -67,6 +67,18 @@
             <div class="main-content-description">
                 <p>@Model.Description</p>
             </div>
+
+            @if (!Model.IsOwn)
+            {
+                <div style="margin-top:0.25rem;">
+                    <button class="author-chat-link"
+                            onclick='chatSidebar.openChatWithAuthor(@Model.UserId, @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.CreatorUserName)))'
+                            title="Написати @Model.CreatorUserName">
+                        <i class="fa-regular fa-comment-dots"></i>
+                        @Model.CreatorUserName
+                    </button>
+                </div>
+            }
         </div>
         
         <div class="discussion-block">

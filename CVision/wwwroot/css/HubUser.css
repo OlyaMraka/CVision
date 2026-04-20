@@ -90,6 +90,12 @@
     box-shadow: 0 14px 28px rgba(128, 86, 39, 0.16);
 }
 
+.dashboard-header__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
 .dashboard-main {
     position: relative;
     z-index: 1;
