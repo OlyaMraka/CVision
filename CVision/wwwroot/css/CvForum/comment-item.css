@@ -15,7 +15,6 @@
 }
 
 .comment-item.is-reply {
-    margin-left: 2rem;
     border-left: 3px solid #c47a6a;
 }
 
@@ -304,10 +303,6 @@ html {
 }
 
 @media (max-width: 576px) {
-    .comment-item.is-reply {
-        margin-left: 1rem;
-    }
-
     .comment-header {
         align-items: stretch;
     }

@@ -47,6 +47,9 @@ public static class UserConstants
     public static readonly string UserLogInError
         = "Incorrect login or password!";
 
+    public static readonly string EmailNotConfirmedError
+        = "Email is not confirmed!";
+
     public static readonly string UserLogOutError
         = "Invalid token!";
 

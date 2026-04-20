@@ -7,6 +7,7 @@ using CVision.Models.ViewModels.ProfileViewModels;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Net.Mail;
 
 namespace CVision.Controllers;
 
@@ -15,8 +16,8 @@ public class HomeController(IMediator mediator, ILogger<HomeController> logger) 
     public IActionResult Index() => View();
 
     [Authorize]
-    [ActionName("hub")]
-    public IActionResult Hub() => View("hub");
+    [ActionName("tips")]
+    public IActionResult Tips() => View("tips");
 
     [HttpGet]
     [Authorize]
@@ -113,6 +114,24 @@ public class HomeController(IMediator mediator, ILogger<HomeController> logger) 
                 : "Дані профілю збережено.";
             return RedirectToAction("user");
         }
+        catch (Exception ex) when (IsEmailSendingNetworkOrTimeoutError(ex))
+        {
+            logger.LogWarning(ex, "Failed to send confirmation email after profile update for user with id {UserId}", userId);
+
+            var emailChanged = !string.IsNullOrWhiteSpace(previousEmail)
+                && !string.Equals(previousEmail, model.Email, StringComparison.OrdinalIgnoreCase);
+
+            if (emailChanged)
+            {
+                TempData["UserWindowError"] = "Дані профілю збережено, але лист підтвердження нової пошти не вдалося надіслати через проблеми з мережею або таймаут. Перевірте інтернет і спробуйте ще раз пізніше.";
+                return RedirectToAction("user");
+            }
+
+            TempData["UserWindowError"] = "Не вдалося зберегти зміни через проблеми з мережею або таймаут. Перевірте інтернет і спробуйте ще раз.";
+            model.MemberSince = await GetMemberSinceAsync(userId);
+
+            return View("user", model);
+        }
         catch (Exception ex)
         {
             logger.LogError(ex, "Failed to save profile for user with id {UserId}", userId);
@@ -190,6 +209,25 @@ public class HomeController(IMediator mediator, ILogger<HomeController> logger) 
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error() => View();
+
+    private static bool IsEmailSendingNetworkOrTimeoutError(Exception exception)
+    {
+        Exception? current = exception;
+        while (current is not null)
+        {
+            if (current is TimeoutException
+                || current is TaskCanceledException
+                || current is HttpRequestException
+                || current is SmtpException)
+            {
+                return true;
+            }
+
+            current = current.InnerException;
+        }
+
+        return false;
+    }
 
     private async Task<string> GetMemberSinceAsync(int userId)
     {
