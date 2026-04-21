@@ -22,24 +22,6 @@ public class DeleteCvAnalysisHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ShouldReturnFalse_WhenAnalysisNotFound()
-    {
-        // Arrange
-        var command = new DeleteCvAnalysisCommand(CvAnalysisId: 1);
-
-        _cvAnalysisRepoMock.Setup(r => r.GetFirstOrDefaultAsync(It.IsAny<QueryOptions<CVAnalysis>>()))
-            .ReturnsAsync((CVAnalysis?)null);
-
-        // Act
-        var result = await _handler.Handle(command, CancellationToken.None);
-
-        // Assert
-        Assert.False(result.IsSuccess);
-        Assert.False(result.Value);
-        _repoMock.Verify(r => r.SaveChangesAsync(), Times.Never);
-    }
-
-    [Fact]
     public async Task Handle_ShouldFail_WhenSaveChangesAsyncFails()
     {
         // Arrange

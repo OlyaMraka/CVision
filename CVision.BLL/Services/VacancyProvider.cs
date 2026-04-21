@@ -32,6 +32,11 @@ public class VacancyProvider(
 
         var nodes = doc.DocumentNode.SelectNodes("//li[contains(@class, 'l-vacancy')]");
 
+        if (nodes is null)
+        {
+            return result;
+        }
+
         foreach (var node in nodes)
         {
             var titleNode = node.SelectSingleNode(".//a[contains(@class, 'vt')]");
