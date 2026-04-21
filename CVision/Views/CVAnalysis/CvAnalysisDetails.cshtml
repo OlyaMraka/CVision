@@ -20,7 +20,7 @@
 
     <div class="cv-details__header">
         <a asp-action="CVGallery" class="btn-back-gallery">
-            Назад до галереї
+            @CvAnalysisDetails.Back
         </a>
         <h2>Резюме #@Model.Id</h2>
     </div>
@@ -53,11 +53,11 @@
     
     <div class="details-info-card">
         <div class="details-score-badge">
-            <span class="label">Загальний бал</span>
+            <span class="label">@CvAnalysisDetails.TotalScore</span>
             <span class="value">@Model.Score</span>
         </div>
 
-        <span class="details-section-label">Загальний аналіз ШІ:</span>
+        <span class="details-section-label">@CvAnalysisDetails.TotalAnalysis</span>
         <div class="details-feedback-text">
             @Html.Raw(Model.FeedBack.Replace("\n", "<br/>"))
         </div>
@@ -82,14 +82,14 @@
                 </div>
 
                 <div class="card-main-content">
-                    <h3 class="section-content-title">Аналіз секції:</h3>
+                    <h3 class="section-content-title">@CvAnalysisDetails.SectionAnalysis</h3>
                     <p class="section-content">@result.Content</p>
                 </div>
             </div>
         }
     </div>
     <div class="vacancies-section">
-        <h3 class="details-section-title">Схожі вакансії для вас</h3>
+        <h3 class="details-section-title">@CvAnalysisDetails.Vacancies</h3>
         <partial name="~/Views/CvAnalysis/components/_Vacancy.cshtml"
                  model="Model.Vacancies"/>
     </div>

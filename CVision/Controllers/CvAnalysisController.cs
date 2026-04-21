@@ -125,7 +125,7 @@ public class CvAnalysisController(IMediator mediator, IMapper mapper) : BaseCont
 
         if (!analysisResult.IsSuccess || analysisResult.Value == null)
         {
-            var errorMessage = analysisResult.Error ?? CvAnalysisConstants.DeleteError;
+            var errorMessage = analysisResult.Error ?? CvAnalysisConstants.DetailsError;
             var backUrl = Url.Action("CVGallery");
 
             return ShowError(errorMessage, backUrl!);
