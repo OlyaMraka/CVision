@@ -10,6 +10,7 @@ using CVision.BLL.Services;
 using CVision.BLL.Validators.Users;
 using CVision.Mappers;
 using CVision.Extensions;
+using CVision.Extensions.Middleware;
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -103,8 +104,10 @@ app.UseSerilogRequestLogging();
 app.UseRouting();
 app.UseSession();
 
+app.UseMiddleware<ResponseTimeMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseMiddleware<RequestLoggingMiddleware>();
 
 app.MapStaticAssets();
 

@@ -1,0 +1,55 @@
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<CVision.DAL.Entities.ApplicationUser> SignInManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <!-- Chat Sidebar -->
+    <aside id="chatSidebar" class="chat-sidebar" role="complementary" aria-label="Чат">
+        <div class="chat-sidebar__header">
+            <h3>Повідомлення</h3>
+            <button class="chat-sidebar__close" onclick="chatSidebar.close()" aria-label="Закрити чат" title="Закрити">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <!-- Conversation list panel -->
+        <div id="chatConvPanel" class="chat-sidebar__panel" style="display:flex; flex-direction:column;">
+            <div class="chat-search-wrap">
+                <input id="chatSearchInput"
+                       class="chat-search-input"
+                       type="search"
+                       placeholder="Пошук користувача..."
+                       autocomplete="off" />
+            </div>
+            <div id="chatSearchResults" class="chat-search-results" style="display:none;"></div>
+            <div id="chatConvList" class="chat-conv-list">
+                <div class="chat-conv-empty">Завантаження...</div>
+            </div>
+        </div>
+
+        <!-- Active conversation panel -->
+        <div id="chatMsgPanel" class="chat-sidebar__panel" style="display:none; flex-direction:column;">
+            <div class="chat-msg-header">
+                <button class="chat-msg-back" onclick="chatSidebar.showConvPanel()" aria-label="Назад">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </button>
+                <span id="chatMsgPeerName" class="chat-msg-peer-name"></span>
+            </div>
+            <div id="chatMessages" class="chat-messages"></div>
+            <div class="chat-send">
+                <input id="chatMessageInput"
+                       class="chat-send-input"
+                       type="text"
+                       placeholder="Напишіть повідомлення..."
+                       maxlength="2000"
+                       autocomplete="off" />
+                <button id="chatSendBtn" class="chat-send-btn" onclick="chatSidebar.sendMessage()" aria-label="Надіслати">
+                    <i class="fa-solid fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Backdrop overlay -->
+    <div id="chatOverlay" class="chat-overlay" onclick="chatSidebar.close()"></div>
+}
