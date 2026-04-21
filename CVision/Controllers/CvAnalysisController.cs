@@ -8,6 +8,8 @@ using CVision.BLL.Commands.CvAnalyses.Create;
 using CVision.BLL.Commands.CvAnalyses.Delete;
 using CVision.BLL.DTOs.CvAnalyses;
 using CVision.BLL.Queries.CvAnalyses.GetAllCvAnalyses;
+using CVision.BLL.Queries.CvAnalyses.GetByCvAnalysisId;
+using CVision.BLL.Queries.Vacancies;
 
 namespace CVision.Controllers;
 
@@ -112,5 +114,37 @@ public class CvAnalysisController(IMediator mediator, IMapper mapper) : BaseCont
         }
 
         return RedirectToAction("CVGallery");
+    }
+
+    [HttpGet]
+    [Authorize]
+    public async Task<IActionResult> Details(int id)
+    {
+        var analysisResult =
+            await mediator.Send(new GetCvAnalysisByIdQuery(id));
+
+        if (!analysisResult.IsSuccess || analysisResult.Value == null)
+        {
+            var errorMessage = analysisResult.Error ?? CvAnalysisConstants.DetailsError;
+            var backUrl = Url.Action("CVGallery");
+
+            return ShowError(errorMessage, backUrl!);
+        }
+
+        var model = mapper.Map<CVAnalysisInfoViewModel>(analysisResult.Value);
+
+
+        var fileIdForVacancies = analysisResult.Value.CVId;
+
+        var vacanciesResult =
+            await mediator.Send(new GetByCvIdQuery(fileIdForVacancies));
+
+        if (vacanciesResult.IsSuccess && vacanciesResult.Value != null)
+        {
+            model.Vacancies =
+                mapper.Map<List<VacancyViewModel>>(vacanciesResult.Value);
+        }
+
+        return View("~/Views/CvAnalysis/CvAnalysisDetails.cshtml", model);
     }
 }

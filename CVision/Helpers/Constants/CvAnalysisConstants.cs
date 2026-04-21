@@ -43,4 +43,7 @@ public static class CvAnalysisConstants
 
     public static readonly string AnalyseError
         = "Помилка аналізу CV";
+
+    public static readonly string DetailsError
+            = "Помилка при виведенні деталей!";
 }

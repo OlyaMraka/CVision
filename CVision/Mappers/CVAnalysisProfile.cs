@@ -1,5 +1,6 @@
     using AutoMapper;
     using CVision.BLL.DTOs.CvAnalyses;
+    using CVision.BLL.DTOs.Vacancies;
 
     using CVision.Models.ViewModels.CVAnalysisViewModels;
 
@@ -14,6 +15,8 @@
                 CreateMap<CvAnalysisResultDto, CVAnalysisResultViewModel>();
                 CreateMap<CvAnalysisResponseDto, CVAnalysisViewModel>();
                 CreateMap<CvAnalysisResponseShortDto, CVAnalysisConfirmationViewModel>();
+                CreateMap<CvAnalysisInfoResponseDto, CVAnalysisInfoViewModel>();
+                CreateMap<VacancyDto, VacancyViewModel>();
             }
         }
     }
