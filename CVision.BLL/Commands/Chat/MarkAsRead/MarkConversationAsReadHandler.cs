@@ -16,7 +16,8 @@ public class MarkConversationAsReadHandler(
         var unread = await repositoryWrapper.ChatMessageRepository.GetAllAsync(
             new QueryOptions<ChatMessage>
             {
-                Filter = x => x.ReceiverId == request.CurrentUserId
+                Filter = x => !x.IsDeleted
+                              && x.ReceiverId == request.CurrentUserId
                               && x.SenderId == request.OtherUserId
                               && !x.IsRead,
                 AsNoTracking = false,

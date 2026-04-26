@@ -20,8 +20,9 @@ public class GetConversationHandler(
         var messages = await repositoryWrapper.ChatMessageRepository.GetAllAsync(
             new QueryOptions<ChatMessage>
             {
-                Filter = x => (x.SenderId == request.CurrentUserId && x.ReceiverId == request.OtherUserId)
-                              || (x.SenderId == request.OtherUserId && x.ReceiverId == request.CurrentUserId),
+                Filter = x => !x.IsDeleted
+                              && ((x.SenderId == request.CurrentUserId && x.ReceiverId == request.OtherUserId)
+                                  || (x.SenderId == request.OtherUserId && x.ReceiverId == request.CurrentUserId)),
                 Include = x => x.Include(m => m.Sender).Include(m => m.Receiver),
                 Offset = request.Skip ?? 0,
                 Limit = request.Take ?? 0,

@@ -20,4 +20,16 @@ public static class ChatConstants
 
     public static readonly string SaveMessageError
         = "Помилка надсилання повідомлення! Спробуйте ще раз!";
+
+    public static readonly string MessageNotFound
+        = "Повідомлення не знайдено!";
+
+    public static readonly string NotMessageOwner
+        = "Ви не можете редагувати або видаляти чуже повідомлення!";
+
+    public static readonly string UpdateMessageError
+        = "Помилка оновлення повідомлення! Спробуйте ще раз!";
+
+    public static readonly string DeleteMessageError
+        = "Помилка видалення повідомлення! Спробуйте ще раз!";
 }

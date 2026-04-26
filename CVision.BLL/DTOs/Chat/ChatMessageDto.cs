@@ -19,4 +19,8 @@ public class ChatMessageDto
     public bool IsRead { get; set; }
 
     public DateTime? ReadAt { get; set; }
+
+    public bool IsEdited { get; set; }
+
+    public DateTime? EditedAt { get; set; }
 }

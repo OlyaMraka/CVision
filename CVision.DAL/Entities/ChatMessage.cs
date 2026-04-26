@@ -16,6 +16,14 @@ public class ChatMessage
 
     public DateTime? ReadAt { get; set; }
 
+    public bool IsDeleted { get; set; } = false;
+
+    public DateTime? DeletedAt { get; set; }
+
+    public bool IsEdited { get; set; } = false;
+
+    public DateTime? EditedAt { get; set; }
+
     public virtual ApplicationUser Sender { get; set; } = null!;
 
     public virtual ApplicationUser Receiver { get; set; } = null!;
