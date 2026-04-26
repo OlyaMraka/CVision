@@ -1,4 +1,6 @@
 using System.Security.Claims;
+using CVision.BLL.Commands.Chat.DeleteMessage;
+using CVision.BLL.Commands.Chat.EditMessage;
 using CVision.BLL.Commands.Chat.MarkAsRead;
 using CVision.BLL.Commands.Chat.SendMessage;
 using CVision.BLL.DTOs.Chat;
@@ -51,5 +53,26 @@ public class ChatController : BaseApiController
     {
         var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         return HandleResult(await Mediator.Send(new MarkConversationAsReadCommand(userId, otherUserId)));
+    }
+
+    [HttpPut("edit")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ChatMessageDto))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> EditMessage([FromBody] EditMessageRequestDto requestDto)
+    {
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        return HandleResult(await Mediator.Send(new EditMessageCommand(userId, requestDto)));
+    }
+
+    [HttpDelete("delete/{messageId:int}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> DeleteMessage([FromRoute] int messageId)
+    {
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        return HandleResult(await Mediator.Send(new DeleteMessageCommand(userId, messageId)));
     }
 }
