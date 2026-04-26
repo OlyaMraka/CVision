@@ -11,6 +11,7 @@
     let activePeerId = null;
     let activePeerName = null;
     let searchDebounce = null;
+    let editingMessageId = null;
 
     /* ─── DOM refs (resolved after DOMContentLoaded) ───────────── */
 
@@ -52,6 +53,9 @@
             if (!item) return;
             startChatFromSearch(Number(item.dataset.userId), item.dataset.userName);
         });
+
+        messagesContainer.addEventListener('click', onMessagesClick);
+
         messageInput.addEventListener('keydown', e => {
             if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
         });
@@ -191,28 +195,69 @@
             return;
         }
 
-        messagesContainer.innerHTML = messages.map(m => {
-            const isMine = m.senderId !== activePeerId;
-            const cls = isMine ? 'chat-bubble--mine' : 'chat-bubble--theirs';
-            const timeStr = m.createdAt ? formatTime(m.createdAt) : '';
-            return `<div class="chat-bubble ${cls}">
-                ${escapeHtml(m.content)}
-                <span class="chat-bubble__time">${timeStr}</span>
-            </div>`;
-        }).join('');
+        messagesContainer.innerHTML = '';
+        messages.forEach(m => messagesContainer.appendChild(createBubbleElement(m)));
 
         scrollMessagesToBottom();
     }
 
     function appendMessage(msg) {
+        messagesContainer.appendChild(createBubbleElement(msg));
+        scrollMessagesToBottom();
+    }
+
+    function createBubbleElement(msg) {
         const isMine = msg.senderId !== activePeerId;
         const cls = isMine ? 'chat-bubble--mine' : 'chat-bubble--theirs';
         const timeStr = msg.createdAt ? formatTime(msg.createdAt) : '';
+
         const bubble = document.createElement('div');
         bubble.className = `chat-bubble ${cls}`;
-        bubble.innerHTML = `${escapeHtml(msg.content)}<span class="chat-bubble__time">${timeStr}</span>`;
-        messagesContainer.appendChild(bubble);
-        scrollMessagesToBottom();
+        bubble.dataset.messageId = String(msg.id || '');
+
+        if (isMine) {
+            const actions = document.createElement('div');
+            actions.className = 'chat-bubble__actions';
+
+            const editBtn = document.createElement('button');
+            editBtn.type = 'button';
+            editBtn.className = 'chat-bubble__action-btn';
+            editBtn.dataset.action = 'edit';
+            editBtn.title = 'Редагувати';
+            editBtn.setAttribute('aria-label', 'Редагувати');
+            editBtn.innerHTML = '<i class="fa-solid fa-pen"></i>';
+
+            const deleteBtn = document.createElement('button');
+            deleteBtn.type = 'button';
+            deleteBtn.className = 'chat-bubble__action-btn chat-bubble__action-btn--danger';
+            deleteBtn.dataset.action = 'delete';
+            deleteBtn.title = 'Видалити';
+            deleteBtn.setAttribute('aria-label', 'Видалити');
+            deleteBtn.innerHTML = '<i class="fa-solid fa-trash"></i>';
+
+            actions.appendChild(editBtn);
+            actions.appendChild(deleteBtn);
+            bubble.appendChild(actions);
+        }
+
+        const textEl = document.createElement('span');
+        textEl.className = 'chat-bubble__text';
+        textEl.textContent = msg.content || '';
+        bubble.appendChild(textEl);
+
+        if (msg.isEdited) {
+            const editedEl = document.createElement('span');
+            editedEl.className = 'chat-bubble__edited';
+            editedEl.textContent = 'відредаговано';
+            bubble.appendChild(editedEl);
+        }
+
+        const timeEl = document.createElement('span');
+        timeEl.className = 'chat-bubble__time';
+        timeEl.textContent = timeStr;
+        bubble.appendChild(timeEl);
+
+        return bubble;
     }
 
     function scrollMessagesToBottom() {
@@ -247,6 +292,189 @@
             messageInput.disabled = false;
             messageInput.focus();
         }
+    }
+
+    /* ─── Edit / Delete message ──────────────────────────────────── */
+
+    function onMessagesClick(e) {
+        const actionBtn = e.target.closest('.chat-bubble__action-btn[data-action]');
+        if (actionBtn) {
+            const bubble = actionBtn.closest('.chat-bubble');
+            if (!bubble) return;
+
+            const messageId = Number(bubble.dataset.messageId);
+            if (!Number.isFinite(messageId)) return;
+
+            if (actionBtn.dataset.action === 'edit') {
+                startEditMessage(messageId, bubble);
+                return;
+            }
+
+            if (actionBtn.dataset.action === 'delete') {
+                deleteMessage(messageId, bubble);
+                return;
+            }
+        }
+
+        const saveBtn = e.target.closest('.chat-bubble__edit-save');
+        if (saveBtn) {
+            const bubble = saveBtn.closest('.chat-bubble');
+            if (!bubble) return;
+            const messageId = Number(bubble.dataset.messageId);
+            const input = bubble.querySelector('.chat-bubble__edit-input');
+            if (!input || !Number.isFinite(messageId)) return;
+            saveEditMessage(messageId, input.value.trim(), bubble);
+            return;
+        }
+
+        const cancelBtn = e.target.closest('.chat-bubble__edit-cancel');
+        if (cancelBtn) {
+            const bubble = cancelBtn.closest('.chat-bubble');
+            if (!bubble) return;
+            cancelEditMessage(bubble);
+        }
+    }
+
+    function startEditMessage(messageId, bubble) {
+        if (editingMessageId !== null) return;
+
+        const textEl = bubble.querySelector('.chat-bubble__text');
+        if (!textEl) return;
+
+        editingMessageId = messageId;
+        bubble.classList.add('chat-bubble--editing');
+
+        const actionsEl = bubble.querySelector('.chat-bubble__actions');
+        if (actionsEl) actionsEl.style.display = 'none';
+
+        const initialText = textEl.textContent || '';
+        textEl.style.display = 'none';
+
+        const editWrap = document.createElement('div');
+        editWrap.className = 'chat-bubble__edit-wrap';
+
+        const input = document.createElement('textarea');
+        input.className = 'chat-bubble__edit-input';
+        input.value = initialText;
+
+        const controls = document.createElement('div');
+        controls.className = 'chat-bubble__edit-controls';
+
+        const cancelBtn = document.createElement('button');
+        cancelBtn.type = 'button';
+        cancelBtn.className = 'chat-bubble__edit-cancel';
+        cancelBtn.textContent = 'Скасувати';
+
+        const saveBtn = document.createElement('button');
+        saveBtn.type = 'button';
+        saveBtn.className = 'chat-bubble__edit-save';
+        saveBtn.textContent = 'Зберегти';
+
+        controls.appendChild(cancelBtn);
+        controls.appendChild(saveBtn);
+        editWrap.appendChild(input);
+        editWrap.appendChild(controls);
+        bubble.appendChild(editWrap);
+
+        input.focus();
+        input.setSelectionRange(input.value.length, input.value.length);
+        input.addEventListener('keydown', event => {
+            if (event.key === 'Escape') {
+                event.preventDefault();
+                cancelEditMessage(bubble);
+            }
+
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                saveEditMessage(messageId, input.value.trim(), bubble);
+            }
+        });
+    }
+
+    function cancelEditMessage(bubble) {
+        editingMessageId = null;
+        bubble.classList.remove('chat-bubble--editing');
+
+        const actionsEl = bubble.querySelector('.chat-bubble__actions');
+        if (actionsEl) actionsEl.style.display = '';
+
+        const textEl = bubble.querySelector('.chat-bubble__text');
+        if (textEl) textEl.style.display = '';
+
+        const editWrap = bubble.querySelector('.chat-bubble__edit-wrap');
+        if (editWrap) editWrap.remove();
+    }
+
+    async function saveEditMessage(messageId, content, bubble) {
+        const textEl = bubble.querySelector('.chat-bubble__text');
+        if (!textEl) {
+            cancelEditMessage(bubble);
+            return;
+        }
+
+        const oldContent = (textEl.textContent || '').trim();
+        if (!content) return;
+        if (content === oldContent) {
+            cancelEditMessage(bubble);
+            return;
+        }
+
+        try {
+            const res = await fetch('/api/chat/edit', {
+                method: 'PUT',
+                credentials: 'same-origin',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: messageId, content }),
+            });
+
+            if (!res.ok) return;
+
+            const updatedMessage = await res.json();
+            textEl.textContent = updatedMessage.content || content;
+
+            let editedEl = bubble.querySelector('.chat-bubble__edited');
+            if (!editedEl) {
+                editedEl = document.createElement('span');
+                editedEl.className = 'chat-bubble__edited';
+                editedEl.textContent = 'відредаговано';
+
+                const timeEl = bubble.querySelector('.chat-bubble__time');
+                if (timeEl) {
+                    bubble.insertBefore(editedEl, timeEl);
+                } else {
+                    bubble.appendChild(editedEl);
+                }
+            }
+
+            cancelEditMessage(bubble);
+            loadConversations();
+        } catch (_) { /* ignore */ }
+    }
+
+    async function deleteMessage(messageId, bubble) {
+        const confirmed = window.confirm('Видалити повідомлення?');
+        if (!confirmed) return;
+
+        try {
+            const res = await fetch(`/api/chat/delete/${messageId}`, {
+                method: 'DELETE',
+                credentials: 'same-origin',
+            });
+
+            if (!res.ok) return;
+
+            if (editingMessageId === messageId) {
+                editingMessageId = null;
+            }
+
+            bubble.remove();
+
+            if (!messagesContainer.querySelector('.chat-bubble')) {
+                messagesContainer.innerHTML = '<div class="chat-msg-loading">Поки немає повідомлень. Напишіть першим!</div>';
+            }
+
+            loadConversations();
+        } catch (_) { /* ignore */ }
     }
 
     /* ─── Search ──────────────────────────────────────────────────── */
