@@ -39,6 +39,11 @@
         unreadBadge       = $('chatUnreadBadge');
 
         if (!sidebar) return; // sidebar not rendered (guest user)
+        if (!searchInput || !searchResults || !convList || !convPanel || !msgPanel ||
+            !msgPeerName || !messagesContainer || !messageInput || !sendBtn) {
+            console.error('Chat sidebar init failed: some DOM elements are missing.');
+            return;
+        }
 
         searchInput.addEventListener('input', onSearchInput);
 
@@ -207,6 +212,13 @@
     }
 
     function createBubbleElement(msg) {
+        if (!msg || typeof msg !== 'object') {
+            const fallback = document.createElement('div');
+            fallback.className = 'chat-bubble chat-bubble--theirs';
+            fallback.textContent = 'Неможливо відобразити повідомлення.';
+            return fallback;
+        }
+
         const isMine = msg.senderId !== activePeerId;
         const cls = isMine ? 'chat-bubble--mine' : 'chat-bubble--theirs';
         const timeStr = msg.createdAt ? formatTime(msg.createdAt) : '';
@@ -302,8 +314,11 @@
             const bubble = actionBtn.closest('.chat-bubble');
             if (!bubble) return;
 
-            const messageId = Number(bubble.dataset.messageId);
-            if (!Number.isFinite(messageId)) return;
+            const messageId = getMessageIdFromBubble(bubble);
+            if (messageId === null) {
+                notifyChatError('Некоректний ID повідомлення. Оновіть сторінку.');
+                return;
+            }
 
             if (actionBtn.dataset.action === 'edit') {
                 startEditMessage(messageId, bubble);
@@ -320,9 +335,12 @@
         if (saveBtn) {
             const bubble = saveBtn.closest('.chat-bubble');
             if (!bubble) return;
-            const messageId = Number(bubble.dataset.messageId);
+            const messageId = getMessageIdFromBubble(bubble);
             const input = bubble.querySelector('.chat-bubble__edit-input');
-            if (!input || !Number.isFinite(messageId)) return;
+            if (!input || messageId === null) {
+                notifyChatError('Не вдалося зчитати дані повідомлення для редагування.');
+                return;
+            }
             saveEditMessage(messageId, input.value.trim(), bubble);
             return;
         }
@@ -336,7 +354,20 @@
     }
 
     function startEditMessage(messageId, bubble) {
-        if (editingMessageId !== null) return;
+        if (!Number.isFinite(messageId) || messageId <= 0 || !bubble || !bubble.isConnected) {
+            notifyChatError('Неможливо перейти в режим редагування.');
+            return;
+        }
+
+        if (editingMessageId !== null) {
+            notifyChatError('Спершу завершіть попереднє редагування.');
+            return;
+        }
+
+        if (!bubble.classList.contains('chat-bubble--mine')) {
+            notifyChatError('Редагувати можна лише власні повідомлення.');
+            return;
+        }
 
         const textEl = bubble.querySelector('.chat-bubble__text');
         if (!textEl) return;
@@ -406,6 +437,11 @@
     }
 
     async function saveEditMessage(messageId, content, bubble) {
+        if (!Number.isFinite(messageId) || messageId <= 0 || !bubble || !bubble.isConnected) {
+            notifyChatError('Неможливо зберегти зміни для цього повідомлення.');
+            return;
+        }
+
         const textEl = bubble.querySelector('.chat-bubble__text');
         if (!textEl) {
             cancelEditMessage(bubble);
@@ -413,11 +449,19 @@
         }
 
         const oldContent = (textEl.textContent || '').trim();
-        if (!content) return;
+        if (!content) {
+            notifyChatError('Текст повідомлення не може бути порожнім.');
+            return;
+        }
         if (content === oldContent) {
             cancelEditMessage(bubble);
             return;
         }
+
+        const saveBtn = bubble.querySelector('.chat-bubble__edit-save');
+        const cancelBtn = bubble.querySelector('.chat-bubble__edit-cancel');
+        if (saveBtn) saveBtn.disabled = true;
+        if (cancelBtn) cancelBtn.disabled = true;
 
         try {
             const res = await fetch('/api/chat/edit', {
@@ -427,7 +471,10 @@
                 body: JSON.stringify({ id: messageId, content }),
             });
 
-            if (!res.ok) return;
+            if (!res.ok) {
+                notifyChatError(await readApiError(res, 'Не вдалося зберегти зміни повідомлення.'));
+                return;
+            }
 
             const updatedMessage = await res.json();
             textEl.textContent = updatedMessage.content || content;
@@ -448,12 +495,26 @@
 
             cancelEditMessage(bubble);
             loadConversations();
-        } catch (_) { /* ignore */ }
+        } catch (error) {
+            console.error('Edit message failed:', error);
+            notifyChatError('Помилка мережі під час збереження повідомлення.');
+        } finally {
+            if (saveBtn) saveBtn.disabled = false;
+            if (cancelBtn) cancelBtn.disabled = false;
+        }
     }
 
     async function deleteMessage(messageId, bubble) {
+        if (!Number.isFinite(messageId) || messageId <= 0 || !bubble || !bubble.isConnected) {
+            notifyChatError('Неможливо видалити це повідомлення.');
+            return;
+        }
+
         const confirmed = window.confirm('Видалити повідомлення?');
         if (!confirmed) return;
+
+        const actionButtons = bubble.querySelectorAll('.chat-bubble__action-btn');
+        actionButtons.forEach(btn => { btn.disabled = true; });
 
         try {
             const res = await fetch(`/api/chat/delete/${messageId}`, {
@@ -461,7 +522,11 @@
                 credentials: 'same-origin',
             });
 
-            if (!res.ok) return;
+            if (!res.ok) {
+                notifyChatError(await readApiError(res, 'Не вдалося видалити повідомлення.'));
+                actionButtons.forEach(btn => { btn.disabled = false; });
+                return;
+            }
 
             if (editingMessageId === messageId) {
                 editingMessageId = null;
@@ -474,7 +539,11 @@
             }
 
             loadConversations();
-        } catch (_) { /* ignore */ }
+        } catch (error) {
+            console.error('Delete message failed:', error);
+            notifyChatError('Помилка мережі під час видалення повідомлення.');
+            actionButtons.forEach(btn => { btn.disabled = false; });
+        }
     }
 
     /* ─── Search ──────────────────────────────────────────────────── */
@@ -570,6 +639,37 @@
             return d.toLocaleTimeString('uk-UA', { hour: '2-digit', minute: '2-digit' });
         }
         return d.toLocaleDateString('uk-UA', { day: '2-digit', month: '2-digit' });
+    }
+
+    function getMessageIdFromBubble(bubble) {
+        if (!bubble || !bubble.dataset) return null;
+        const messageId = Number(bubble.dataset.messageId);
+        if (!Number.isFinite(messageId) || messageId <= 0) return null;
+        return messageId;
+    }
+
+    function notifyChatError(message) {
+        const fallback = 'Сталася помилка. Спробуйте ще раз.';
+        window.alert(message || fallback);
+    }
+
+    async function readApiError(response, fallbackMessage) {
+        try {
+            const contentType = response.headers.get('content-type') || '';
+            if (contentType.includes('application/json')) {
+                const payload = await response.json();
+                if (payload && typeof payload === 'object') {
+                    const candidates = [payload.error, payload.message, payload.title];
+                    const first = candidates.find(x => typeof x === 'string' && x.trim().length > 0);
+                    if (first) return first;
+                }
+            }
+
+            const text = await response.text();
+            if (text && text.trim().length > 0) return text.trim();
+        } catch (_) { /* ignore parse errors */ }
+
+        return fallbackMessage;
     }
 
     /* ─── Public API ──────────────────────────────────────────────── */
