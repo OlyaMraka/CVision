@@ -28,6 +28,9 @@ public static class CvAnalysisConstants
     public static readonly string DbDeleteError
         = "Помилка при видаленні аналізу";
 
+    public static readonly string DbRecoverError
+        = "Помилка при відновленні аналізу";
+
     public static string CvSizeError(int size)
     {
         return $"Розмір файлу не повинен перевищувати {size} MB!";
