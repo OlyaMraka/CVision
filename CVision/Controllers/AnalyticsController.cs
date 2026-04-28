@@ -3,7 +3,7 @@ using CVision.Models.ViewModels.SalaryViewModels;
 using MediatR;
 using AutoMapper;
 using CVision.Helpers.Constants;
-using CVision.BLL.DTOs.Analytics;
+using CVision.Extensions;
 using CVision.BLL.Queries.Analytics;
 
 
@@ -19,6 +19,7 @@ public class AnalyticsController(IMediator mediator, IMapper mapper) : BaseContr
 
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [RateLimit(maxRequests: 5, timeWindowInSeconds: 60)]
     public async Task<IActionResult> SalaryAnalytics(SalaryDataViewModel model)
     {
         if (string.IsNullOrWhiteSpace(model.JobTitle) || string.IsNullOrWhiteSpace(model.City))

@@ -4,6 +4,7 @@ using CVision.BLL.Commands.Users.ForgotPassword;
 using CVision.BLL.Commands.Users.Register;
 using CVision.BLL.Commands.Users.ResetPassword;
 using CVision.BLL.DTOs.Users;
+using CVision.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using CVision.Models.ViewModels.AuthViewModels;
 using MediatR;
@@ -69,6 +70,7 @@ namespace CVision.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [RateLimit(maxRequests: 5, timeWindowInSeconds: 60)]
         public async Task<IActionResult> Login(LogInViewModel model, string? returnUrl = null)
         {
             LoginUserRequestDto requestDto = new LoginUserRequestDto()
@@ -210,6 +212,7 @@ namespace CVision.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [RateLimit(maxRequests: 3, timeWindowInSeconds: 60)]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
             if (!ModelState.IsValid)

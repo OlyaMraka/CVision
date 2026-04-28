@@ -2,6 +2,7 @@ using MediatR;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using CVision.Extensions;
 using CVision.Helpers.Constants;
 using CVision.Models.ViewModels.CVAnalysisViewModels;
 using CVision.BLL.Commands.CvAnalyses.Create;
@@ -26,6 +27,7 @@ public class CvAnalysisController(IMediator mediator, IMapper mapper) : BaseCont
     [HttpPost]
     [Authorize]
     [ValidateAntiForgeryToken]
+    [RateLimit(maxRequests: 5, timeWindowInSeconds: 60)]
     public async Task<IActionResult> Analyze(IFormFile file)
     {
         var userId = GetUserId();
