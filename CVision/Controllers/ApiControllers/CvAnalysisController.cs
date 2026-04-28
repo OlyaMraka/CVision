@@ -1,6 +1,8 @@
 using CVision.BLL.DTOs.CvAnalyses;
 using CVision.BLL.Commands.CvAnalyses.Create;
 using CVision.BLL.Commands.CvAnalyses.Delete;
+using CVision.BLL.Commands.CvAnalyses.Recover;
+using CVision.BLL.Queries.Analytics;
 using CVision.BLL.Queries.CvAnalyses.GetAllCvAnalyses;
 using CVision.BLL.Queries.CvAnalyses.GetByCvAnalysisId;
 using CVision.BLL.Queries.CvAnalyses.GetDeletedCvAnalyses;
@@ -54,6 +56,15 @@ public class CvAnalysisController : BaseApiController
         return Ok(await Mediator.Send(new DeleteCvAnalysisCommand(id)));
     }
 
+    [HttpPost("recover/{id:int}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> RecoverCvAnalysis([FromRoute] int id)
+    {
+        return Ok(await Mediator.Send(new RecoverCvAnalysisCommand(id)));
+    }
+
     [HttpGet("deleted/{id:int}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -79,5 +90,13 @@ public class CvAnalysisController : BaseApiController
     public async Task<IActionResult> GetCvAnalysisById([FromRoute] int id)
     {
         return Ok(await Mediator.Send(new GetCvAnalysisByIdQuery(id)));
+    }
+
+    [HttpGet("market-analytics")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> GetMarketAnalytics([FromQuery] string jobTitle, [FromQuery] string city)
+    {
+        return HandleResult(await Mediator.Send(new GetMarketAnalyticsQuery(jobTitle, city)));
     }
 }

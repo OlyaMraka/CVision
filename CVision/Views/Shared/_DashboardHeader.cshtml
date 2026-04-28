@@ -11,8 +11,12 @@
             CV аналіз
         </a>
         <a class="dashboard-nav__item @(currentPage == "gallery" ? "is-active" : "")" asp-controller="CvAnalysis"
-               asp-action="CVGallery">
+           asp-action="CVGallery">
             Подивитись на CV
+        </a>
+        <a class="dashboard-nav__item @(currentPage == "Analytics" ? "is-active" : "")" 
+           asp-controller="Analytics" asp-action="SalaryAnalytics">
+            Аналітика
         </a>
         <a class="dashboard-nav__item @(currentPage == "Basket" ? "is-active" : "")" asp-controller="Basket"
                asp-action="Index" title="Переглянути видалені CV">

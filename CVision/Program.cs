@@ -33,6 +33,7 @@ builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 builder.Services.AddScoped<ITextExtractor, PdfTextExtractor>();
 builder.Services.AddScoped<ITextExtractor, DocxTextExtractor>();
 builder.Services.AddScoped<ITextExtractor, ImageTextExtractor>();
+builder.Services.AddScoped<IGlassdoorProvider, GlassdoorProvider>();
 
 builder.Services.AddScoped<ICvParserService, CvParserService>();
 builder.Services.AddScoped<IHttpClientService, HttpClientService>();
