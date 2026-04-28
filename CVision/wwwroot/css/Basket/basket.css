@@ -40,3 +40,18 @@
     font-size: 0.75rem;
     font-weight: 600;
 }
+.btn-recover {
+    background: #2c1f1b;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: background 0.3s ease;
+    width: 100%;
+}
+
+.btn-recover:hover {
+    background: #4a352f;
+}

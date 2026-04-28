@@ -10,6 +10,7 @@ using CVision.BLL.DTOs.CvAnalyses;
 using CVision.BLL.Queries.CvAnalyses.GetAllCvAnalyses;
 using CVision.BLL.Queries.CvAnalyses.GetByCvAnalysisId;
 using CVision.BLL.Queries.Vacancies;
+using CVision.BLL.Commands.CvAnalyses.Recover;
 
 namespace CVision.Controllers;
 
@@ -146,5 +147,24 @@ public class CvAnalysisController(IMediator mediator, IMapper mapper) : BaseCont
         }
 
         return View("~/Views/CvAnalysis/CvAnalysisDetails.cshtml", model);
+    }
+
+    [HttpPost]
+    [Authorize]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Recover(int id)
+    {
+        var result = await mediator.Send(new RecoverCvAnalysisCommand(id));
+
+        if (!result.IsSuccess)
+        {
+            // Якщо сталася помилка, показуємо її (використовуючи твій метод ShowError)
+            var errorMessage = result.Error ?? CvAnalysisConstants.RecoverError;
+            var backUrl = Url.Action("CVGallery");
+
+            return ShowError(errorMessage, backUrl!);
+        }
+
+        return RedirectToAction("CVGallery");
     }
 }

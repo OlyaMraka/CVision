@@ -46,4 +46,10 @@ public static class CvAnalysisConstants
 
     public static readonly string DetailsError
             = "Помилка при виведенні деталей!";
+
+    public static readonly string RecoverError
+        = "Помилка при відновленні!";
+
+    public static readonly string RecoverButton
+        = "Відновити";
 }
