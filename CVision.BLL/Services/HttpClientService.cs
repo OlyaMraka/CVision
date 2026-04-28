@@ -1,3 +1,4 @@
+using System.Net.Http.Json;
 using CVision.BLL.Interfaces;
 
 namespace CVision.BLL.Services;
@@ -32,5 +33,22 @@ public class HttpClientService : IHttpClientService
         response.EnsureSuccessStatusCode();
 
         return response;
+    }
+
+    public async Task<T?> GetFromJsonAsync<T>(string url, IDictionary<string, string>? headers = null)
+    {
+        using var request = new HttpRequestMessage(HttpMethod.Get, url);
+        if (headers != null)
+        {
+            foreach (var header in headers)
+            {
+                request.Headers.Add(header.Key, header.Value);
+            }
+        }
+
+        var response = await _client.SendAsync(request);
+        response.EnsureSuccessStatusCode();
+
+        return await response.Content.ReadFromJsonAsync<T>();
     }
 }
