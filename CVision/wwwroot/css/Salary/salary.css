@@ -1,119 +1,199 @@
-
-.salary-analytics {
-    padding: .5rem 0 3rem;
+/* ── Сторінка ── */
+.dashboard-page {
+    min-height: 100vh;
+    background: #fef9f7;
+    position: relative;
 }
 
+.dashboard-page__gradient {
+    position: fixed;
+    inset: 0;
+    background:
+            radial-gradient(circle at 12% 86%, rgba(174, 192, 186, 0.55), transparent 30%),
+            radial-gradient(circle at 87% 18%, rgba(232, 189, 142, 0.52), transparent 28%),
+            linear-gradient(120deg, #f6efe2 0%, #f3e7d2 42%, #efd3b5 100%);
+    z-index: 0;
+    pointer-events: none;
+}
+
+.hub {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: calc(64px + 2rem) 1.5rem 3rem;
+    position: relative;
+    z-index: 1;
+}
+
+/* ── Хедер ── */
+.cv-gallery__header {
+    padding-top: 0.5rem;
+    margin-bottom: 1.75rem !important;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.cv-gallery__header h2 {
+    font-size: 28px;
+    font-weight: 800;
+    color: #2c1f1b;
+    letter-spacing: -0.03em;
+    margin: 0 0 0.75rem;
+    line-height: 1.2;
+}
+
+.cv-gallery__header p {
+    font-size: 13px;
+    color: #c4a49c;
+    margin: 0;
+    line-height: 1.6;
+    padding-top: 0.75rem;
+    border-top: 1px solid #f0d8d1;
+}
+
+/* ── Панель пошуку ── */
 .search-panel {
-    background: rgba(255, 255, 255, .75);
+    background: rgba(255, 255, 255, 0.82);
     backdrop-filter: blur(16px);
-    border-radius: 16px;
-    padding: 1.5rem;
-    box-shadow: 0 4px 20px rgba(0,0,0,.07);
+    border-radius: 20px;
+    padding: 2rem;
     border: 1px solid #f0d8d1;
+    box-shadow: 0 4px 24px rgba(230, 150, 120, 0.08);
     margin-bottom: 2rem;
 }
 
+.search-panel .row {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 1rem;
+    align-items: end;
+}
+
 .search-panel label {
-    font-size: .7rem;
+    font-size: 10px;
     font-weight: 700;
-    letter-spacing: .08em;
     text-transform: uppercase;
-    color: #c0a888;
-    margin-bottom: .5rem;
+    letter-spacing: 0.08em;
+    color: #d4957f;
+    margin-bottom: 0.4rem;
     display: block;
 }
 
 .search-panel .form-control {
-    border: 1px solid #e2d5d1;
-    border-radius: 8px;
-    padding: 10px 12px;
-    font-size: .85rem;
-    background: rgba(255,255,255,.5);
+    border: 1.5px solid #f5ddd4;
+    border-radius: 12px;
+    padding: 0.75rem 1rem;
+    font-size: 13.5px;
+    background: #fff;
+    color: #2c1f1b;
+    outline: none;
+    width: 100%;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    font-family: inherit;
+}
+
+.search-panel .form-control::placeholder {
+    color: #c4a49c;
 }
 
 .search-panel .form-control:focus {
-    border-color: #c47a6a;
-    box-shadow: 0 0 0 0.25rem rgba(196, 122, 106, 0.15);
+    border-color: #e8907c;
+    box-shadow: 0 0 0 3px rgba(232, 144, 124, 0.12);
     background: #fff;
 }
 
+/* ── Кнопка аналізу ── */
 .btn-analyze {
-    background: #2c1f1b;
-    color: white;
+    padding: 0.75rem 1.75rem;
+    background: #e8907c;
+    color: #fff;
     border: none;
-    border-radius: 10px;
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 13.5px;
     font-weight: 700;
-    font-size: .85rem;
-    transition: transform .2s, background .2s;
-    height: 42px;
+    cursor: pointer;
+    white-space: nowrap;
+    height: 46px;
+    transition: background 0.2s, transform 0.15s;
 }
 
 .btn-analyze:hover {
-    background: #45322c;
+    background: #de7d68;
     transform: translateY(-1px);
 }
 
-/* Картки результатів */
+.btn-analyze:active {
+    transform: scale(0.98);
+}
+
+/* ── Сітка карток зарплат ── */
 .salary-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 1.25rem;
 }
 
+/* ── Картка зарплати ── */
 .salary-card {
-    background: rgba(255, 255, 255, .75);
+    background: rgba(255, 255, 255, 0.82);
     backdrop-filter: blur(16px);
-    border-radius: 16px;
+    border-radius: 18px;
     padding: 1.5rem;
-    box-shadow: 0 4px 20px rgba(0,0,0,.07);
-    border-left: 5px solid #c47a6a;
-    transition: transform .25s ease, box-shadow .25s ease;
+    border: 1px solid #f5ddd4;
+    border-left: 4px solid #e8907c;
+    box-shadow: 0 4px 20px rgba(230, 150, 120, 0.07);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .salary-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 10px 32px rgba(0,0,0,.12);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 32px rgba(230, 150, 120, 0.15);
 }
 
 .salary-card__company {
-    font-size: 1rem;
+    font-size: 15px;
     font-weight: 700;
-    color: #1a1a1a;
-    margin-bottom: .2rem;
+    color: #2c1f1b;
+    margin: 0 0 0.3rem;
 }
 
 .salary-card__position {
     display: inline-block;
-    font-size: .7rem;
+    font-size: 10px;
     font-weight: 700;
-    padding: .2rem .6rem;
-    background: #f0d8d1;
-    color: #2c1f1b;
-    border-radius: 6px;
+    padding: 3px 10px;
+    background: #faeae4;
+    color: #c47a6a;
+    border-radius: 999px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
     margin-bottom: 1rem;
 }
 
 .salary-card__amount {
-    font-size: 1.5rem;
+    font-size: 22px;
     font-weight: 800;
-    color: #c47a6a;
+    color: #e8907c;
+    letter-spacing: -0.02em;
 }
 
 .salary-card__period {
-    font-size: .7rem;
+    font-size: 10px;
     font-weight: 700;
     text-transform: uppercase;
-    color: #999;
+    color: #c4a49c;
+    letter-spacing: 0.06em;
 }
 
-/* Процентилі */
+/* ── Процентилі ── */
 .percentile-title {
-    font-size: .7rem;
+    font-size: 10px;
     font-weight: 700;
-    letter-spacing: .05em;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: #c0a888;
-    margin: 1.2rem 0 .8rem;
+    color: #d4957f;
+    margin: 1.25rem 0 0.75rem;
 }
 
 .percentile-grid {
@@ -124,25 +204,51 @@
 
 .percentile-item {
     background: #faf7f6;
-    padding: .5rem .8rem;
-    border-radius: 8px;
+    padding: 0.5rem 0.875rem;
+    border-radius: 10px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    border: 1px solid #f5ddd4;
 }
 
 .percentile-item__label {
-    font-size: .7rem;
+    font-size: 10px;
     font-weight: 700;
-    color: #999;
+    color: #c4a49c;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
 }
 
 .percentile-item__value {
-    font-size: .75rem;
+    font-size: 12px;
     font-weight: 700;
     color: #2c1f1b;
 }
 
+/* ── Адаптив ── */
 @media (max-width: 992px) {
-    .salary-grid { grid-template-columns: 1fr; }
+    .salary-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .search-panel .row {
+        grid-template-columns: 1fr;
+    }
+
+    .btn-analyze {
+        width: 100%;
+        height: auto;
+        padding: 0.75rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .hub {
+        padding: calc(64px + 1.25rem) 1rem 2rem;
+    }
+
+    .search-panel {
+        padding: 1.25rem;
+    }
 }

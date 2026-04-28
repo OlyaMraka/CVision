@@ -35,6 +35,6 @@ public class AnalyticsController(IMediator mediator, IMapper mapper) : BaseContr
 
         model.Records = mapper.Map<IEnumerable<SalaryItemViewModel>>(result.Value);
 
-        return View(model);
+        return View("~/Views/Salary/Salary.cshtml", model);
     }
 }
