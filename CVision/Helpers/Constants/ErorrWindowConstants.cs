@@ -21,6 +21,9 @@ public static class ErorrWindowConstants
     public static readonly string Error408
         = "Сервер занадто довго чекав на відповідь. Перевірте з'єднання.";
 
+    public static readonly string Error429
+        = "Занадто багато запитів. Зачекайте хвилину і спробуйте ще раз.";
+
     public static readonly string Error500
         = "На сервері щось зламалося. Наші розробники вже отримали сповіщення.";
 

@@ -18,6 +18,7 @@ public class ErrorsController : Controller
             403 => ErorrWindowConstants.Error403,
             404 => ErorrWindowConstants.Error404,
             408 => ErorrWindowConstants.Error408,
+            429 => ErorrWindowConstants.Error429,
             500 => ErorrWindowConstants.Error500,
             _ => ErorrWindowConstants.UnknownError,
         };
