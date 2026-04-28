@@ -1,0 +1,148 @@
+
+.salary-analytics {
+    padding: .5rem 0 3rem;
+}
+
+.search-panel {
+    background: rgba(255, 255, 255, .75);
+    backdrop-filter: blur(16px);
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,.07);
+    border: 1px solid #f0d8d1;
+    margin-bottom: 2rem;
+}
+
+.search-panel label {
+    font-size: .7rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: #c0a888;
+    margin-bottom: .5rem;
+    display: block;
+}
+
+.search-panel .form-control {
+    border: 1px solid #e2d5d1;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: .85rem;
+    background: rgba(255,255,255,.5);
+}
+
+.search-panel .form-control:focus {
+    border-color: #c47a6a;
+    box-shadow: 0 0 0 0.25rem rgba(196, 122, 106, 0.15);
+    background: #fff;
+}
+
+.btn-analyze {
+    background: #2c1f1b;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: .85rem;
+    transition: transform .2s, background .2s;
+    height: 42px;
+}
+
+.btn-analyze:hover {
+    background: #45322c;
+    transform: translateY(-1px);
+}
+
+/* Картки результатів */
+.salary-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+}
+
+.salary-card {
+    background: rgba(255, 255, 255, .75);
+    backdrop-filter: blur(16px);
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,.07);
+    border-left: 5px solid #c47a6a;
+    transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.salary-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 32px rgba(0,0,0,.12);
+}
+
+.salary-card__company {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: .2rem;
+}
+
+.salary-card__position {
+    display: inline-block;
+    font-size: .7rem;
+    font-weight: 700;
+    padding: .2rem .6rem;
+    background: #f0d8d1;
+    color: #2c1f1b;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+}
+
+.salary-card__amount {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #c47a6a;
+}
+
+.salary-card__period {
+    font-size: .7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #999;
+}
+
+/* Процентилі */
+.percentile-title {
+    font-size: .7rem;
+    font-weight: 700;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    color: #c0a888;
+    margin: 1.2rem 0 .8rem;
+}
+
+.percentile-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+}
+
+.percentile-item {
+    background: #faf7f6;
+    padding: .5rem .8rem;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.percentile-item__label {
+    font-size: .7rem;
+    font-weight: 700;
+    color: #999;
+}
+
+.percentile-item__value {
+    font-size: .75rem;
+    font-weight: 700;
+    color: #2c1f1b;
+}
+
+@media (max-width: 992px) {
+    .salary-grid { grid-template-columns: 1fr; }
+}

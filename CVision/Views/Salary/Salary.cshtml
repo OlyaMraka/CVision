@@ -1,0 +1,82 @@
+@using CVision.Helpers.Constants;
+@model CVision.Models.ViewModels.SalaryViewModels.SalaryDataViewModel
+
+@{
+    ViewData["Title"] = "Аналітика ринку";
+    ViewData["DashboardCurrentPage"] = "Analytics";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/HubUser.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Salary/salary.css" asp-append-version="true" />
+}
+
+<div class="dashboard-page dashboard-page--hub">
+    <div class="dashboard-page__gradient"></div>
+    
+    <partial name="~/Views/Shared/_DashboardHeader.cshtml" />
+
+    <main class="hub">
+        <div class="salary-analytics container">
+            
+            <div class="cv-gallery__header mb-4">
+                <h2 class="fw-bold">@SalaryConstants.Analytic</h2>
+                <p>@SalaryConstants.Data</p>
+            </div>
+
+            <div class="search-panel">
+                <form asp-action="SalaryAnalytics" method="post" class="row g-3">
+                    <div class="col-md-5">
+                        <label>@SalaryConstants.Position</label>
+                        <input asp-for="JobTitle" class="form-control" placeholder=@SalaryConstants.Example2 required>
+                    </div>
+                    <div class="col-md-5">
+                        <label>@SalaryConstants.City</label>
+                        <input asp-for="City" class="form-control" placeholder=@SalaryConstants.Example1 required>
+                    </div>
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button type="submit" class="btn-analyze w-100">
+                            @SalaryConstants.Analyze
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            @if (Model?.Records != null && Model.Records.Any())
+            {
+                <div class="salary-grid">
+                    @foreach (var record in Model.Records)
+                    {
+                        <div class="salary-card">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h4 class="salary-card__company">@record.Employer.Name</h4>
+                                    <span class="salary-card__position">@record.JobTitle.Text</span>
+                                </div>
+                                <div class="text-end">
+                                    <div class="salary-card__amount">
+                                        ₴@record.BasePayStatistics.Mean.ToString("N0")
+                                    </div>
+                                    <span class="salary-card__period">@record.PayPeriod</span>
+                                </div>
+                            </div>
+
+                            <div class="percentile-title">Розподіл (Percentiles)</div>
+                            
+                            <div class="percentile-grid">
+                                @foreach (var p in record.TotalPayStatistics.Percentiles.OrderBy(x => x.Ident))
+                                {
+                                    <div class="percentile-item">
+                                        <span class="percentile-item__label">@p.Ident</span>
+                                        <span class="percentile-item__value">₴@p.Value.ToString("N0")</span>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </main>
+</div>
