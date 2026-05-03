@@ -1,136 +1,127 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Manrope:wght@400;500;600;700&display=swap');
+
+:root {
+    --peach: #e8907c;
+    --peach-soft: #fff4f0;
+    --warm-dark: #2c1f1b;
+    --muted: #7a6560;
+    --glass: rgba(255, 255, 255, 0.78);
+    --border: rgba(196, 122, 106, 0.14);
+}
+
+/* GRID */
 .vacancies-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     gap: 1rem;
 }
 
+/* CARD */
 .vacancy-card {
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(8px);
-    border: 1px solid #f5ddd4;
+    padding: 1.2rem 1.2rem 1rem;
     border-radius: 18px;
-    padding: 0;
+    background: var(--glass);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.85);
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.06);
     display: flex;
     flex-direction: column;
-    overflow: hidden;
-    transition: box-shadow 0.2s, transform 0.2s;
+    justify-content: space-between;
+    min-height: 180px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .vacancy-card:hover {
-    box-shadow: 0 8px 32px rgba(230, 150, 120, 0.18);
-    transform: translateY(-2px);
+    transform: translateY(-3px);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.1);
 }
 
-.vacancy-card::before {
-    content: '';
-    display: block;
-    height: 4px;
-    background: linear-gradient(90deg, #f4b8a5, #e8907c);
-    flex-shrink: 0;
-}
-
+/* TOP */
 .vacancy-top {
-    padding: 1.25rem 1.5rem 1rem;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
-    flex: 1;
+    gap: 0.35rem;
 }
 
 .vacancy-source {
-    font-size: 10px;
-    font-weight: 700;
+    font-size: 0.7rem;
+    font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: #e8907c;
-    background: #faeae4;
-    padding: 3px 10px;
-    border-radius: 999px;
-    align-self: flex-start;
+    color: var(--peach);
 }
 
 .vacancy-title {
-    font-size: 14px;
-    font-weight: 700;
-    color: #2c1f1b;
-    line-height: 1.45;
     margin: 0;
-    letter-spacing: -0.01em;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    font-weight: 800;
+    line-height: 1.2;
+    color: var(--warm-dark);
 }
 
 .vacancy-company {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 12px;
-    color: #c4a49c;
-    font-weight: 500;
     margin: 0;
-}
-
-.vacancy-company::before {
-    content: '';
-    display: block;
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: #f4b8a5;
-    flex-shrink: 0;
-}
-
-.vacancy-footer {
-    padding: 0.875rem 1.5rem;
-    border-top: 1px solid #faeae4;
-}
-
-.btn-vacancy-link {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    padding: 0.6rem 1rem;
-    background: #faeae4;
-    border: none;
-    border-radius: 10px;
-    font-size: 13px;
+    font-size: 0.85rem;
     font-weight: 600;
-    color: #c47a6a;
-    text-decoration: none;
-    width: 100%;
-    transition: background 0.2s, color 0.2s;
+    color: var(--muted);
 }
 
-.btn-vacancy-link svg {
-    transition: transform 0.2s, stroke 0.2s;
-    flex-shrink: 0;
+/* FOOTER */
+.vacancy-footer {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* BUTTON */
+.btn-vacancy-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.55rem 0.9rem;
+    border-radius: 12px;
+    background: var(--peach);
+    color: #fff;
+    font-family: 'Manrope', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    box-shadow: 0 8px 18px rgba(232, 144, 124, 0.22);
 }
 
 .btn-vacancy-link:hover {
-    background: #e8907c;
-    color: #fff;
+    background: #de7d68;
+    transform: translateY(-1px);
+}
+
+.btn-vacancy-link svg {
+    transition: transform 0.2s ease;
 }
 
 .btn-vacancy-link:hover svg {
     transform: translate(2px, -2px);
-    stroke: #fff;
 }
 
+/* EMPTY STATE */
 .no-vacancies {
-    font-size: 13.5px;
-    color: #c4a49c;
+    padding: 1rem;
+    font-size: 0.9rem;
+    color: var(--muted);
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px dashed rgba(196, 122, 106, 0.25);
+    border-radius: 14px;
     text-align: center;
-    padding: 2rem;
-    grid-column: 1 / -1;
 }
 
-@media (max-width: 900px) {
-    .vacancies-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (max-width: 600px) {
+/* RESPONSIVE */
+@media (max-width: 768px) {
     .vacancies-grid {
         grid-template-columns: 1fr;
+    }
+
+    .vacancy-card {
+        min-height: auto;
     }
 }
