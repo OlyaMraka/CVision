@@ -1,219 +1,214 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Manrope:wght@400;500;600;700&display=swap');
 
-.cv-gallery {
-    padding: .5rem 0 3rem;
-}
-
-
-.cv-gallery__grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1.25rem;
-}
-
-
-.cv-card-item {
-    background: rgba(255,255,255,.75);
-    backdrop-filter: blur(16px);
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 4px 20px rgba(0,0,0,.07);
-    transition: transform .25s ease, box-shadow .25s ease;
-    cursor: pointer;
+/* ── Сторінка ── */
+.gallery-page {
+    min-height: 100vh;
+    background: #f6efe2;
     position: relative;
-}
-.cv-card-actions {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    z-index: 5;
-    opacity: 0; 
-    transition: opacity 0.3s ease;
+    font-family: 'Manrope', sans-serif;
 }
 
-.cv-card-item:hover .cv-card-actions {
-    opacity: 1; 
+.gallery-page__gradient {
+    position: fixed;
+    inset: 0;
+    background:
+            radial-gradient(circle at 12% 86%, rgba(174, 192, 186, 0.55), transparent 30%),
+            radial-gradient(circle at 87% 18%, rgba(232, 189, 142, 0.52), transparent 28%),
+            linear-gradient(120deg, #f6efe2 0%, #f3e7d2 42%, #efd3b5 100%);
+    z-index: 0;
+    pointer-events: none;
 }
 
-
-.btn-comment-action {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    border: 1px solid #f0d8d1;
-    background: #fff7f4;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
-}
-
-.btn-comment-action:hover {
-    background-color: #faede9;
-    box-shadow: 0 4px 10px rgba(196, 122, 106, 0.18);
-    transform: translateY(-1px);
-}
-
-.btn-comment-action.delete:hover {
-    background-color: #fff1ee;
-}
-
-.comment-action-icon {
-    width: 15px;
-    height: 15px;
-    object-fit: contain;
-}
-
-
-@media (max-width: 768px) {
-    .cv-card-actions {
-        opacity: 1;
-    }
-}
-
-.cv-card-item:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 10px 32px rgba(0,0,0,.12);
-}
-
-
-.cv-card-item__preview {
-    width: 100%;
-    background: #f0e8dc;
-    overflow: hidden;
+/* ── Контент ── */
+.gallery-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: calc(64px + 2rem) 1.5rem 3rem;
     position: relative;
-    height: 400px;
-    border-radius: 16px;
+    z-index: 1;
 }
 
-.cv-card-item__img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    display: block;
-}
-
-
-.cv-card-item__placeholder {
-    width: 100%;
-    height: 100%;
+/* ── Порожній стан ── */
+.gallery-empty {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: .5rem;
-    color: #c0a888;
-}
-
-.cv-card-item__placeholder span {
-    font-size: .7rem;
-    font-weight: 700;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-    color: #c0a888;
-}
-
-
-.cv-card-item__body {
-    padding: 1rem 1rem .9rem;
-}
-
-.cv-card-item__title {
-    font-size: .85rem;
-    font-weight: 700;
-    color: #1a1a1a;
-    margin-bottom: .4rem;
-}
-
-
-.cv-card-item__feedback {
-    font-size: .78rem;
-    color: #666;
-    line-height: 1.5;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;     
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    margin-bottom: .75rem;
-
-    
-    -webkit-mask-image: linear-gradient(
-            to bottom,
-            black 50%,
-            transparent 100%
-    );
-    mask-image: linear-gradient(
-            to bottom,
-            black 50%,
-            transparent 100%
-    );
-}
-
-
-.cv-card-item__link {
-    display: inline-flex;
-    align-items: center;
-    gap: .3rem;
-    font-size: .78rem;
-    font-weight: 600;
-    color: #c47c2a;
-    text-decoration: none;
-    transition: gap .2s, opacity .2s;
-}
-
-.cv-card-item__link:hover {
-    gap: .5rem;
-    opacity: .8;
-}
-
-.cv-gallery__empty {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 4rem 2rem;
+    gap: 1rem;
+    padding: 5rem 2rem;
+    background: rgba(255, 255, 255, 0.55);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(232, 189, 142, 0.25);
+    border-radius: 20px;
     text-align: center;
 }
 
-.cv-gallery__empty-icon {
-    width: 72px;
-    height: 72px;
+.gallery-empty__icon {
+    width: 64px;
+    height: 64px;
+    background: rgba(232, 144, 124, 0.1);
     border-radius: 50%;
-    background: #fef3e2;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #c47c2a;
-    margin-bottom: 1.2rem;
+    color: #e8907c;
 }
 
-.cv-gallery__empty-title {
-    font-size: 1.1rem;
+.gallery-empty__title {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
     font-weight: 700;
-    color: #1a1a1a;
-    margin-bottom: .5rem;
+    color: #2c1f1b;
+    margin: 0;
 }
 
-.cv-gallery__empty-text {
-    font-size: .88rem;
-    color: #999;
+.gallery-empty__text {
+    font-size: 13px;
+    color: #a08878;
+    margin: 0;
+    line-height: 1.6;
+    max-width: 320px;
 }
 
-.cv-card-item__preview iframe {
+/* ── Сітка ── */
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.25rem;
+}
+
+.resume-card {
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(232, 189, 142, 0.25);
+    border-radius: 18px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.resume-card:hover {
+    box-shadow: 0 8px 32px rgba(174, 130, 100, 0.14);
+    transform: translateY(-2px);
+}
+
+.resume-card__actions {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 10;
+}
+
+.resume-card__delete-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(8px);
+    border-radius: 8px;
+    border: 1px solid rgba(232, 189, 142, 0.3);
+    transition: background 0.2s, border-color 0.2s;
+    text-decoration: none;
+}
+
+.resume-card__delete-btn:hover {
+    background: #faeae4;
+    border-color: #e8907c;
+}
+
+.resume-card__delete-icon {
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
+}
+
+.resume-card__preview {
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    background: rgba(246, 239, 226, 0.8);
+    overflow: hidden;
+}
+
+.resume-card__preview-img,
+.resume-card__preview-frame {
     width: 100%;
     height: 100%;
+    object-fit: cover;
     border: none;
-    
+    display: block;
 }
 
-@media (max-width: 1100px) {
-    .cv-gallery__grid { grid-template-columns: repeat(3, 1fr); }
+.resume-card__preview-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: #a08878;
 }
 
-@media (max-width: 768px) {
-    .cv-gallery__grid { grid-template-columns: repeat(2, 1fr); }
+.resume-card__body {
+    padding: 1.1rem 1.25rem 1.25rem;
+    border-top: 1px solid rgba(232, 189, 142, 0.2);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 }
 
-@media (max-width: 480px) {
-    .cv-gallery__grid { grid-template-columns: 1fr; }
+.resume-card__title {
+    font-family: 'Playfair Display', serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: #2c1f1b;
+    margin: 0;
+    letter-spacing: -0.01em;
+}
+
+.resume-card__feedback {
+    font-size: 12.5px;
+    color: #a08878;
+    line-height: 1.6;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.resume-card__details-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #c47a6a;
+    text-decoration: none;
+    margin-top: 0.25rem;
+    transition: color 0.2s, gap 0.2s;
+}
+
+.resume-card__details-link:hover {
+    color: #e8907c;
+    gap: 8px;
+}
+
+@media (max-width: 900px) {
+    .gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .gallery-content {
+        padding: calc(64px + 1.25rem) 1rem 2rem;
+    }
+
+    .gallery-grid {
+        grid-template-columns: 1fr;
+    }
 }

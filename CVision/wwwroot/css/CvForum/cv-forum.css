@@ -1,42 +1,53 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Manrope:wght@400;500;600;700&display=swap');
+
+/* ── Сторінка ── */
 .cv-forum-main-block {
+    min-height: 100vh;
     max-width: 1200px;
     margin: 0 auto;
-    padding: calc(64px + 2rem) 1.5rem 2rem;
+    padding: calc(64px + 2rem) 1.5rem 3rem;
+    position: relative;
+    z-index: 1;
     display: flex;
     flex-direction: column;
     gap: 2rem;
+    font-family: 'Manrope', sans-serif;
 }
 
+/* ── Хедер сторінки ── */
 .cv-forum-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
     gap: 1.5rem;
     padding-bottom: 1.5rem;
-    border-bottom: 1px solid #faeae4;
+    border-bottom: 1px solid rgba(232, 189, 142, 0.4);
 }
 
 .title-section {
     display: flex;
     flex-direction: column;
-    gap: 0.4rem;
+    gap: 0.75rem;
 }
 
 .cv-forum-title {
-    font-size: 26px;
-    font-weight: 700;
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 800;
     color: #2c1f1b;
     letter-spacing: -0.02em;
+    line-height: 1.2;
     margin: 0;
 }
 
 .cv-forum-subtitle {
-    font-size: 13.5px;
-    color: #c4a49c;
-    line-height: 1.5;
+    font-size: 13px;
+    color: #a08878;
     margin: 0;
+    line-height: 1.6;
 }
 
+/* ── Тулбар ── */
 .cv-forum-toolbar {
     display: flex;
     align-items: center;
@@ -44,21 +55,25 @@
     flex-shrink: 0;
 }
 
+/* ── Перемикач Усі / Мої ── */
 .publications-buttons {
     display: flex;
     gap: 0.25rem;
-    background: #faeae4;
-    border-radius: 10px;
-    padding: 3px;
+    background: rgba(255, 255, 255, 0.55);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(232, 189, 142, 0.3);
+    border-radius: 12px;
+    padding: 4px;
 }
 
 .publications-buttons a {
+    font-family: 'Manrope', sans-serif;
     font-size: 13px;
     font-weight: 600;
-    color: #c47a6a;
+    color: #a08878;
     text-decoration: none;
     padding: 0.4rem 1rem;
-    border-radius: 8px;
+    border-radius: 9px;
     transition: background 0.2s, color 0.2s;
 }
 
@@ -68,48 +83,50 @@
     color: #e8907c;
 }
 
+/* ── Кнопка створення ── */
 .cv-forum-toolbar > a {
+    font-family: 'Manrope', sans-serif;
     font-size: 13px;
-    font-weight: 600;
+    font-weight: 700;
     color: #fff;
     text-decoration: none;
     background: #e8907c;
-    border-radius: 10px;
-    padding: 0.5rem 1.25rem;
-    transition: background 0.2s;
+    border-radius: 12px;
+    padding: 0.55rem 1.25rem;
+    transition: background 0.2s, transform 0.15s;
     white-space: nowrap;
 }
 
-.cv-forum-toolbar > a:hover { background: #de7d68; }
+.cv-forum-toolbar > a:hover {
+    background: #de7d68;
+    transform: translateY(-1px);
+}
 
+/* ── Сітка карток ── */
 .publications-list-block {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1.25rem;
 }
 
-.publications-buttons a.active {
-    background: #fff;
-    color: #e8907c;
+/* ── Адаптив ── */
+@media (max-width: 1024px) {
+    .publications-list-block {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 768px) {
     .cv-forum-header {
         flex-direction: column;
         align-items: flex-start;
     }
 
     .publications-list-block {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (max-width: 600px) {
-    .cv-forum-main-block {
-        padding: calc(64px + 1.25rem) 1rem 1.5rem;
-    }
-
-    .publications-list-block {
         grid-template-columns: 1fr;
+    }
+
+    .cv-forum-main-block {
+        padding: calc(64px + 1.25rem) 1rem 2rem;
     }
 }

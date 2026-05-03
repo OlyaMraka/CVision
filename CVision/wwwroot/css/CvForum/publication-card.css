@@ -1,38 +1,44 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Manrope:wght@400;500;600;700&display=swap');
+
+/* ── Картка публікації ── */
 .publication-card-block {
-    background: #fff;
-    border: 1px solid #f5ddd4;
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(232, 189, 142, 0.25);
     border-radius: 18px;
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    font-family: 'Manrope', sans-serif;
     transition: box-shadow 0.2s, transform 0.2s;
-    cursor: pointer;
 }
 
 .publication-card-block:hover {
-    box-shadow: 0 8px 32px rgba(230, 150, 120, 0.13);
+    box-shadow: 0 8px 32px rgba(174, 130, 100, 0.14);
     transform: translateY(-2px);
 }
 
+/* ── Заголовок ── */
 .publication-title {
-    font-size: 14px;
-    font-weight: 600;
+    font-family: 'Playfair Display', serif;
+    font-size: 15px;
+    font-weight: 700;
     color: #2c1f1b;
     padding: 1.1rem 1.25rem 0.75rem;
-    line-height: 1.4;
     margin: 0;
+    line-height: 1.4;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    border-bottom: 1px solid rgba(232, 189, 142, 0.2);
 }
 
 /* ── Превʼю файлу ── */
 .file-preview-container {
     width: 100%;
     aspect-ratio: 3 / 4;
-    background: #faeae4;
+    background: rgba(246, 239, 226, 0.8);
     overflow: hidden;
-    position: relative;
 }
 
 .file-preview-container img,
@@ -44,13 +50,14 @@
     display: block;
 }
 
+/* ── Додаткова інфо ── */
 .additional-info {
-    padding: 0.875rem 1.25rem 1.1rem;
+    padding: 0.875rem 1.25rem;
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
     gap: 0.5rem;
-    border-top: 1px solid #faeae4;
+    border-top: 1px solid rgba(232, 189, 142, 0.2);
 }
 
 .author-block,
@@ -67,8 +74,8 @@
 .author-block h5,
 .published-at-block h5 {
     font-size: 10px;
-    font-weight: 600;
-    color: #d4957f;
+    font-weight: 700;
+    color: #c47a6a;
     letter-spacing: 0.06em;
     text-transform: uppercase;
     margin: 0;
@@ -81,24 +88,27 @@
     color: #7a6560;
 }
 
+/* ── Кнопка детальніше ── */
 .operation-btn {
     display: block;
     width: calc(100% - 2.5rem);
     margin: 0 1.25rem 1.1rem;
     padding: 0.65rem;
     background: transparent;
-    border: 1.5px solid #f0b8a4;
+    border: 1.5px solid rgba(232, 189, 142, 0.5);
     border-radius: 10px;
+    font-family: 'Manrope', sans-serif;
     font-size: 13px;
     font-weight: 600;
     color: #c47a6a;
-    cursor: pointer;
     text-align: center;
+    text-decoration: none;
+    cursor: pointer;
     transition: background 0.2s, border-color 0.2s, color 0.2s;
 }
 
 .operation-btn:hover {
-    background: #faeae4;
+    background: rgba(232, 144, 124, 0.1);
     border-color: #e8907c;
     color: #e8907c;
 }

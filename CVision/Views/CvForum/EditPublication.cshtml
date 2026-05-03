@@ -15,11 +15,12 @@
     <partial name="~/Views/Shared/_DashboardHeader.cshtml" />
     
     <form asp-controller="Publication" asp-action="EditPublication" method="post">
-        <input type="hidden" asp-for="Id" />
+        <h2 class="edit-title">Редагування допису</h2>
+        <input type="hidden" asp-for="Id"/>
 
         <div class="form-group">
             <label>Назва допису</label>
-            <input asp-for="Title" class="form-control" type="text" />
+            <input asp-for="Title" class="form-control" type="text"/>
             <span asp-validation-for="Title" class="text-danger"></span>
         </div>
 

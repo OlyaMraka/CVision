@@ -10,84 +10,81 @@
 
 @section Styles {
     <link rel="stylesheet" href="~/css/HubUser.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/CVGallery.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/Basket/basket.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/CvForum/publication-page.css" asp-append-version="true" />
 }
 
-<div class="dashboard-page dashboard-page--hub">
-    <div class="dashboard-page__gradient"></div>
+<div class="basket-page">
+    <div class="basket-page__gradient"></div>
     <partial name="~/Views/Shared/_DashboardHeader.cshtml" />
 
-    <main class="hub">
-        <div class="cv-gallery">
-            <div class="cv-gallery__header">
-                <h2>Мій кошик</h2>
-                <p>Файли тут зберігаються до повного видалення. Ви можете переглянути їх перед очищенням.</p>
-            </div>
+    <main class="basket-content">
 
-            @if (Model?.Items == null || !Model.Items.Any())
-            {
-                <div class="cv-gallery__empty">
-                    <div class="cv-gallery__empty-icon">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M3 6h18m-2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                        </svg>
-                    </div>
-                    <div class="cv-gallery__empty-title">Кошик порожній</div>
-                </div>
-            }
-            else
-            {
-                <div class="cv-gallery__grid">
-                    @foreach (var item in Model.Items)
-                    {
-                        <div class="cv-card-item cv-card-item--trash">
-                            
-                            <div class="file-preview-container">
-                                @{
-                                    var fileUrl = item.FilePath;
-                                }
-
-                                @if (FileUtils.IsImage(fileUrl))
-                                {
-                                    <img src="@fileUrl" class="img-fluid"/>
-                                }
-                                else if (FileUtils.IsDocx(fileUrl))
-                                {
-                                    var encodedUrl = System.Net.WebUtility.UrlEncode(fileUrl);
-                                    <iframe src="https://view.officeapps.live.com/op/embed.aspx?src=@encodedUrl"></iframe>
-                                }
-                                else if (FileUtils.IsPdf(fileUrl))
-                                {
-                                    <iframe src="@fileUrl#toolbar=0"></iframe>
-                                }
-                            </div>
-
-                            <div class="cv-card-item__body">
-                                <h3 class="cv-card-item__title">Резюме #@item.Id</h3>
-                                
-                                <div class="cv-trash-timer">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke-width="2">
-                                        <circle cx="12" cy="12" r="10"></circle>
-                                        <polyline points="12 6 12 12 16 14"></polyline>
-                                    </svg>
-                                    <span class="cv-trash-timer__text">
-                                        @item.DeletionNotice
-                                    </span>
-                                </div>
-                                <form asp-action="Recover" asp-controller="CvAnalysis" method="post" class="mt-3">
-                                    @Html.AntiForgeryToken()
-                                    <input type="hidden" name="id" value="@item.Id" />
-                                    <button type="submit" class="btn-recover">
-                                        @CvAnalysisConstants.RecoverButton
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                    }
-                </div>
-            }
+        <div class="basket-header">
+            <h2 class="basket-header__title">Мій кошик</h2>
+            <p class="basket-header__subtitle">Файли тут зберігаються до повного видалення. Ви можете переглянути їх перед очищенням.</p>
         </div>
+
+        @if (Model?.Items == null || !Model.Items.Any())
+        {
+            <div class="basket-empty">
+                <div class="basket-empty__icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 6h18m-2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    </svg>
+                </div>
+                <p class="basket-empty__text">Кошик порожній</p>
+            </div>
+        }
+        else
+        {
+            <div class="basket-grid">
+                @foreach (var item in Model.Items)
+                {
+                    <div class="basket-card">
+
+                        <div class="basket-card__preview">
+                            @{
+                                var fileUrl = item.FilePath;
+                            }
+                            @if (FileUtils.IsImage(fileUrl))
+                            {
+                                <img src="@fileUrl" alt="CV Preview" />
+                            }
+                            else if (FileUtils.IsDocx(fileUrl))
+                            {
+                                var encodedUrl = System.Net.WebUtility.UrlEncode(fileUrl);
+                                <iframe src="https://view.officeapps.live.com/op/embed.aspx?src=@encodedUrl"></iframe>
+                            }
+                            else if (FileUtils.IsPdf(fileUrl))
+                            {
+                                <iframe src="@fileUrl#toolbar=0"></iframe>
+                            }
+                        </div>
+
+                        <div class="basket-card__body">
+                            <h3 class="basket-card__title">Резюме #@item.Id</h3>
+
+                            <div class="basket-card__timer">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#e8907c" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12 6 12 12 16 14"></polyline>
+                                </svg>
+                                <span class="basket-card__timer-text">@item.DeletionNotice</span>
+                            </div>
+
+                            <form asp-action="Recover" asp-controller="CvAnalysis" method="post">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@item.Id" />
+                                <button type="submit" class="basket-card__recover-btn">
+                                    @CvAnalysisConstants.RecoverButton
+                                </button>
+                            </form>
+                        </div>
+
+                    </div>
+                }
+            </div>
+        }
+
     </main>
 </div>
