@@ -6,6 +6,7 @@ using CVision.DAL.Repositories.Interfaces.CvAnalyses;
 using CVision.DAL.Repositories.Interfaces.CvAnalysisRecommendations;
 using CVision.DAL.Repositories.Interfaces.CvLookups;
 using CVision.DAL.Repositories.Interfaces.CVs;
+using CVision.DAL.Repositories.Interfaces.Notifications;
 using CVision.DAL.Repositories.Interfaces.Publications;
 
 namespace CVision.DAL.Repositories.Interfaces.Base;
@@ -29,6 +30,8 @@ public interface IRepositoryWrapper
     public IContactRepository ContactRepository { get; }
 
     public IChatMessageRepository ChatMessageRepository { get; }
+
+    public INotificationRepository NotificationRepository { get; }
 
     int SaveChanges();
 
