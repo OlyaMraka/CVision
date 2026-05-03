@@ -1,57 +1,213 @@
-.cv-gallery__header {
-    margin-bottom: 2rem;
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Manrope:wght@400;500;600;700&display=swap');
+
+/* ── Сторінка ── */
+.basket-page {
+    min-height: 100vh;
+    background: #f6efe2;
+    position: relative;
+    font-family: 'Manrope', sans-serif;
 }
 
-.cv-gallery__header h2 {
-    font-weight: 700;
+.basket-page__gradient {
+    position: fixed;
+    inset: 0;
+    background:
+            radial-gradient(circle at 12% 86%, rgba(174, 192, 186, 0.55), transparent 30%),
+            radial-gradient(circle at 87% 18%, rgba(232, 189, 142, 0.52), transparent 28%),
+            linear-gradient(120deg, #f6efe2 0%, #f3e7d2 42%, #efd3b5 100%);
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* ── Контент ── */
+.basket-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: calc(64px + 2rem) 1.5rem 3rem;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+}
+
+/* ── Хедер ── */
+.basket-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding-top: 0.5rem;
+}
+
+.basket-header__title {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 800;
     color: #2c1f1b;
+    letter-spacing: -0.02em;
+    margin: 0 0 0.75rem;
+    line-height: 1.2;
 }
 
-.cv-gallery__header p {
-    color: #7a6560;
-    font-size: 0.9rem;
+.basket-header__subtitle {
+    font-size: 13px;
+    color: #a08878;
+    margin: 0;
+    line-height: 1.6;
+    padding-top: 0.75rem;
+    border-top: 1px solid rgba(232, 189, 142, 0.4);
 }
 
-/* Картка в кошику */
-.cv-card-item--trash {
-    opacity: 0.85;
-    border: 1px dashed #f0d8d1;
+/* ── Порожній стан ── */
+.basket-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 5rem 2rem;
+    background: rgba(255, 255, 255, 0.55);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(232, 189, 142, 0.25);
+    border-radius: 20px;
+    text-align: center;
 }
 
-/* Прев'ю файлу */
-.cv-card-item__preview--trash {
-    filter: grayscale(0.5);
-}
-
-/* Таймер видалення */
-.cv-trash-timer {
+.basket-empty__icon {
+    width: 64px;
+    height: 64px;
+    background: rgba(232, 144, 124, 0.1);
+    border-radius: 50%;
     display: flex;
     align-items: center;
-    gap: 5px;
-    margin-top: 8px;
+    justify-content: center;
+    color: #e8907c;
 }
 
-.cv-trash-timer svg {
-    stroke: #c47a6a;
-}
-
-.cv-trash-timer__text {
-    color: #c47a6a;
-    font-size: 0.75rem;
+.basket-empty__text {
+    font-size: 15px;
     font-weight: 600;
-}
-.btn-recover {
-    background: #2c1f1b;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 0.85rem;
-    transition: background 0.3s ease;
-    width: 100%;
+    color: #a08878;
+    margin: 0;
 }
 
-.btn-recover:hover {
-    background: #4a352f;
+/* ── Сітка карток ── */
+.basket-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.25rem;
+}
+
+/* ── Картка ── */
+.basket-card {
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(232, 189, 142, 0.25);
+    border-radius: 18px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    opacity: 0.88;
+    transition: opacity 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+
+.basket-card:hover {
+    opacity: 1;
+    box-shadow: 0 8px 32px rgba(174, 130, 100, 0.14);
+    transform: translateY(-2px);
+}
+
+/* ── Превʼю ── */
+.basket-card__preview {
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    background: rgba(246, 239, 226, 0.8);
+    overflow: hidden;
+    filter: grayscale(0.3);
+    transition: filter 0.2s;
+}
+
+.basket-card:hover .basket-card__preview {
+    filter: grayscale(0);
+}
+
+.basket-card__preview img,
+.basket-card__preview iframe {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border: none;
+    display: block;
+}
+
+/* ── Тіло картки ── */
+.basket-card__body {
+    padding: 1rem 1.25rem 1.25rem;
+    border-top: 1px solid rgba(232, 189, 142, 0.2);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.basket-card__title {
+    font-family: 'Playfair Display', serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: #2c1f1b;
+    margin: 0;
+    letter-spacing: -0.01em;
+}
+
+/* ── Таймер видалення ── */
+.basket-card__timer {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.basket-card__timer-text {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: #c47a6a;
+}
+
+/* ── Кнопка відновлення ── */
+.basket-card__recover-btn {
+    display: block;
+    width: 100%;
+    padding: 0.6rem;
+    margin-top: 0.25rem;
+    background: transparent;
+    border: 1.5px solid rgba(232, 189, 142, 0.5);
+    border-radius: 10px;
+    font-family: 'Manrope', sans-serif;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: #c47a6a;
+    cursor: pointer;
+    text-align: center;
+    transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.basket-card__recover-btn:hover {
+    background: rgba(232, 144, 124, 0.1);
+    border-color: #e8907c;
+    color: #e8907c;
+}
+
+/* ── Адаптив ── */
+@media (max-width: 900px) {
+    .basket-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .basket-content {
+        padding: calc(64px + 1.25rem) 1rem 2rem;
+    }
+
+    .basket-grid {
+        grid-template-columns: 1fr;
+    }
 }

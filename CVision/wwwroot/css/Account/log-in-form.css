@@ -299,7 +299,6 @@ form {
     }
 }
 
-/* Reset password compact layout */
 .modal--compact {
     max-width: 430px;
     padding: 1.8rem;
@@ -338,7 +337,6 @@ form {
     font-weight: 700;
 }
 
-/* better spacing for smaller auth forms */
 @media (max-width: 640px) {
     .modal--compact {
         padding: 1.5rem 1rem;

@@ -8,22 +8,22 @@
     <nav class="dashboard-nav" aria-label="Основна навігація">
         <a class="dashboard-nav__item @(currentPage == "CvAnalysis" ? "is-active" : string.Empty)"
                asp-controller="CvAnalysis" asp-action="Analyze">
-            CV аналіз
+            Аналіз резюме
         </a>
         <a class="dashboard-nav__item @(currentPage == "gallery" ? "is-active" : "")" asp-controller="CvAnalysis"
            asp-action="CVGallery">
-            Подивитись на CV
+            Переглянути резюме
         </a>
         <a class="dashboard-nav__item @(currentPage == "Analytics" ? "is-active" : "")" 
            asp-controller="Analytics" asp-action="SalaryAnalytics">
-            Аналітика
+            Аналітика ринку праці
         </a>
         <a class="dashboard-nav__item @(currentPage == "Basket" ? "is-active" : "")" asp-controller="Basket"
                asp-action="Index" title="Переглянути видалені CV">
             Кошик
         </a>
-        <a class="dashboard-nav__item" asp-controller="Publication" asp-action="CvForum">
-            CV Форум
+        <a class="dashboard-nav__item @(currentPage == "CvForum" ? "is-active" : "")" asp-controller="Publication" asp-action="CvForum">
+            Форум натхнення
         </a>
         
     </nav>
