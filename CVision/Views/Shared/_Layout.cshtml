@@ -3,17 +3,28 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
     <title>@ViewData["Title"] — CVision</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&display=swap"
-          rel="stylesheet" />
-    
-    <link rel="stylesheet" href="~/css/LadingPage.css" asp-append-version="true" />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="~/css/chat-sidebar.css" asp-append-version="true" />
+
+    @* Тимчасово включаємо бандли в Development, щоб ти побачив результат *@
+    <environment include="Development, Production">
+        <link rel="stylesheet" href="~/css/landing.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/css/chat.min.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/css/cv-analysis-bundle.min.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/css/cv-forum-bundle.min.css" asp-append-version="true" />
+    </environment>
+
+    @* Цей блок запрацює, тільки якщо ти явно захочеш повернутися до оригіналів *@
+    @*<environment include="Staging">
+        <link rel="stylesheet" href="~/css/LadingPage.css" />
+        <link rel="stylesheet" href="~/css/chat-sidebar.css" />
+        <link rel="stylesheet" href="~/css/CvAnalysis/cv-details.css" />
+        <link rel="stylesheet" href="~/css/CvAnalysis/cv-upload-page.css" />
+    </environment>*@
     
     @await RenderSectionAsync("Styles", required: false)
 </head>
@@ -23,7 +34,11 @@
 
 <partial name="~/Views/Shared/_ChatSidebar.cshtml" />
 
-<script src="~/js/chat-sidebar.js" asp-append-version="true"></script>
+<environment include="Development, Production">
+    <script src="~/js/chat.min.js" asp-append-version="true"></script>
+    <script src="~/js/account-bundle.min.js" asp-append-version="true"></script>
+</environment>
+
 @await RenderSectionAsync("Scripts", required: false)
 
 </body>

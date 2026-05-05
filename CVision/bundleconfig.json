@@ -1,0 +1,53 @@
+[
+  {
+    "outputFileName": "wwwroot/css/cv-analysis-bundle.min.css",
+    "inputFiles": [
+      "wwwroot/css/CvAnalysis/cv-details.css",
+      "wwwroot/css/CvAnalysis/cv-upload-page.css",
+      "wwwroot/css/CvAnalysis/cv-vacancies.css",
+      "wwwroot/css/CvAnalysis/CVGallery.css",
+      "wwwroot/css/CvAnalysis/section-card.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/css/cv-forum-bundle.min.css",
+    "inputFiles": [
+      "wwwroot/css/CvForum/cv-forum.css",
+      "wwwroot/css/CvForum/add-comment.css",
+      "wwwroot/css/CvForum/comment-item.css",
+      "wwwroot/css/CvForum/publication-card.css",
+      "wwwroot/css/CvForum/publication-page.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/account-bundle.min.js",
+    "inputFiles": [
+      "wwwroot/js/Account/LogIn.js",
+      "wwwroot/js/Account/Register.js",
+      "wwwroot/js/Account/ConfirmEmail.js"
+    ],
+    "minify": { "enabled": true, "renameLocals": true }
+  },
+  {
+    "outputFileName": "wwwroot/js/cv-forum-bundle.min.js",
+    "inputFiles": [
+      "wwwroot/js/CvForum/CvForumMainPage.js",
+      "wwwroot/js/CvForum/AddComment.js"
+    ],
+    "minify": { "enabled": true, "renameLocals": true }
+  },
+  {
+    "outputFileName": "wwwroot/css/landing-bundle.min.css",
+    "inputFiles": [ 
+      "wwwroot/css/LadingPage.css" ,
+      "wwwroot/css/landing.css"]
+  },
+  {
+    "outputFileName": "wwwroot/css/chat.min.css",
+    "inputFiles": [ "wwwroot/css/chat-sidebar.css" ]
+  },
+  {
+    "outputFileName": "wwwroot/js/chat.min.js",
+    "inputFiles": [ "wwwroot/js/chat-sidebar.js" ]
+  }
+] 
