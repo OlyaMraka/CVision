@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="~/css/LadingPage.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="~/css/chat-sidebar.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/notifications.css" asp-append-version="true" />
     
     @await RenderSectionAsync("Styles", required: false)
 </head>
@@ -22,8 +23,11 @@
 @RenderBody()
 
 <partial name="~/Views/Shared/_ChatSidebar.cshtml" />
+<partial name="~/Views/Shared/_NotificationPanel.cshtml" />
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js"></script>
 <script src="~/js/chat-sidebar.js" asp-append-version="true"></script>
+<script src="~/js/notifications.js" asp-append-version="true"></script>
 @await RenderSectionAsync("Scripts", required: false)
 
 </body>
