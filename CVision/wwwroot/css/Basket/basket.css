@@ -1,6 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Manrope:wght@400;500;600;700&display=swap');
-
-/* ── Сторінка ── */
 .basket-page {
     min-height: 100vh;
     background: #f6efe2;
@@ -19,7 +16,6 @@
     pointer-events: none;
 }
 
-/* ── Контент ── */
 .basket-content {
     max-width: 1200px;
     margin: 0 auto;
@@ -31,7 +27,6 @@
     gap: 1.75rem;
 }
 
-/* ── Хедер ── */
 .basket-header {
     display: flex;
     flex-direction: column;
@@ -58,7 +53,6 @@
     border-top: 1px solid rgba(232, 189, 142, 0.4);
 }
 
-/* ── Порожній стан ── */
 .basket-empty {
     display: flex;
     flex-direction: column;
@@ -91,14 +85,12 @@
     margin: 0;
 }
 
-/* ── Сітка карток ── */
 .basket-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: 1.25rem;
 }
 
-/* ── Картка ── */
 .basket-card {
     background: rgba(255, 255, 255, 0.65);
     backdrop-filter: blur(12px);
@@ -117,7 +109,6 @@
     transform: translateY(-2px);
 }
 
-/* ── Превʼю ── */
 .basket-card__preview {
     width: 100%;
     aspect-ratio: 2 / 3;
@@ -140,7 +131,6 @@
     display: block;
 }
 
-/* ── Тіло картки ── */
 .basket-card__body {
     padding: 1rem 1.25rem 1.25rem;
     border-top: 1px solid rgba(232, 189, 142, 0.2);
@@ -158,7 +148,6 @@
     letter-spacing: -0.01em;
 }
 
-/* ── Таймер видалення ── */
 .basket-card__timer {
     display: flex;
     align-items: center;
@@ -171,7 +160,6 @@
     color: #c47a6a;
 }
 
-/* ── Кнопка відновлення ── */
 .basket-card__recover-btn {
     display: block;
     width: 100%;
@@ -195,7 +183,6 @@
     color: #e8907c;
 }
 
-/* ── Адаптив ── */
 @media (max-width: 900px) {
     .basket-grid {
         grid-template-columns: repeat(2, 1fr);

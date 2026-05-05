@@ -1,6 +1,3 @@
-
-
-/* ── Сторінка ── */
 .cv-forum-main-block {
     min-height: 100vh;
     max-width: 1200px;
@@ -14,7 +11,6 @@
     font-family: 'Manrope', sans-serif;
 }
 
-/* ── Хедер сторінки ── */
 .cv-forum-header {
     display: flex;
     justify-content: space-between;
@@ -47,7 +43,6 @@
     line-height: 1.6;
 }
 
-/* ── Тулбар ── */
 .cv-forum-toolbar {
     display: flex;
     align-items: center;
@@ -55,7 +50,6 @@
     flex-shrink: 0;
 }
 
-/* ── Перемикач Усі / Мої ── */
 .publications-buttons {
     display: flex;
     gap: 0.25rem;
@@ -83,7 +77,6 @@
     color: #e8907c;
 }
 
-/* ── Кнопка створення ── */
 .cv-forum-toolbar > a {
     font-family: 'Manrope', sans-serif;
     font-size: 13px;
@@ -102,14 +95,12 @@
     transform: translateY(-1px);
 }
 
-/* ── Сітка карток ── */
 .publications-list-block {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1.25rem;
 }
 
-/* ── Адаптив ── */
 @media (max-width: 1024px) {
     .publications-list-block {
         grid-template-columns: repeat(2, 1fr);
