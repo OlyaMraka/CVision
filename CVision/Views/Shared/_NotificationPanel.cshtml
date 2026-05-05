@@ -1,0 +1,33 @@
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<CVision.DAL.Entities.ApplicationUser> SignInManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <!-- Notification Dropdown -->
+    <div id="notifDropdown" class="notif-dropdown" role="region" aria-label="Сповіщення">
+        <div class="notif-dropdown__header">
+            <h3 class="notif-dropdown__title">Сповіщення</h3>
+            <button class="notif-mark-all-btn" id="notifMarkAllBtn" title="Позначити всі як прочитані">
+                Прочитати всі
+            </button>
+        </div>
+        <div id="notifList" class="notif-list">
+            <div class="notif-empty">
+                <i class="fa-regular fa-bell-slash"></i>
+                Завантаження...
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast container -->
+    <div id="notifToast" class="notif-toast" role="alert" aria-live="polite">
+        <i class="fa-solid fa-bell notif-toast__icon"></i>
+        <div class="notif-toast__body">
+            <p class="notif-toast__title" id="notifToastTitle"></p>
+            <p class="notif-toast__message" id="notifToastMessage"></p>
+        </div>
+        <button class="notif-toast__close" id="notifToastClose" aria-label="Закрити">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
+}
