@@ -86,7 +86,7 @@ namespace CVision.Controllers
                 if (response.IsSuccess)
                 {
                     await signInManager.SignInAsync(response.Value!, isPersistent: false);
-                    return RedirectToAction("tips", "Home");
+                    return RedirectToAction("Analyze", "CvAnalysis");
                 }
 
                 if (response.Error == null)
