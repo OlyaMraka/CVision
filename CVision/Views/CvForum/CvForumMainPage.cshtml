@@ -44,14 +44,5 @@
 </div>
 
 @section Scripts {
-<script>
-    const path = window.location.pathname.toLowerCase();
-    const buttons = document.querySelectorAll('.publications-buttons a');
-
-    buttons.forEach(btn => {
-        if (btn.href.toLowerCase().includes(path)) {
-            btn.classList.add('active');
-        }
-    });
-</script>
+    <script src="~/js/CvForum/CvForumMainPage.js" asp-append-version="true"></script>
 }

@@ -9,7 +9,7 @@
 @section Styles {
     <link rel="stylesheet" href="~/css/HubUser.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/CvForum/cv-forum-create.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/CvAnalysis/cv-upload-page.css" asp-append-version="true">
+    @*<link rel="stylesheet" href="~/css/CvAnalysis/cv-upload-page.css" asp-append-version="true">*@
     <link rel="stylesheet" href="~/css/CvAnalysis/cv-analysis-result.css" asp-append-version="true" />
 }
 
@@ -60,17 +60,5 @@
 </div>
 
 @section Scripts {
-    <script>
-        const input = document.getElementById('cvFile');
-        const display = document.getElementById('fileName');
-        const form = document.querySelector('.upload-cv-input');
-        const uploadBlock = document.querySelector('.upload-cv-block');
-
-        input.addEventListener('change', () => {
-            if (input.files.length) {
-                display.textContent = input.files[0].name;
-                display.style.display = 'inline-block';
-            }
-        });
-    </script>
+    <script src="~/js/CvForum/CvForumCreateModal.js" asp-append-version="true"></script>
 }
