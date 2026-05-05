@@ -8,9 +8,11 @@ using CVision.BLL.Mappers;
 using CVision.BLL.Options;
 using CVision.BLL.Services;
 using CVision.BLL.Validators.Users;
+using CVision.Hubs;
 using CVision.Mappers;
 using CVision.Extensions;
 using CVision.Extensions.Middleware;
+using CVision.Services;
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -57,6 +59,8 @@ string geminiApiKey = builder.Configuration["GeminiApiKey"]
 builder.Services.AddScoped<IAIService>(sp => new GeminiService(geminiApiKey));
 
 builder.Services.AddControllersWithViews();
+builder.Services.AddSignalR();
+builder.Services.AddHostedService<NotificationBackgroundService>();
 builder.Services.AddSession();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -82,6 +86,12 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    dbContext.Database.Migrate();
+}
 
 // Configure the HTTP request pipeline.
 // if (!app.Environment.IsDevelopment())
@@ -117,5 +127,6 @@ app.MapControllerRoute(
         pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 
+app.MapHub<NotificationHub>("/hubs/notifications");
 
 app.Run();

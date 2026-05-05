@@ -1,0 +1,281 @@
+/* ─── Notification Button (in header) ────────────────────────── */
+
+.notif-toggle-btn {
+    position: relative;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #c47c2a;
+    font-size: 1.2rem;
+    transition: background 0.15s;
+    flex-shrink: 0;
+}
+
+.notif-toggle-btn:hover {
+    background: rgba(196, 124, 42, 0.1);
+}
+
+.notif-badge {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    min-width: 16px;
+    height: 16px;
+    border-radius: 999px;
+    background: #e06050;
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 0.25rem;
+    border: 2px solid #fffaf4;
+}
+
+/* ─── Dropdown Panel ──────────────────────────────────────────── */
+
+.notif-dropdown {
+    position: fixed;
+    top: 70px;
+    right: 1rem;
+    width: 360px;
+    max-width: calc(100vw - 2rem);
+    max-height: 480px;
+    display: flex;
+    flex-direction: column;
+    background: #fffaf4;
+    border: 1px solid #f0dfc8;
+    border-radius: 16px;
+    box-shadow: 0 12px 40px rgba(107, 77, 43, 0.16);
+    z-index: 450;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-8px) scale(0.98);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.notif-dropdown.is-open {
+    opacity: 1;
+    pointer-events: all;
+    transform: translateY(0) scale(1);
+}
+
+/* ─── Header ──────────────────────────────────────────────────── */
+
+.notif-dropdown__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem 0.75rem;
+    border-bottom: 1px solid #f0dfc8;
+    flex-shrink: 0;
+}
+
+.notif-dropdown__title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #2c1f1b;
+    margin: 0;
+}
+
+.notif-mark-all-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #c47c2a;
+    font-family: var(--font-main);
+    padding: 0.2rem 0.5rem;
+    border-radius: 6px;
+    transition: background 0.15s, color 0.15s;
+}
+
+.notif-mark-all-btn:hover {
+    background: #faeae4;
+    color: #a5651e;
+}
+
+/* ─── List ────────────────────────────────────────────────────── */
+
+.notif-list {
+    overflow-y: auto;
+    flex: 1;
+    padding: 0.5rem 0;
+}
+
+.notif-list::-webkit-scrollbar {
+    width: 4px;
+}
+
+.notif-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.notif-list::-webkit-scrollbar-thumb {
+    background: #e8d8c4;
+    border-radius: 999px;
+}
+
+/* ─── Item ────────────────────────────────────────────────────── */
+
+.notif-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.75rem 1.25rem;
+    cursor: pointer;
+    transition: background 0.15s;
+    border-left: 3px solid transparent;
+}
+
+.notif-item:hover {
+    background: #faf0e4;
+}
+
+.notif-item.is-unread {
+    background: #fff8f0;
+    border-left-color: #c47c2a;
+}
+
+.notif-item.is-unread:hover {
+    background: #faeee0;
+}
+
+.notif-item__icon {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #f5e8d4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #c47c2a;
+    font-size: 0.9rem;
+    margin-top: 0.1rem;
+}
+
+.notif-item__body {
+    flex: 1;
+    min-width: 0;
+}
+
+.notif-item__title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #2c1f1b;
+    margin: 0 0 0.15rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.notif-item__message {
+    font-size: 0.8rem;
+    color: #6b5a4e;
+    margin: 0 0 0.25rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.notif-item__time {
+    font-size: 0.72rem;
+    color: #a07858;
+}
+
+/* ─── Empty / Loading states ──────────────────────────────────── */
+
+.notif-empty {
+    text-align: center;
+    padding: 2.5rem 1rem;
+    color: #a07858;
+    font-size: 0.875rem;
+}
+
+.notif-empty i {
+    font-size: 2rem;
+    margin-bottom: 0.75rem;
+    display: block;
+    color: #d4b896;
+}
+
+/* ─── Toast (pop-up for new notification) ─────────────────────── */
+
+.notif-toast {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    min-width: 280px;
+    max-width: 360px;
+    background: #fff;
+    border: 1px solid #f0dfc8;
+    border-left: 4px solid #c47c2a;
+    border-radius: 12px;
+    padding: 0.9rem 1.1rem;
+    box-shadow: 0 8px 28px rgba(107, 77, 43, 0.18);
+    z-index: 600;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    pointer-events: none;
+}
+
+.notif-toast.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: all;
+}
+
+.notif-toast__icon {
+    color: #c47c2a;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+}
+
+.notif-toast__body {
+    flex: 1;
+    min-width: 0;
+}
+
+.notif-toast__title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #2c1f1b;
+    margin: 0 0 0.2rem;
+}
+
+.notif-toast__message {
+    font-size: 0.8rem;
+    color: #6b5a4e;
+    margin: 0;
+}
+
+.notif-toast__close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #a07858;
+    font-size: 0.85rem;
+    padding: 0;
+    flex-shrink: 0;
+    line-height: 1;
+    align-self: flex-start;
+}
+
+.notif-toast__close:hover {
+    color: #2c1f1b;
+}

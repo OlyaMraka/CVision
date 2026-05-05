@@ -19,7 +19,7 @@
 
     let sidebar, overlay, searchInput, searchResults, convList,
         convPanel, msgPanel, msgPeerName, messagesContainer,
-        messageInput, sendBtn, toggleBtn, unreadBadge;
+        messageInput, sendBtn, toggleBtn;
 
     /* ─── Init ──────────────────────────────────────────────────── */
 
@@ -36,7 +36,6 @@
         messageInput      = $('chatMessageInput');
         sendBtn           = $('chatSendBtn');
         toggleBtn         = $('chatToggleBtn');
-        unreadBadge       = $('chatUnreadBadge');
 
         if (!sidebar) return; // sidebar not rendered (guest user)
         if (!searchInput || !searchResults || !convList || !convPanel || !msgPanel ||
@@ -117,7 +116,7 @@
             if (!res.ok) return;
             const conversations = await res.json();
             renderConversations(conversations);
-            updateUnreadBadge(conversations);
+
         } catch (_) { /* network error – silently ignore */ }
     }
 
@@ -151,16 +150,7 @@
         }).join('');
     }
 
-    function updateUnreadBadge(list) {
-        if (!unreadBadge) return;
-        const total = list.reduce((sum, c) => sum + (c.unreadCount || 0), 0);
-        if (total > 0) {
-            unreadBadge.textContent = total > 99 ? '99+' : total;
-            unreadBadge.style.display = 'flex';
-        } else {
-            unreadBadge.style.display = 'none';
-        }
-    }
+
 
     /* ─── Open conversation ──────────────────────────────────────── */
 

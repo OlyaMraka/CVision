@@ -8,6 +8,7 @@ using CVision.DAL.Repositories.Interfaces.CvAnalyses;
 using CVision.DAL.Repositories.Interfaces.CvAnalysisRecommendations;
 using CVision.DAL.Repositories.Interfaces.CvLookups;
 using CVision.DAL.Repositories.Interfaces.CVs;
+using CVision.DAL.Repositories.Interfaces.Notifications;
 using CVision.DAL.Repositories.Interfaces.Publications;
 using CVision.DAL.Repositories.Realizations.ChatMessages;
 using CVision.DAL.Repositories.Realizations.CommentReactions;
@@ -17,6 +18,7 @@ using CVision.DAL.Repositories.Realizations.CvAnalyses;
 using CVision.DAL.Repositories.Realizations.CvAnalysisRecommendations;
 using CVision.DAL.Repositories.Realizations.CvLookups;
 using CVision.DAL.Repositories.Realizations.CVs;
+using CVision.DAL.Repositories.Realizations.Notifications;
 using CVision.DAL.Repositories.Realizations.Publications;
 
 namespace CVision.DAL.Repositories.Realizations.Base;
@@ -42,6 +44,8 @@ public class RepositoryWrapper : IRepositoryWrapper
     private IContactRepository? _contactRepository;
 
     private IChatMessageRepository? _chatMessageRepository;
+
+    private INotificationRepository? _notificationRepository;
 
     public RepositoryWrapper(ApplicationDbContext dbContext)
     {
@@ -74,6 +78,9 @@ public class RepositoryWrapper : IRepositoryWrapper
 
     public IChatMessageRepository ChatMessageRepository
         => _chatMessageRepository ??= new ChatMessageRepository(context);
+
+    public INotificationRepository NotificationRepository
+        => _notificationRepository ??= new NotificationRepository(context);
 
     public int SaveChanges()
     {
