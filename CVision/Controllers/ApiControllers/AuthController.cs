@@ -28,6 +28,7 @@ public class AuthController(
         return Ok();
     }
 
+    // test
     [HttpPost("login")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(LoginUserResponseDto))]
