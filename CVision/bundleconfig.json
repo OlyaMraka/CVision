@@ -39,7 +39,7 @@
   {
     "outputFileName": "wwwroot/css/landing-bundle.min.css",
     "inputFiles": [ 
-      "wwwroot/css/LadingPage.css" ,
+      "wwwroot/css/LandingPage.css" ,
       "wwwroot/css/landing.css"]
   },
   {

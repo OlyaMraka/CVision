@@ -119,6 +119,7 @@ app.MapGet("/test-exception", () =>
 app.UseExceptionHandler();
 app.UseHttpsRedirection();
 
+
 app.UseSerilogRequestLogging();
 
 app.UseRouting();
