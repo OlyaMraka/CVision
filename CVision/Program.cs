@@ -17,6 +17,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+using Azure.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,6 +45,14 @@ builder.Services.AddScoped<IEmailService, SmtpEmailService>();
 builder.Services.AddAutoMapper(typeof(UsersProfile), typeof(CVAnalysisProfile));
 builder.Services.AddValidatorsFromAssembly(typeof(RegisterUserValidator).Assembly);
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(RegisterUserCommand).Assembly));
+
+if (builder.Environment.IsProduction())
+{
+    var keyVaultName = builder.Configuration["KeyVaultName"];
+    builder.Configuration.AddAzureKeyVault(
+        new Uri($"https://{keyVaultName}.vault.azure.net/"),
+        new DefaultAzureCredential());
+}
 
 var cloudinaryOptions = builder.Configuration
     .GetSection("CloudinarySettings")
