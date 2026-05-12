@@ -121,6 +121,7 @@ app.UseHttpsRedirection();
 
 app.UseSerilogRequestLogging();
 
+app.UseStaticFiles();
 app.UseRouting();
 app.UseSession();
 
@@ -129,12 +130,9 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.UseMiddleware<RequestLoggingMiddleware>();
 
-app.MapStaticAssets();
-
 app.MapControllerRoute(
-        name: "default",
-        pattern: "{controller=Home}/{action=Index}/{id?}")
-    .WithStaticAssets();
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.MapHub<NotificationHub>("/hubs/notifications");
 
