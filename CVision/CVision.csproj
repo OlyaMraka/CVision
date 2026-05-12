@@ -22,10 +22,12 @@
         <PackageReference Include="Microsoft.AspNetCore.SignalR.Common" Version="9.0.0"/>
         <PackageReference Include="Serilog.AspNetCore" Version="10.0.0"/>
         <PackageReference Include="Serilog.Sinks.Seq" Version="9.0.0"/>
-        <Content Include="wwwroot\**" CopyToPublishDirectory="PreserveNewest"/>
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\CVision.BLL\CVision.BLL.csproj"/>
         <ProjectReference Include="..\CVision.DAL\CVision.DAL.csproj"/>
+    </ItemGroup>
+    <ItemGroup>
+        <Content Update="wwwroot\**" CopyToPublishDirectory="PreserveNewest"/>
     </ItemGroup>
 </Project>
