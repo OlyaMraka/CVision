@@ -28,7 +28,7 @@ public class AuthController(
         return Ok();
     }
 
-    // test
+    // test test
     [HttpPost("login")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(LoginUserResponseDto))]
@@ -88,5 +88,26 @@ public class AuthController(
     public async Task<IActionResult> ResetPasswordAsync(ResetPasswordRequestDto requestDto)
     {
         return HandleResult(await Mediator.Send(new ResetPasswordCommand(requestDto)));
+    }
+
+    // Додайте це, наприклад, у якийсь Helper або Service для тесту
+    public string GetWelcomeMessage(string name)
+    {
+        // SonarCloud може поскаржитися на пустий блок catch або захардкоджені паролі
+        try
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                return "Hello, Guest!";
+            }
+
+            // Використання String.Format замість інтерполяції або просто проста логіка
+            return string.Format("Welcome to CVision, {0}! Today is {1}", name, DateTime.Now.ToShortDateString());
+        }
+        catch
+        {
+            // Порожній catch — це класичний "Code Smell", який SonarCloud обов'язково підсвітить
+            throw;
+        }
     }
 }
