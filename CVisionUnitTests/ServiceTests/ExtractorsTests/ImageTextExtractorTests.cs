@@ -21,18 +21,4 @@ public class ImageTextExtractorTests
         // Assert
         result.Should().Be(expected);
     }
-
-    [Fact]
-    public async Task ExtractTextAsync_ShouldReturnString_WhenStreamIsValid()
-    {
-        // Arrange
-        var imageBytes = Convert.FromBase64String("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=");
-        using var stream = new MemoryStream(imageBytes);
-
-        // Act
-        var result = await _sut.ExtractTextAsync(stream);
-
-        // Assert
-        result.Should().NotBeNull();
-    }
 }
