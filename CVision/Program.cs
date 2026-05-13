@@ -59,7 +59,7 @@ var cloudinaryOptions = builder.Configuration
     .Get<CloudinaryOptions>();
 
 builder.Services.Configure<CacheOptions>(builder.Configuration.GetSection("Caching"));
-
+string Password = "123";
 builder.Services.AddScoped<IFileService>(sp => new CloudinaryFileService(cloudinaryOptions!));
 
 string geminiApiKey = builder.Configuration["GeminiApiKey"]
